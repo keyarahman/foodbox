@@ -31,9 +31,10 @@ const App = () => {
   // const [isLoading, setIsLoading] = React.useState(true);
   // const [userToken, setUserToken] = React.useState(null);
 
-  const storeData = async value => {
+  const storeData =  value => {
     try {
-      await AsyncStorage.setItem('userToken', value);
+      AsyncStorage.setItem('userToken', value);
+     
     } catch (e) {
       // saving error
     }
@@ -78,9 +79,10 @@ const App = () => {
 
                 if (resData.data.profile.role == 'RestaurantAdmin') {
 
-                  alert('Successfully log in');
+                  alert('Successfully logged in');
                   userToken = resData;
-                  storeData(userToken);
+                  AsyncStorage.setItem("userToken", JSON.stringify(userToken));
+                  dispatch({type: 'LOGIN', id: email, token: userToken});
                 } else {
                   console.log('Not allowed');
                   alert("You don't have permission to log in");
@@ -94,20 +96,20 @@ const App = () => {
             }
           });
           
-        dispatch({type: 'LOGIN', id: email, token: userToken});
+        
       },
-      logOut: async () => {
+      logOut:  () => {
         // setUserToken(null);
         // setIsLoading(false);
         try {
-          await AsyncStorage.removeItem('userToken');
+           AsyncStorage.removeItem('userToken');
         } catch (e) {
           console.log(e);
         }
         dispatch({type: 'LOGOUT'});
       },
     }),
-    [],
+    
   );
 
   const loginReducer = (prevState, action) => {
@@ -134,6 +136,8 @@ const App = () => {
         };
     }
   };
+
+
   const [loginState, dispatch] = React.useReducer(
     loginReducer,
     initialLoginState,
@@ -144,15 +148,20 @@ const App = () => {
       // setIsLoading(false);
       let userToken;
       userToken = null;
-      userToken=getData();
-      dispatch({type: 'RETRIEVE_TOKEN', token: userToken});
+      AsyncStorage.getItem("userToken").then(token => {
+      
+        userToken=JSON.parse(token);
+      
+        dispatch({type: 'RETRIEVE_TOKEN', token: userToken});
+      });
+     
     }, 1000);
   }, []);
 
   if (loginState.isLoading) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
   }

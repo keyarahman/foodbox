@@ -1,16 +1,85 @@
-import * as React from 'react';
-import { View, Text ,Image} from 'react-native';
+import React from "react";
+import {
+    StyleSheet,
+    SafeAreaView,
+    FlatList,
+    View,
+    Image,
+    TouchableOpacity,
+    Text
+} from "react-native";
 
-const IncomingScreen=()=> {
-   return (
+export default class IncomingScreen extends React.Component {
+  constructor(props) {
+      super(props);
+      this.state = {
+          data: [],
+          refreshing: true,
+      }
+  }
 
-    <View style={{ flex: 1,marginTop:150,alignItems:"center" }}>
-      <Text  style={{ fontSize:20,padding:20,}}>You have no active orders!</Text>
-     <View style={{ height: 140, alignItems: 'center' }}>
-     <Image source={require('../assets/palate.jpeg')} style={{ height: 120, width: 120, borderRadius: 80 }} />
-     </View>
-     </View>
-   );
- }
+  componentDidMount() {
+      this.fetchCats();
+  }
 
-  export default IncomingScreen;
+  fetchCats() {
+      this.setState({ refreshing: true });
+      fetch('https://qrtech.co.uk/api/login')
+          .then(res => res.json())
+          .then(resJson => {
+              this.setState({ data: resJson });
+              this.setState({ refreshing: false });
+          }).catch(e => console.log(e));
+  }
+
+  // renderItemComponent = (data) =>
+  //     <TouchableOpacity style={styles.container}>
+  //         <Image style={styles.image} source={{ uri: data.item.url }} />
+  //     </TouchableOpacity>
+
+  ItemSeparator = () => <View style={{
+      height: 2,
+      backgroundColor: "rgba(0,0,0,0.5)",
+      marginLeft: 10,
+      marginRight: 10,
+  }}
+  />
+
+  handleRefresh = () => {
+      this.setState({ refreshing: false }, () => { this.fetchCats() }); // call fetchCats after setting the state
+  }
+
+  render() {
+    return (
+      <SafeAreaView>
+        <FlatList
+        
+          // data={this.state.data.data.profile.name}
+          // // renderItem={item => this.renderItemComponent(item)}
+          // // keyExtractor={item => item.id.toString()}
+          // ItemSeparatorComponent={this.ItemSeparator}
+          // refreshing={this.state.refreshing}
+          // onRefresh={this.handleRefresh}
+        >
+        
+        </FlatList>
+      
+        
+        
+      </SafeAreaView>)
+  }
+}
+
+const styles = StyleSheet.create({
+container: {
+  height: 300,
+  margin: 10,
+  backgroundColor: '#FFF',
+  borderRadius: 6,
+},
+image: {
+  height: '100%',
+  borderRadius: 4,
+},
+});
+

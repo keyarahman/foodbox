@@ -27,27 +27,49 @@ import {
   FileMinus,
   FolderMinus,
 } from 'react-native-feather';
-import {AuthContext} from  '../components.js/context';
-
+import {AuthContext} from '../components.js/context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { get } from 'react-native/Libraries/Utilities/PixelRatio';
+import { useState } from 'react/cjs/react.development';
 
 // import{ AuthContext } from '../components/context';
 
 export default function DrawerContent(props) {
-    const { logOut } = React.useContext(AuthContext);
+  const {logOut} = React.useContext(AuthContext);
+ 
+const [fullName, setFullName] = useState("")
+// const getData = () => {
+//   try {
+//     const value = AsyncStorage.getItem('userToken');
+//     if (value !== null) {
+//       console.log(value);
+//       return value;
+//       // value previously stored
+//     }
+//   } catch (e) {
+//     // error reading value
+//   }
+// };
+
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <Drawer.Section style={styles.firstDrawerSection}>
-        <View style={{height: 140, alignItems: 'center'}}>
+        <View style={{height: 150, alignItems: 'center'}}>
           <Image
             source={require('../assets/UserImage.png')}
             style={{height: 120, width: 120, borderRadius: 80}}
           />
+          {/* <View style={{marginLeft: 15, flexDirection: 'column'}}> */}
+            <Title style={styles.title}>keya</Title>
+           
+          {/* </View> */}
         </View>
       </Drawer.Section>
       <DrawerContentScrollView {...props}>
         <View style={styles.drawerContent}>
           <Drawer.Section style={styles.drawerSection}>
-            <Home stroke='#FFA500' fill="none" width={20} height={20} />
+            <Home stroke="#FFA500" fill="none" width={20} height={20} />
             <Menu.Item
               onPress={() => {
                 props.navigation.navigate('Home');
@@ -57,7 +79,7 @@ export default function DrawerContent(props) {
           </Drawer.Section>
 
           <Drawer.Section style={styles.drawerSection}>
-            <ShoppingCart stroke='#FFA500' fill="none" width={20} height={20} />
+            <ShoppingCart stroke="#FFA500" fill="none" width={20} height={20} />
 
             <Menu.Item
               onPress={() => {
@@ -67,7 +89,7 @@ export default function DrawerContent(props) {
             />
           </Drawer.Section>
           <Drawer.Section style={styles.drawerSection}>
-            <FolderPlus stroke='#FFA500' fill="none" width={20} height={20} />
+            <FolderPlus stroke="#FFA500" fill="none" width={20} height={20} />
 
             <Menu.Item
               onPress={() => {
@@ -77,7 +99,7 @@ export default function DrawerContent(props) {
             />
           </Drawer.Section>
           <Drawer.Section style={styles.drawerSection}>
-            <FolderMinus stroke='#FFA500' fill="none" width={20} height={20} />
+            <FolderMinus stroke="#FFA500" fill="none" width={20} height={20} />
 
             <Menu.Item
               onPress={() => {
@@ -87,7 +109,7 @@ export default function DrawerContent(props) {
             />
           </Drawer.Section>
           <Drawer.Section style={styles.drawerSection}>
-            <Settings stroke='#FFA500' fill="none" width={20} height={20} />
+            <Settings stroke="#FFA500" fill="none" width={20} height={20} />
             <Menu.Item
               onPress={() => {
                 props.navigation.navigate('Settings');
@@ -99,10 +121,12 @@ export default function DrawerContent(props) {
       </DrawerContentScrollView>
 
       <Drawer.Section style={styles.bottomDrawerSection}>
-        <LogOut stroke='#FFA500' fill="none" width={20} height={20} />
+        <LogOut stroke="#FFA500" fill="none" width={20} height={20} />
 
         <Menu.Item
-        onPress={() => {logOut()}}
+          onPress={() => {
+            logOut();
+          }}
           title="Log Out"
         />
       </Drawer.Section>
@@ -158,13 +182,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   bottomDrawerSection: {
- 
     marginStart: 20,
-    marginBottom:2,
+    marginBottom: 2,
     borderTopColor: '#f4f4f4',
     borderTopWidth: 1,
     alignItems: 'center',
     flex: 1,
     flexDirection: 'row',
-},
+  },
 });
