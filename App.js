@@ -23,42 +23,22 @@ import HomeScreen from './Screens/HomeScreen';
 import {AuthContext} from './components.js/context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-//  const HomeStack = createNativeStackNavigator();
-//  const SettingsStac = createNativeStackNavigator();
+
 const Drawer = createDrawerNavigator();
 
 const App = () => {
-  // const [isLoading, setIsLoading] = React.useState(true);
-  // const [userToken, setUserToken] = React.useState(null);
-
-  const storeData =  value => {
-    try {
-      AsyncStorage.setItem('userToken', value);
-     
-    } catch (e) {
-      // saving error
-    }
-  };
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('userToken');
-      if (value !== null) {
-        // value previously stored
-      }
-    } catch (e) {
-      // error reading value
-    }
-  };
 
   const initialLoginState = {
     isLoading: true,
     email: null,
     userToken: null,
   };
+
   const authContext = React.useMemo(
     () => ({
 
       logIn: async (email, password) => {
+        
         let userToken;
         userToken = null;
         await fetch('https://qrtech.co.uk/api/login', {
@@ -79,7 +59,7 @@ const App = () => {
 
                 if (resData.data.profile.role == 'RestaurantAdmin') {
 
-                  alert('Successfully logged in');
+                  // alert('Successfully logged in');
                   userToken = resData;
                   AsyncStorage.setItem("userToken", JSON.stringify(userToken));
                   dispatch({type: 'LOGIN', id: email, token: userToken});
@@ -88,16 +68,14 @@ const App = () => {
                   alert("You don't have permission to log in");
                 }
               }
-
-
               if (resData.message != null) {
                 alert(resData.message);
               }
             }
-          });
-          
+          });       
         
       },
+
       logOut:  () => {
         // setUserToken(null);
         // setIsLoading(false);
@@ -109,6 +87,7 @@ const App = () => {
         dispatch({type: 'LOGOUT'});
       },
     }),
+
     
   );
 
@@ -161,7 +140,7 @@ const App = () => {
   if (loginState.isLoading) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#FFA500" />
       </View>
     );
   }

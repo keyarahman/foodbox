@@ -38,18 +38,12 @@ export default function DrawerContent(props) {
   const {logOut} = React.useContext(AuthContext);
  
 const [fullName, setFullName] = useState("")
-// const getData = () => {
-//   try {
-//     const value = AsyncStorage.getItem('userToken');
-//     if (value !== null) {
-//       console.log(value);
-//       return value;
-//       // value previously stored
-//     }
-//   } catch (e) {
-//     // error reading value
-//   }
-// };
+
+
+AsyncStorage.getItem("userToken").then(token => {
+      setFullName(JSON.parse(token).data.profile.name)
+ 
+});
 
 
   return (
@@ -58,10 +52,10 @@ const [fullName, setFullName] = useState("")
         <View style={{height: 150, alignItems: 'center'}}>
           <Image
             source={require('../assets/UserImage.png')}
-            style={{height: 120, width: 120, borderRadius: 80}}
+            style={{height: 100, width: 100, borderRadius: 80}}
           />
           {/* <View style={{marginLeft: 15, flexDirection: 'column'}}> */}
-            <Title style={styles.title}>keya</Title>
+            <Title style={styles.title}>{fullName}</Title>
            
           {/* </View> */}
         </View>
@@ -69,7 +63,7 @@ const [fullName, setFullName] = useState("")
       <DrawerContentScrollView {...props}>
         <View style={styles.drawerContent}>
           <Drawer.Section style={styles.drawerSection}>
-            <Home stroke="#FFA500" fill="none" width={20} height={20} />
+            <Home stroke="#3090C7"fill="none" width={20} height={20} />
             <Menu.Item
               onPress={() => {
                 props.navigation.navigate('Home');
@@ -79,7 +73,7 @@ const [fullName, setFullName] = useState("")
           </Drawer.Section>
 
           <Drawer.Section style={styles.drawerSection}>
-            <ShoppingCart stroke="#FFA500" fill="none" width={20} height={20} />
+            <ShoppingCart stroke="#3090C7" fill="none" width={20} height={20} />
 
             <Menu.Item
               onPress={() => {
@@ -89,7 +83,7 @@ const [fullName, setFullName] = useState("")
             />
           </Drawer.Section>
           <Drawer.Section style={styles.drawerSection}>
-            <FolderPlus stroke="#FFA500" fill="none" width={20} height={20} />
+            <FolderPlus stroke="#3090C7" fill="none" width={20} height={20} />
 
             <Menu.Item
               onPress={() => {
@@ -99,7 +93,7 @@ const [fullName, setFullName] = useState("")
             />
           </Drawer.Section>
           <Drawer.Section style={styles.drawerSection}>
-            <FolderMinus stroke="#FFA500" fill="none" width={20} height={20} />
+            <FolderMinus stroke="#3090C7" fill="none" width={20} height={20} />
 
             <Menu.Item
               onPress={() => {
@@ -109,7 +103,7 @@ const [fullName, setFullName] = useState("")
             />
           </Drawer.Section>
           <Drawer.Section style={styles.drawerSection}>
-            <Settings stroke="#FFA500" fill="none" width={20} height={20} />
+            <Settings stroke="#3090C7"fill="none" width={20} height={20} />
             <Menu.Item
               onPress={() => {
                 props.navigation.navigate('Settings');
@@ -121,7 +115,7 @@ const [fullName, setFullName] = useState("")
       </DrawerContentScrollView>
 
       <Drawer.Section style={styles.bottomDrawerSection}>
-        <LogOut stroke="#FFA500" fill="none" width={20} height={20} />
+        <LogOut stroke="#3090C7"fill="none" width={20} height={20} />
 
         <Menu.Item
           onPress={() => {
@@ -144,9 +138,9 @@ const styles = StyleSheet.create({
   },
   image: {},
   title: {
-    fontSize: 16,
+    fontSize: 14,
     marginTop: 3,
-    fontWeight: 'bold',
+   
   },
   caption: {
     fontSize: 14,
@@ -172,7 +166,7 @@ const styles = StyleSheet.create({
 
   firstDrawerSection: {
     // marginBottom:
-    paddingTop: 20,
+    paddingTop: 5,
     borderTopColor: '#f4f4f4',
   },
   drawerSection: {
