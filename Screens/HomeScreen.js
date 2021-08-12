@@ -1,55 +1,17 @@
-import * as React from 'react';
-import {View, Text, StyleSheet, StatusBar} from 'react-native';
-import {createAppContainer} from 'react-navigation';
-import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
-import IncomingScreen from './IncomingScreen';
-import AcceptiesScreen from './AcceptiesScreen';
+import React from 'react';
 
-const TabNavigator = createMaterialTopTabNavigator(
-  {
-    Incoming: {
-      screen: IncomingScreen,
-      navigationOptions: {
-        tabBarLabel: 'Incoming',
-        showLabel: ({focused}) => {
-          console.log(focused);
-          return focused ? true : false;
-        },
-      },
-    },
-    Accepties: {
-      screen: AcceptiesScreen,
-      navigationOptions: {
-        tabBarLabel: 'Accepties',
-      },
-    },
-  },
-  {
-    tabBarOptions: {
-      showIcon: true,
+// import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+// import { createStackNavigator } from '@react-navigation/stack';
+import { View, Text } from 'react-native';
+// import Icon from 'react-native-vector-icons/Ionicons';
 
-      style: {
-        backgroundColor: '#FFA500',
-      },
-    },
-  },
-);
+import OrderScreen from './OrderScreen';
+import StackNavigatorScreens from './StackNavigatorScreens';
 
-const Navigator = createAppContainer(TabNavigator);
-
-const HomeScreen = () => {
-  return (
-    <Navigator>
-      <IncomingScreen />
-    </Navigator>
-  );
-};
+const HomeScreen =()=>{
+    return (
+      <StackNavigatorScreens/>
+    );
+  }
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFA500',
-  },
-});

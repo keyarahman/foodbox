@@ -7,8 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react/cjs/react.development';
 import DetailsScreen from './DetailsScreen'
 import NewOrder from './NewOrder';
-;
-export default function IncomingScreen({navigation}){
+
+export default function IncomingOrderScreen({navigation}){
 
 
   const [orderData, setOrderData] = useState("")
@@ -42,7 +42,7 @@ export default function IncomingScreen({navigation}){
                   <Button
                     title="Check"
                     color="#3090C7"
-                    onPress={() => navigation.navigate('NewOrder')}
+                    onPress={() => navigation.navigate('SignInScreen')}
                   />
                   <View style={{ flex: 1, flexDirection: "row", marginTop:20,marginStart:50}} >
                   <Clock stroke="#05375a" fill="none" width={20} height={20} />

@@ -71,7 +71,16 @@ AsyncStorage.getItem("userToken").then(token => {
               title="Home"
             />
           </Drawer.Section>
+          <Drawer.Section style={styles.drawerSection}>
+            <FolderPlus stroke="#3090C7" fill="none" width={20} height={20} />
 
+            <Menu.Item
+              onPress={() => {
+                props.navigation.navigate('Products');
+              }}
+              title="Products"
+            />
+          </Drawer.Section>
           <Drawer.Section style={styles.drawerSection}>
             <ShoppingCart stroke="#3090C7" fill="none" width={20} height={20} />
 
@@ -82,16 +91,7 @@ AsyncStorage.getItem("userToken").then(token => {
               title="Today's Order"
             />
           </Drawer.Section>
-          <Drawer.Section style={styles.drawerSection}>
-            <FolderPlus stroke="#3090C7" fill="none" width={20} height={20} />
-
-            <Menu.Item
-              onPress={() => {
-                props.navigation.navigate('New Order');
-              }}
-              title="New Order"
-            />
-          </Drawer.Section>
+         
           <Drawer.Section style={styles.drawerSection}>
             <FolderMinus stroke="#3090C7" fill="none" width={20} height={20} />
 

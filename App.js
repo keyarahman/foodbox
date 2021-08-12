@@ -14,13 +14,15 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 
 import DrawerContent from './Screens/DrawerContent';
 import Settings from './Screens/Settings';
-import MainTabScreen from './Screens/MainTabScreen';
+import MainTabScreen from './Screens/HomeScreen';
 import RootStackScreen from './Screens/RootStackScreen';
 import NewOrder from './Screens/NewOrder';
 import OrderHistory from './Screens/OrderHistory';
 import TodaysOrder from './Screens/TodaysOrder';
 import HomeScreen from './Screens/HomeScreen';
 import {AuthContext} from './components.js/context';
+
+import ProductScreen from './Screens/ProductsScreen'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -165,7 +167,16 @@ const App = () => {
               }}
             />
             <Drawer.Screen name="Settings" component={Settings} />
-            <Drawer.Screen name="New Order" component={NewOrder} />
+            <Drawer.Screen name="Products" component={ProductScreen}    options={{
+                title: 'Products',
+                headerStyle: {
+                  backgroundColor: '#FFA500',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+              }}/>
             <Drawer.Screen name="Order History" component={OrderHistory} />
             <Drawer.Screen name="Today's Order" component={TodaysOrder} />
           </Drawer.Navigator>
