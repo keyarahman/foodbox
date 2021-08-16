@@ -30,6 +30,8 @@ const TabNavigator = createMaterialTopTabNavigator(
       showIcon: true,
 
       style: {
+        margin:5,
+       
         backgroundColor: '#FFA500',
       },
     },

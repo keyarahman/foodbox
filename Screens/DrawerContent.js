@@ -26,22 +26,24 @@ import {
   FolderPlus,
   FileMinus,
   FolderMinus,
+  Folder
 } from 'react-native-feather';
 import {AuthContext} from '../components.js/context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { get } from 'react-native/Libraries/Utilities/PixelRatio';
 import { useState } from 'react/cjs/react.development';
+import { color } from 'react-native-reanimated';
 
 // import{ AuthContext } from '../components/context';
 
 export default function DrawerContent(props) {
   const {logOut} = React.useContext(AuthContext);
  
-const [fullName, setFullName] = useState("")
+const [profile, setProfile] = useState("")
 
 
 AsyncStorage.getItem("userToken").then(token => {
-      setFullName(JSON.parse(token).data.profile.name)
+  setProfile(JSON.parse(token).data.profile)
  
 });
 
@@ -49,13 +51,14 @@ AsyncStorage.getItem("userToken").then(token => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <Drawer.Section style={styles.firstDrawerSection}>
-        <View style={{height: 150, alignItems: 'center'}}>
+        <View style={{height: 160 ,marginStart:20}}>
           <Image
             source={require('../assets/UserImage.png')}
-            style={{height: 100, width: 100, borderRadius: 80}}
+            style={{height: 100, width: 100, borderRadius: 100}}
           />
           {/* <View style={{marginLeft: 15, flexDirection: 'column'}}> */}
-            <Title style={styles.title}>{fullName}</Title>
+            <Title style={styles.title}>{profile.name}</Title>
+            <Text style={{color:"#fff"}}>{profile.email}</Text>
            
           {/* </View> */}
         </View>
@@ -72,7 +75,7 @@ AsyncStorage.getItem("userToken").then(token => {
             />
           </Drawer.Section>
           <Drawer.Section style={styles.drawerSection}>
-            <FolderPlus stroke="#3090C7" fill="none" width={20} height={20} />
+            <Folder stroke="#3090C7" fill="none" width={20} height={20} />
 
             <Menu.Item
               onPress={() => {
@@ -86,7 +89,7 @@ AsyncStorage.getItem("userToken").then(token => {
 
             <Menu.Item
               onPress={() => {
-                props.navigation.navigate("Today's Order");
+                props.navigation.navigate("Today's Orders");
               }}
               title="Today's Order"
             />
@@ -139,7 +142,10 @@ const styles = StyleSheet.create({
   image: {},
   title: {
     fontSize: 14,
-    marginTop: 3,
+   
+    color:"#fff",
+    fontSize:15,
+    fontWeight:'bold'
    
   },
   caption: {
@@ -166,8 +172,10 @@ const styles = StyleSheet.create({
 
   firstDrawerSection: {
     // marginBottom:
-    paddingTop: 5,
+    backgroundColor:'#FFA500',
+    paddingTop: 10,
     borderTopColor: '#f4f4f4',
+    
   },
   drawerSection: {
     marginStart: 20,

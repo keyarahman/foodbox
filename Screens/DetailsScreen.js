@@ -8,56 +8,124 @@ import {
   StatusBar,
   Image,
   SafeAreaView,
-  FlatList
+  FlatList,
+  ScrollView,
+  Button,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
+
 import LinearGradient from 'react-native-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { useState } from 'react/cjs/react.development';
+import {Card} from 'react-native-paper';
+import {useState} from 'react/cjs/react.development';
+import { Stack } from "react-native-spacing-system";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {useTheme} from '@react-navigation/native';
+import {blue100} from 'react-native-paper/lib/typescript/styles/colors';
+import { ArrowLeft} from 'react-native-feather';
+const DetailsScreen = ({route, navigation}) => {
+  const {item} = route.params;
 
-const DetailsScreen = ({navigation}) => {
+  const [productData, setProductData] = useState('');
   const {colors} = useTheme();
-
-  const [orderDetailsData, setOrderDetailsData] = useState('');
-
-  AsyncStorage.getItem('userToken').then(token => {
-    setOrderDetailsData(JSON.parse(token).data.orders.details.products);
-  });
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor="#FFA500" barStyle="light-content" />
-      <View style={styles.header}>
-        <View>
-          <Text
-            style={{
-              textAlign: 'center',
-              color: '#fff',
-              fontWeight: 'bold',
-              fontSize: 25,
-            }}>
-            Order Details
+      {/* <View style={{paddingVertical:20}}> 
+      <View style={{marginStart:20}}>
+      <ArrowLeft stroke="#05375a" fill="none" width={25} height={20} />
+      </View>
+      </View> */}
+      <ScrollView>
+        <FlatList
+          data={item.products}
+          renderItem={({item}) => (
+            <View>
+              <Card style={{margin: 5}}>
+                <View style={{flex: 1, flexDirection: 'row', padding: 8}}>
+                  <View style={{flexDirection: 'column',marginStart:10,borderWidth:1,backgroundColor:"#fff"}}>
+                    <Text style={{paddingVertical:5,paddingHorizontal:10,fontWeight: 'bold'}}>{item.quantity}</Text>
+                  </View>
+
+                  <View
+                    style={{
+                     
+                      flexDirection: 'column',
+                     marginStart:10,
+                     padding:5      
+                    }}>
+                    <Text style={{color:"#3090C7"}}>{item.name}</Text>
+                  </View>
+
+                  <View
+                    style={{
+                    
+                   
+                      flexDirection: 'column',
+                     flex:1,
+                     alignItems:'flex-end'
+                     
+                    }}>
+                       
+                    <Text style={{}}>
+                      {'\u00A3'}
+                      {item.unit_total}
+                    </Text>
+                    
+                  </View>
+                </View>
+              </Card>
+            </View>
+          )}
+          keyExtractor={item => item.id}
+        />
+
+        <View style={{flex: 1, flexDirection: 'row', paddingLeft: 20}}>
+          <View style={{ flexDirection: 'column'}}>
+            <Text style={{fontWeight: 'bold', fontSize: 18}}>Subtotal </Text>
+            <Text style={{paddingTop:7}}>Discount </Text>
+          </View>
+          <View
+            style={{flexDirection: 'column',alignItems:'flex-end',flex:1,paddingRight:13}}>
+            <Text style={{fontWeight: 'bold', fontSize: 18}}>
+              {' '}
+              {'\u00A3'}
+              {item.subtotal}
+            </Text>
+            <Text style={{color:"#FF0000",paddingTop:7}}>
+              -{'\u00A3'}
+              {item.discount}
+            </Text>
+          </View>
+        </View>
+      </ScrollView>
+
+      <View
+        style={{
+          paddingVertical: 30,
+          paddingHorizontal: 10,
+          backgroundColor: '#fff',
+          flexDirection:'column'
+        }}>
+        <View style={{ marginStart: 4,flexDirection: 'row'}}>
+          <Text style={{fontWeight: 'bold', fontSize: 22}}> Total</Text>
+
+          <Text style={{fontWeight: 'bold', fontSize: 18, marginLeft: 250}}>
+            {'\u00A3'}
+            {item.total}
           </Text>
         </View>
+        <View style={{marginStart: 10}}>
+        <Button
+          title="Accept"
+          color="#3090C7"
+          onPress={() =>
+            navigation.navigate('DetailsScreen', {item: item.details})
+          }
+        />
+        </View>
       </View>
-      <Animatable.View
-        style={[
-          styles.footer,
-          {
-            backgroundColor: colors.background,
-          },
-        ]}
-        animation="fadeInUpBig">
-       
-            <View style={{flex:1,flexDirection:'column',padding:10}}>
-              
-            </View>
-         
-
-      </Animatable.View>
     </SafeAreaView>
   );
 };
@@ -70,7 +138,7 @@ const height_logo = height * 0.28;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFA500',
+    backgroundColor: '#fff',
   },
   header: {
     flex: 1,
@@ -78,11 +146,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footer: {
-    flex: 5,
+    flex: 1,
     backgroundColor: '#fff',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingVertical: 30,
+
+    paddingVertical: 40,
     paddingHorizontal: 20,
   },
 
@@ -104,7 +171,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginTop: 30,
   },
- 
+
   textSign: {
     color: 'white',
     fontWeight: 'bold',

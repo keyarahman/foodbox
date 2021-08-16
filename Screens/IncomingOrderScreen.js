@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, Button } from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, Button ,Date} from 'react-native';
 import { Bold } from 'react-native-feather';
 import { Card } from "react-native-paper";
 import { Clock } from 'react-native-feather';
@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react/cjs/react.development';
 import DetailsScreen from './DetailsScreen'
 import NewOrder from './NewOrder';
+import moment from 'moment';
 
 export default function IncomingOrderScreen({navigation}){
 
@@ -14,14 +15,11 @@ export default function IncomingOrderScreen({navigation}){
   const [orderData, setOrderData] = useState("")
 
 
-  // let token =  AsyncStorage. getItem('userToken');
-  // let orderData = JSON.parse(token).data.orders;
 
-  AsyncStorage.getItem("userToken").then(token => {
-    setOrderData(JSON.parse(token).data.orders)
 
+AsyncStorage.getItem("userToken").then(token => {
+setOrderData(JSON.parse(token).data.orders);
 });
-
 
    
     return (
@@ -42,7 +40,7 @@ export default function IncomingOrderScreen({navigation}){
                   <Button
                     title="Check"
                     color="#3090C7"
-                    onPress={() => navigation.navigate('SignInScreen')}
+                    onPress={() => navigation.navigate('DetailsScreen',{item:item.details})}
                   />
                   <View style={{ flex: 1, flexDirection: "row", marginTop:20,marginStart:50}} >
                   <Clock stroke="#05375a" fill="none" width={20} height={20} />

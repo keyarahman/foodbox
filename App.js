@@ -1,10 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
 
 import React, {useEffect} from 'react';
 import {View, Text, ActivityIndicator} from 'react-native';
@@ -16,7 +9,7 @@ import DrawerContent from './Screens/DrawerContent';
 import Settings from './Screens/Settings';
 import MainTabScreen from './Screens/HomeScreen';
 import RootStackScreen from './Screens/RootStackScreen';
-import NewOrder from './Screens/NewOrder';
+
 import OrderHistory from './Screens/OrderHistory';
 import TodaysOrder from './Screens/TodaysOrder';
 import HomeScreen from './Screens/HomeScreen';
@@ -24,9 +17,65 @@ import {AuthContext} from './components.js/context';
 
 import ProductScreen from './Screens/ProductsScreen'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DetailsScreen from './Screens/DetailsScreen';
+import { black } from 'react-native-paper/lib/typescript/styles/colors';
 
 
 const Drawer = createDrawerNavigator();
+const Stack = createNativeStackNavigator();
+
+
+function Root() {
+  return (
+    <Drawer.Navigator
+            drawerContent={props => <DrawerContent {...props} />}>
+            <Drawer.Screen
+              name="Home"
+              component={HomeScreen}
+              options={{
+                title: 'Orders',
+                headerStyle: {
+                  backgroundColor: '#FFA500',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+              }}
+            />
+            <Drawer.Screen name="Settings" component={Settings} />
+            <Drawer.Screen name="Products" component={ProductScreen}    options={{
+                title: 'Products',
+                headerStyle: {
+                  backgroundColor: '#FFA500',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+              }}/>
+            <Drawer.Screen name="Order History" component={OrderHistory} options={{
+                title: 'Order History',
+                headerStyle: {
+                  backgroundColor: '#FFA500',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+              }}/>
+            <Drawer.Screen name="Today's Orders" component={TodaysOrder} options={{
+                
+                headerStyle: {
+                  backgroundColor: '#FFA500',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                }}}/>
+          </Drawer.Navigator>
+  );
+}
 
 const App = () => {
 
@@ -123,6 +172,7 @@ const App = () => {
     loginReducer,
     initialLoginState,
   );
+  
 
   useEffect(() => {
     setTimeout(() => {
@@ -150,36 +200,22 @@ const App = () => {
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
         {loginState.userToken !== null ? (
-          <Drawer.Navigator
-            drawerContent={props => <DrawerContent {...props} />}>
-            <Drawer.Screen
-              name="Home"
-              component={HomeScreen}
-              options={{
-                title: 'Orders',
+          <Stack.Navigator>
+          <Stack.Screen
+            name="Root"
+            component={Root}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="DetailsScreen" component={DetailsScreen} options={{
+                title: 'Details',
                 headerStyle: {
-                  backgroundColor: '#FFA500',
+                  backgroundColor: '#fff',
                 },
-                headerTintColor: '#fff',
+                headerTintColor: "#000000",
                 headerTitleStyle: {
                   fontWeight: 'bold',
-                },
-              }}
-            />
-            <Drawer.Screen name="Settings" component={Settings} />
-            <Drawer.Screen name="Products" component={ProductScreen}    options={{
-                title: 'Products',
-                headerStyle: {
-                  backgroundColor: '#FFA500',
-                },
-                headerTintColor: '#fff',
-                headerTitleStyle: {
-                  fontWeight: 'bold',
-                },
-              }}/>
-            <Drawer.Screen name="Order History" component={OrderHistory} />
-            <Drawer.Screen name="Today's Order" component={TodaysOrder} />
-          </Drawer.Navigator>
+                },}} />
+        </Stack.Navigator>
         ) : (
           <RootStackScreen />
         )}

@@ -38,7 +38,7 @@ export default function ProductsScreen({navigation}){
           <View style={{flexDirection:'column',flex:1,padding:5}}>
               <Text style={{fontSize:20,fontWeight:'bold'}}>{item.title}</Text>
               <Text>{item.description}</Text>
-              <Text style={{ fontWeight: 'bold' }}>Price: {'\u00A3'}{item.price}</Text>
+              <Text style={{ fontWeight: 'bold' ,color:"#3090C7"}}>{'\u00A3'}{item.price}</Text>
           </View>
           </View>
 
