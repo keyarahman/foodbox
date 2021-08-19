@@ -51,10 +51,10 @@ AsyncStorage.getItem("userToken").then(token => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <Drawer.Section style={styles.firstDrawerSection}>
-        <View style={{height: 160 ,marginStart:20}}>
+        <View style={{height: 160 ,marginStart:20,flexDirection:'column'}}>
           <Image
-            source={require('../assets/UserImage.png')}
-            style={{height: 100, width: 100, borderRadius: 100}}
+            source={require('../assets/images.jpeg')}
+            style={{height: 100, width: 100, borderRadius: 200}}
           />
           {/* <View style={{marginLeft: 15, flexDirection: 'column'}}> */}
             <Title style={styles.title}>{profile.name}</Title>
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   image: {},
   title: {
     fontSize: 14,
-   
+ 
     color:"#fff",
     fontSize:15,
     fontWeight:'bold'

@@ -12,7 +12,7 @@ import moment from 'moment';
 export default function OrderHistory({navigation}){
 
 
-  const [orderData, setOrderData] = useState("")
+  const [PreOrderData, setPreOrderData] = useState(null)
 
 
 //   // let token =  AsyncStorage. getItem('userToken');
@@ -22,10 +22,12 @@ export default function OrderHistory({navigation}){
     let OrderList=JSON.parse(token).data.orders;
     let itemsArray = Array.from(OrderList);
     let newArray = itemsArray.filter((item) =>{
-      return moment(item.created_at) < moment();
+      const dateLimit = moment(item.created_at).format("MM ddd, YYYY");
+      const now = moment().format("MM ddd, YYYY");
+      return now>dateLimit;
     });
 
-    setOrderData(newArray);
+    setPreOrderData(newArray);
 
 });
 
@@ -36,8 +38,9 @@ export default function OrderHistory({navigation}){
    
     return (
       <SafeAreaView>
+        {PreOrderData !== null ? (
         <FlatList
-          data={orderData}
+          data={PreOrderData}
           renderItem={({ item }) => (
             <Card style={{ margin: 5 }}>
               <View style={{ flex: 1, flexDirection: "row", padding: 10 }}>
@@ -69,6 +72,13 @@ export default function OrderHistory({navigation}){
           keyExtractor={item => item.id}
 
         />
+        ):(
+          <View style={{alignItems: 'center',marginTop:190}}>
+          <Text style={{fontSize: 20, padding: 20}}>
+            You have no previous orders!
+          </Text>
+        </View>
+        )}
 
 
       </SafeAreaView>

@@ -31,10 +31,7 @@ export default function ProductsScreen({navigation}){
           renderItem={({ item }) => (
             <Card style={{ margin: 5 }}>
             <View style={{flexDirection:'row',flex:1,padding:10}}>
-            <Image
-            source={require('../assets/foodImage.jpeg')}
-            style={{height: 100, width: 100}}
-          />
+            
           <View style={{flexDirection:'column',flex:1,padding:5}}>
               <Text style={{fontSize:20,fontWeight:'bold'}}>{item.title}</Text>
               <Text>{item.description}</Text>

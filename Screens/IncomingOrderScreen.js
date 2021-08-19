@@ -12,7 +12,7 @@ import moment from 'moment';
 export default function IncomingOrderScreen({navigation}){
 
 
-  const [orderData, setOrderData] = useState("")
+  const [orderData, setOrderData] = useState(null)
 
 
 
@@ -24,6 +24,8 @@ setOrderData(JSON.parse(token).data.orders);
    
     return (
       <SafeAreaView>
+         <StatusBar backgroundColor='#FFA500' barStyle="light-content"/>
+         {orderData !== null ? (
         <FlatList
           data={orderData}
           renderItem={({ item }) => (
@@ -57,6 +59,11 @@ setOrderData(JSON.parse(token).data.orders);
           keyExtractor={item => item.id}
 
         />
+         ):( <View style={{alignItems: 'center',marginTop:190}}>
+         <Text style={{fontSize: 20, padding: 20}}>
+           You have no orders!
+         </Text>
+       </View>)}
 
 
       </SafeAreaView>

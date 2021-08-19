@@ -32,11 +32,7 @@ const DetailsScreen = ({route, navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* <View style={{paddingVertical:20}}> 
-      <View style={{marginStart:20}}>
-      <ArrowLeft stroke="#05375a" fill="none" width={25} height={20} />
-      </View>
-      </View> */}
+    <StatusBar backgroundColor='#fff' barStyle="light-content"/>
       <ScrollView>
         <FlatList
           data={item.products}
@@ -106,7 +102,8 @@ const DetailsScreen = ({route, navigation}) => {
           paddingVertical: 30,
           paddingHorizontal: 10,
           backgroundColor: '#fff',
-          flexDirection:'column'
+          flexDirection:'column',
+  
         }}>
         <View style={{ marginStart: 4,flexDirection: 'row'}}>
           <Text style={{fontWeight: 'bold', fontSize: 22}}> Total</Text>
