@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, Button ,Date} from 'react-native';
+import React,{useEffect} from 'react';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, Button ,Date,ActivityIndicator} from 'react-native';
 import { Bold } from 'react-native-feather';
 import { Card } from "react-native-paper";
 import { Clock } from 'react-native-feather';
@@ -13,23 +13,37 @@ export default function OrderHistory({navigation}){
 
 
   const [PreOrderData, setPreOrderData] = useState(null)
+  const[isLoading, setIsLoading]=useState(true)
 
 
-//   // let token =  AsyncStorage. getItem('userToken');
-//   // let orderData = JSON.parse(token).data.orders;
 
+useEffect(() => {
+  //setIsLoading(true)
   AsyncStorage.getItem("userToken").then(token => {
     let OrderList=JSON.parse(token).data.orders;
     let itemsArray = Array.from(OrderList);
     let newArray = itemsArray.filter((item) =>{
       const dateLimit = moment(item.created_at).format("MM ddd, YYYY");
       const now = moment().format("MM ddd, YYYY");
-      return now>dateLimit;
+      return now<dateLimit;
     });
-
+  
     setPreOrderData(newArray);
+    setIsLoading(false)
+  
+  });
+ 
+}, [])
 
-});
+if (isLoading) {
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <ActivityIndicator size="large" color="#FFA500" />
+    </View>
+  );
+}
+
+
 
 // AsyncStorage.getItem("userToken").then(token => {
 // setOrderData(JSON.parse(token).data.orders);
