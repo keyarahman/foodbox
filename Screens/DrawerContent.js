@@ -33,11 +33,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { get } from 'react-native/Libraries/Utilities/PixelRatio';
 import { useState } from 'react/cjs/react.development';
 import { color } from 'react-native-reanimated';
-
+import { useSelector, useDispatch } from 'react-redux'
+import {logOut} from '../Redux2/actions';
 // import{ AuthContext } from '../components/context';
 
 export default function DrawerContent(props) {
-  const {logOut} = React.useContext(AuthContext);
+  const dispatch = useDispatch();
+  
+  // const {logOut} = React.useContext(AuthContext);
  
 const [profile, setProfile] = useState("")
 
@@ -122,7 +125,7 @@ AsyncStorage.getItem("userToken").then(token => {
 
         <Menu.Item
           onPress={() => {
-            logOut();
+            dispatch(logOut());
           }}
           title="Log Out"
         />

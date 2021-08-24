@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 // import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 // import { createStackNavigator } from '@react-navigation/stack';
 import { View, Text,StatusBar } from 'react-native';
 // import Icon from 'react-native-vector-icons/Ionicons';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import OrderScreen from './OrderScreen';
+
 import IncomingOrderScreen from './IncomingOrderScreen';
 import AcceptiesScreen from './AcceptiesScreen';
 const Tab = createMaterialTopTabNavigator();

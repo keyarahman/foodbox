@@ -16,14 +16,15 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { EyeOff, Lock, Mail, Eye } from 'react-native-feather';
 import { AuthContext } from '../components.js/context';
-
-// import { useTheme } from 'react-native-paper';
-
-// import { AuthContext } from '../components/context';
-
-// import Users from '../model/users';
+import {useSelector,useDispatch} from 'react-redux'
+import AuthReducer from '../Redux2/reducer';
+import {logIn} from '../Redux2/actions';
 
 const SignInScreen = ({ navigation }) => {
+
+  const dispatch = useDispatch()
+  // const {} =useSelector(state => state.AuthReducer)
+
   const [data, setData] = React.useState({
     email: '',
     password: '',
@@ -83,18 +84,14 @@ const SignInScreen = ({ navigation }) => {
       });
     };
 
-    // const[email,setEmail]=useState();
-    // const[password,setPassword]=useState();
-
-    const { logIn } = React.useContext(AuthContext);
+   
+  
 
     const loginHandle = (email, password) => {
-      logIn(email, password);
+      dispatch(logIn(email, password));
     };
 
-    // const goBack = () => {
-    //   props.navigation.push('WelcomeScreen')
-    // }
+   
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor="#FFA500" barStyle="light-content" />

@@ -5,26 +5,28 @@ import { Card } from "react-native-paper";
 import { Clock } from 'react-native-feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react/cjs/react.development';
-import DetailsScreen from './DetailsScreen'
-import NewOrder from './NewOrder';
+import DetailsScreen from './DetailsScreen';
+import {OrderReducer} from '../Redux2/reducer';
+
 import moment from 'moment';
+import {useSelector,useDispatch} from 'react-redux'
+// import { getItems } from '../Service/Redux/actions';
+
+import {getOrder} from '../Redux2/actions';
 
 export default function IncomingOrderScreen({navigation}){
 
+  const {Orders,loading} =useSelector(state => state.OrderReducer)
 
-  const [orderData, setOrderData] = useState(null)
-  const[isLoading, setIsLoading]=useState(true)
+  const dispatch = useDispatch()
+
 
   useEffect(() => {
-    //setIsLoading(true)
-    AsyncStorage.getItem("userToken").then(token => {
-      setOrderData(JSON.parse(token).data.orders);
-      setIsLoading(false)
-      });
+    dispatch(getOrder());
      
   }, [])
   
-  if (isLoading) {
+  if (loading) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <ActivityIndicator size="large" color="#FFA500" />
@@ -39,9 +41,9 @@ export default function IncomingOrderScreen({navigation}){
     return (
       <SafeAreaView>
          <StatusBar backgroundColor='#FFA500' barStyle="light-content"/>
-         {orderData !== null ? (
+         {Orders !== null ? (
         <FlatList
-          data={orderData}
+          data={Orders}
           renderItem={({ item }) => (
             <Card style={{ margin: 5 }}>
               <View style={{ flex: 1, flexDirection: "row", padding: 10 }}>
@@ -73,11 +75,15 @@ export default function IncomingOrderScreen({navigation}){
           keyExtractor={item => item.id}
 
         />
-         ):( <View style={{alignItems: 'center',marginTop:190}}>
+          ):(  
+           
+           <View style={{alignItems: 'center',marginTop:190}}>
          <Text style={{fontSize: 20, padding: 20}}>
            You have no orders!
          </Text>
-       </View>)}
+       </View> 
+       
+        )} 
 
 
       </SafeAreaView>

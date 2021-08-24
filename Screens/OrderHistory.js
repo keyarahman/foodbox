@@ -1,58 +1,52 @@
-import React,{useEffect} from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, Button ,Date,ActivityIndicator} from 'react-native';
+import React, { useEffect } from 'react';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, Button, Date, ActivityIndicator } from 'react-native';
 import { Bold } from 'react-native-feather';
 import { Card } from "react-native-paper";
 import { Clock } from 'react-native-feather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react/cjs/react.development';
 import DetailsScreen from './DetailsScreen'
-import NewOrder from './NewOrder';
+import { OrderReducer } from '../Redux2/reducer';
 import moment from 'moment';
-
-export default function OrderHistory({navigation}){
-
-
-  const [PreOrderData, setPreOrderData] = useState(null)
-  const[isLoading, setIsLoading]=useState(true)
+import { useSelector, useDispatch } from 'react-redux'
 
 
 
-useEffect(() => {
-  //setIsLoading(true)
-  AsyncStorage.getItem("userToken").then(token => {
-    let OrderList=JSON.parse(token).data.orders;
-    let itemsArray = Array.from(OrderList);
-    let newArray = itemsArray.filter((item) =>{
+export default function OrderHistory({ navigation }) {
+
+
+
+  const [PreOrderData, setPreOrderData] = useState([])
+  const { Orders } = useSelector(state => state.OrderReducer)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    newArray();
+  }, []);
+
+  const newArray = () => {
+
+    let itemsArray = Array.from(Orders);
+    let arr = itemsArray.filter((item) => {
       const dateLimit = moment(item.created_at).format("MM ddd, YYYY");
       const now = moment().format("MM ddd, YYYY");
-      return now<dateLimit;
+      return now > dateLimit;
     });
-  
-    setPreOrderData(newArray);
+    setPreOrderData(arr);
     setIsLoading(false)
-  
-  });
- 
-}, [])
+  };
 
-if (isLoading) {
-  return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <ActivityIndicator size="large" color="#FFA500" />
-    </View>
-  );
-}
-
-
-
-// AsyncStorage.getItem("userToken").then(token => {
-// setOrderData(JSON.parse(token).data.orders);
-// });
-
-   
+  if (isLoading) {
     return (
-      <SafeAreaView>
-        {PreOrderData !== null ? (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#FFA500" />
+      </View>
+    );
+  }
+
+  return (
+    <SafeAreaView>
+      {PreOrderData.length>0 ? (
         <FlatList
           data={PreOrderData}
           renderItem={({ item }) => (
@@ -71,9 +65,9 @@ if (isLoading) {
                     color="#3090C7"
                     onPress={() => navigation.navigate('DetailsScreen')}
                   />
-                  <View style={{ flex: 1, flexDirection: "row", marginTop:20,marginStart:50}} >
-                  <Clock stroke="#05375a" fill="none" width={20} height={20} />
-                  <Text> 1.00pm</Text>
+                  <View style={{ flex: 1, flexDirection: "row", marginTop: 20, marginStart: 50 }} >
+                    <Clock stroke="#05375a" fill="none" width={20} height={20} />
+                    <Text> 1.00pm</Text>
                   </View>
                 </View>
               </View>
@@ -86,18 +80,18 @@ if (isLoading) {
           keyExtractor={item => item.id}
 
         />
-        ):(
-          <View style={{alignItems: 'center',marginTop:190}}>
-          <Text style={{fontSize: 20, padding: 20}}>
+      ) : (
+        <View style={{ alignItems: 'center', marginTop: 190 }}>
+          <Text style={{ fontSize: 20, padding: 20 }}>
             You have no previous orders!
           </Text>
         </View>
-        )}
+      )}
 
 
-      </SafeAreaView>
+    </SafeAreaView>
 
 
-    );
-  }
-  
+  );
+}
+
