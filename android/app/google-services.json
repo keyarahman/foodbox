@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "972935620444",
+    "project_id": "foodbox-1346f",
+    "storage_bucket": "foodbox-1346f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:972935620444:android:62229284a6b425d3244399",
+        "android_client_info": {
+          "package_name": "com.eazm_foodbox"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "972935620444-ti37n709befbgpbq9vpg6u6i1s9kfcrg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMmEWg5etNdAs0NgZaIIRjtzFtoI76bLc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "972935620444-ti37n709befbgpbq9vpg6u6i1s9kfcrg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
