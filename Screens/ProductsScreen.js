@@ -11,22 +11,22 @@ import DetailsScreen from './DetailsScreen'
 export default function ProductsScreen({navigation}){
 
 
-//   const [productData, setProductData] = useState("")
+  const [productData, setProductData] = useState("")
 
 
 //   // let token =  AsyncStorage. getItem('userToken');
 //   // let orderData = JSON.parse(token).data.orders;
 
-//   AsyncStorage.getItem("userToken").then(token => {
-//     setProductData(JSON.parse(token).data.products)
+  AsyncStorage.getItem("userToken").then(token => {
+    setProductData(JSON.parse(token).data.products)
 
-// });
+});
 
 
    
     return (
       <SafeAreaView>
-        {/* <FlatList
+        <FlatList
           data={productData}
           renderItem={({ item }) => (
             <Card style={{ margin: 5 }}>
@@ -45,7 +45,7 @@ export default function ProductsScreen({navigation}){
 
           keyExtractor={item => item.id}
 
-        /> */}
+        />
 
 
       </SafeAreaView>

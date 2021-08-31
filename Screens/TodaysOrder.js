@@ -66,7 +66,7 @@ export default function TodaysOrder({ navigation }) {
                   <Button
                     title="Check"
                     color="#3090C7"
-                    onPress={() => navigation.navigate('DetailsScreen')}
+                    onPress={() => navigation.navigate('DetailsScreen',{item:item.details})}
                   />
                   <View style={{ flex: 1, flexDirection: "row", marginTop: 20, marginStart: 50 }} >
                     <Clock stroke="#05375a" fill="none" width={20} height={20} />

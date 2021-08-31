@@ -30,7 +30,7 @@ export default function OrderHistory({ navigation }) {
     let arr = itemsArray.filter((item) => {
       const dateLimit = moment(item.created_at).format("MM ddd, YYYY");
       const now = moment().format("MM ddd, YYYY");
-      return now > dateLimit;
+      return now < dateLimit;
     });
     setPreOrderData(arr);
     setIsLoading(false)
@@ -63,7 +63,7 @@ export default function OrderHistory({ navigation }) {
                   <Button
                     title="Check"
                     color="#3090C7"
-                    onPress={() => navigation.navigate('DetailsScreen')}
+                    onPress={() => navigation.navigate('DetailsScreen',{item:item.details})}
                   />
                   <View style={{ flex: 1, flexDirection: "row", marginTop: 20, marginStart: 50 }} >
                     <Clock stroke="#05375a" fill="none" width={20} height={20} />

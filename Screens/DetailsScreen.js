@@ -32,7 +32,7 @@ const DetailsScreen = ({route, navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-    <StatusBar backgroundColor='#fff' barStyle="light-content"/>
+    <StatusBar backgroundColor='#FFA500'barStyle="light-content"/>
       <ScrollView>
         <FlatList
           data={item.products}

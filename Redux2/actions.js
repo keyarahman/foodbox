@@ -2,11 +2,17 @@ import { FETCH_ORDER, FETCH_ORDER_FAIL, LOGIN, LOGOUT, SET_USER_EMAIL, SET_USER_
 // import * as api from "./api";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import moment from 'moment';
 
 
 
 const OrderApi = 'https://qrtech.co.uk/api/orders';
 
+// const sortArray=(props)=>{
+//   const sortedArray  = props.sort((a,b) => moment(a.created_at).format('YYYYMMDD') -  moment(b.created_at).format('YYYYMMDD'));
+//   return sortedArray;
+
+//   };
 
 export const getOrder = () => async (dispatch) => {
   AsyncStorage.getItem('userToken').then(data => {
@@ -14,10 +20,12 @@ export const getOrder = () => async (dispatch) => {
     axios
       .get(OrderApi, {headers: {Authorization: `Bearer ${token}`}})
       .then(res => {
-        console.log(res);
+        let OrderData=null;
+
+        OrderData=res.data.sort((a,b) => b.created_at.localeCompare(a.created_at));
         dispatch({
           type: FETCH_ORDER,
-          payload: res.data,
+          payload: OrderData,
         });
       })
       .catch(function (error) {
