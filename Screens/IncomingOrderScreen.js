@@ -10,7 +10,7 @@ import { OrderReducer } from '../Redux2/reducer';
 import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux'
 import { getOrder } from '../Redux2/actions';
-import Pusher from 'pusher-js/react-native';
+
 
 
 

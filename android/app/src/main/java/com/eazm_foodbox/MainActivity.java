@@ -1,4 +1,4 @@
-package com.myapp;
+package com.eazm_foodbox;
 
 import com.facebook.react.ReactActivity;
 import com.BV.LinearGradient.LinearGradientPackage; 
