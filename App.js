@@ -24,8 +24,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { AuthReducer } from '../Redux2/reducer';
 
 import {RETRIEVE_TOKEN} from './Redux2/constant'
-
-// import StateProvider from './Redux2/store'
+import {requestUserPermission} from './Service/Notifications'
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -88,14 +87,13 @@ const App = () => {
 
   const dispatch = useDispatch();
   const { userToken, isLoading } = useSelector(state => state.AuthReducer);
-  // const [loginState] = React.useReducer(
-  //   AuthReducer,
-  //   initialLoginState,
-  // );
 
 
+ 
 
   useEffect(() => {
+
+    requestUserPermission();
     setTimeout(() => {
       // setIsLoading(false);
       let userToken;
@@ -121,10 +119,7 @@ const App = () => {
   }
   return (
 
-    //   <AuthContext.Provider value={authContext}>
-    //  <Provider store={Store}>
-
-    //  <AuthContext.Provider value={authContext}>
+    
    
       <NavigationContainer>
         {userToken !== null ? (
@@ -155,7 +150,5 @@ const App = () => {
 };
 
 
-{/* </Provider>
-    </AuthContext.Provider> */}
 
 export default App;

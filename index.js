@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { Store } from './Redux2/store';
 import { name as appName } from './app.json';
 import App from './App';
-import DetailsScreen from './Screens/DetailsScreen';
+
 
 
 export default function Main() {
