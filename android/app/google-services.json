@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "972935620444",
-    "project_id": "foodbox-1346f",
-    "storage_bucket": "foodbox-1346f.appspot.com"
+    "project_number": "837526861389",
+    "project_id": "foodbox-61f9f",
+    "storage_bucket": "foodbox-61f9f.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:972935620444:android:62229284a6b425d3244399",
+        "mobilesdk_app_id": "1:837526861389:android:c981ec718b28d3797dce04",
         "android_client_info": {
           "package_name": "com.eazm_foodbox"
         }
       },
       "oauth_client": [
         {
-          "client_id": "972935620444-ti37n709befbgpbq9vpg6u6i1s9kfcrg.apps.googleusercontent.com",
+          "client_id": "837526861389-ivdej5cvnja3elmio4sga1gke4ajg2hu.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBMmEWg5etNdAs0NgZaIIRjtzFtoI76bLc"
+          "current_key": "AIzaSyDo1XtUyUMC17Q0RsZKvWAXO5IpTmyCKK8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "972935620444-ti37n709befbgpbq9vpg6u6i1s9kfcrg.apps.googleusercontent.com",
+              "client_id": "837526861389-ivdej5cvnja3elmio4sga1gke4ajg2hu.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
