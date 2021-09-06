@@ -3,6 +3,7 @@ import { FETCH_ORDER, FETCH_ORDER_FAIL, LOGIN, LOGOUT, SET_USER_EMAIL, SET_USER_
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
+import{requestUserPermission} from '../Service/Notifications'
 
 
 
@@ -70,7 +71,9 @@ export const logIn = (email, password) => async (dispatch) => {
           alert(resData.message);
         }
       }
-    });
+    }).then(data=>{
+      requestUserPermission();
+    })
 
 }
 

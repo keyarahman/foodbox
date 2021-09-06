@@ -1,6 +1,8 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
+import axios from 'axios';
+
 
  export  async function  requestUserPermission(){
     const authStatus = await messaging().requestPermission();
@@ -19,23 +21,35 @@ import messaging from '@react-native-firebase/messaging';
   }
 
   const getFcmToken = async () => {
-    let fcmToken = await AsyncStorage.getItem("fcmToken");
-    if(!fcmToken){
+    // let fcmToken = await AsyncStorage.getItem("fcmToken");
+   
     const fcmToken = await messaging().getToken();
     if (fcmToken) {
      alert(fcmToken);
      console.log("Your Firebase Token is:", fcmToken);
-     await AsyncStorage.setItem("fcmToken",fcmToken);
+     var body = {
+      token:fcmToken,
+  
+    };
+     AsyncStorage.getItem('userToken').then(data => {
+      let token = JSON.parse(data).access_token;
+      axios
+        .post("https://qrtech.co.uk/api/save_token", body,{headers: {Authorization: `Bearer ${token}`}})
+        .then(res => {
+          alert(res.data.message)
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    });
     } else {
        
      console.log("Failed", "No token received");
     }
     }
-   else{
-      console.log(fcmToken)
-   }
+   
   
-  }
+  
 
 
   export const notificationListener = async () => {

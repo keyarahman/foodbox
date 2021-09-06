@@ -93,7 +93,6 @@ const App = () => {
 
   useEffect(() => {
 
-    requestUserPermission();
     setTimeout(() => {
       // setIsLoading(false);
       let userToken;
