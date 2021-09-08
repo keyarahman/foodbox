@@ -24,7 +24,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { AuthReducer } from '../Redux2/reducer';
 
 import {RETRIEVE_TOKEN} from './Redux2/constant'
-import {requestUserPermission} from './Service/Notifications'
+import {notificationListener} from './Service/Notifications'
+import messaging from '@react-native-firebase/messaging';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -92,6 +93,10 @@ const App = () => {
  
 
   useEffect(() => {
+    // notificationListener();
+    messaging().onMessage(async remoteMessage => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
 
     setTimeout(() => {
       // setIsLoading(false);
@@ -104,7 +109,30 @@ const App = () => {
       });
      
     }, 1000);
+
+ messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+
+    });
+
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.notification,
+          );
+       
+        }
+      
+      });
   }, []);
+
 
 
 

@@ -34,7 +34,7 @@ import axios from 'axios';
      AsyncStorage.getItem('userToken').then(data => {
       let token = JSON.parse(data).access_token;
       axios
-        .post("https://qrtech.co.uk/api/save_token", body,{headers: {Authorization: `Bearer ${token}`}})
+        .post("https://qrtech.co.uk/api/save_token", body,{headers: {'Content-Type': 'application/json',Authorization: `Bearer ${token}`}})
         .then(res => {
           alert(res.data.message)
         })
