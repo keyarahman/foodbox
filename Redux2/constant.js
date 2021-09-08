@@ -1,0 +1,7 @@
+export const FETCH_ORDER = "FETCH_ORDER";
+export const FETCH_ORDER_FAIL = "FETCH_ORDER_FAIL";
+export const LOGIN="LOGIN";
+export const LOGOUT="LOGOUT";
+export const RETRIEVE_TOKEN="RETRIEVE_TOKEN";
+export const SET_USER_EMAIL="SET_USER_EMAIL";
+export const SET_USER_PASSWORD="SET_USER_PASSWORD";
