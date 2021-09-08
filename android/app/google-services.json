@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:837526861389:android:354a57f73d09db997dce04",
+        "mobilesdk_app_id": "1:837526861389:android:f7fbb4b7babcf52a7dce04",
         "android_client_info": {
-          "package_name": "com.eazm_foodbox"
+          "package_name": "com.eazmfoodbox"
         }
       },
       "oauth_client": [
