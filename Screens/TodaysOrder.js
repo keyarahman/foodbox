@@ -70,7 +70,7 @@ export default function TodaysOrder({ navigation }) {
                   />
                   <View style={{ flex: 1, flexDirection: "row", marginTop: 20, marginStart: 50 }} >
                     <Clock stroke="#05375a" fill="none" width={20} height={20} />
-                    <Text> 1.00pm</Text>
+                    <Text>{moment(item.created_at).format("hh:mm a")}</Text>
                   </View>
                 </View>
               </View>

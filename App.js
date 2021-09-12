@@ -23,8 +23,8 @@ import { black } from 'react-native-paper/lib/typescript/styles/colors';
 import { useSelector, useDispatch } from 'react-redux'
 import { AuthReducer } from '../Redux2/reducer';
 
-import {RETRIEVE_TOKEN} from './Redux2/constant'
-import {notificationListener} from './Service/Notifications'
+import { RETRIEVE_TOKEN } from './Redux2/constant'
+import { notificationListener } from './Service/Notifications'
 import messaging from '@react-native-firebase/messaging';
 
 const Drawer = createDrawerNavigator();
@@ -90,22 +90,24 @@ const App = () => {
   const { userToken, isLoading } = useSelector(state => state.AuthReducer);
 
 
- 
+
 
   useEffect(() => {
-   
+    let isMounted = true;
     setTimeout(() => {
-      notificationListener();
+
+      dispatch(notificationListener());
       let userToken;
       userToken = null;
-      AsyncStorage.getItem("userToken").then(token => { 
-        userToken=JSON.parse(token);
-      
-        dispatch({type: RETRIEVE_TOKEN, token: userToken});
+      AsyncStorage.getItem("userToken").then(token => {
+        userToken = JSON.parse(token);
+
+        dispatch({ type: RETRIEVE_TOKEN, token: userToken });
       });
-     
+
     }, 1000);
-    
+    return () => { isMounted = false };
+
   }, []);
 
 
@@ -121,33 +123,33 @@ const App = () => {
   }
   return (
 
-    
-   
-      <NavigationContainer>
-        {userToken !== null ? (
-          <Stack.Navigator>
-            <Stack.Screen
-              name="DrawerPage"
-              component={DrawerPage}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="DetailsScreen" component={DetailsScreen} options={{
-              title: 'Details',
-              headerStyle: {
-                backgroundColor: '#fff',
-              },
-              headerTintColor: "#000000",
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-            }} />
-          </Stack.Navigator>
-        ) : (
-          <RootStackScreen />
-        )}
 
-      </NavigationContainer>
-   
+
+    <NavigationContainer>
+      {userToken !== null ? (
+        <Stack.Navigator>
+          <Stack.Screen
+            name="DrawerPage"
+            component={DrawerPage}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="DetailsScreen" component={DetailsScreen} options={{
+        
+            headerStyle: {
+              backgroundColor: '#FFA500',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            }
+          }} />
+        </Stack.Navigator>
+      ) : (
+        <RootStackScreen />
+      )}
+
+    </NavigationContainer>
+
   );
 };
 

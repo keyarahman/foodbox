@@ -18,12 +18,12 @@ import LinearGradient from 'react-native-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Card} from 'react-native-paper';
 import {useState} from 'react/cjs/react.development';
-import { Stack } from "react-native-spacing-system";
+import {Stack} from 'react-native-spacing-system';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {useTheme} from '@react-navigation/native';
 import {blue100} from 'react-native-paper/lib/typescript/styles/colors';
-import { ArrowLeft} from 'react-native-feather';
+import {ArrowLeft} from 'react-native-feather';
 const DetailsScreen = ({route, navigation}) => {
   const {item} = route.params;
 
@@ -32,7 +32,7 @@ const DetailsScreen = ({route, navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-    <StatusBar backgroundColor='#FFA500'barStyle="light-content"/>
+      <StatusBar backgroundColor="#FFA500" barStyle="light-content" />
       <ScrollView>
         <FlatList
           data={item.products}
@@ -40,35 +40,42 @@ const DetailsScreen = ({route, navigation}) => {
             <View>
               <Card style={{margin: 5}}>
                 <View style={{flex: 1, flexDirection: 'row', padding: 8}}>
-                  <View style={{flexDirection: 'column',marginStart:10,borderWidth:1,backgroundColor:"#fff"}}>
-                    <Text style={{paddingVertical:5,paddingHorizontal:10,fontWeight: 'bold'}}>{item.quantity}</Text>
+                  <View
+                    style={{
+                      flexDirection: 'column',
+                      marginStart: 10,
+                      borderWidth: 1,
+                      backgroundColor: '#fff',
+                    }}>
+                    <Text
+                      style={{
+                        paddingVertical: 5,
+                        paddingHorizontal: 10,
+                        fontWeight: 'bold',
+                      }}>
+                      {item.quantity}
+                    </Text>
                   </View>
 
                   <View
                     style={{
-                     
                       flexDirection: 'column',
-                     marginStart:10,
-                     padding:5      
+                      marginStart: 10,
+                      padding: 5,
                     }}>
-                    <Text style={{color:"#3090C7"}}>{item.name}</Text>
+                    <Text style={{color: '#3090C7'}}>{item.name}</Text>
                   </View>
 
                   <View
                     style={{
-                    
-                   
                       flexDirection: 'column',
-                     flex:1,
-                     alignItems:'flex-end'
-                     
+                      flex: 1,
+                      alignItems: 'flex-end',
                     }}>
-                       
                     <Text style={{}}>
                       {'\u00A3'}
                       {item.unit_total}
                     </Text>
-                    
                   </View>
                 </View>
               </Card>
@@ -78,18 +85,23 @@ const DetailsScreen = ({route, navigation}) => {
         />
 
         <View style={{flex: 1, flexDirection: 'row', paddingLeft: 20}}>
-          <View style={{ flexDirection: 'column'}}>
+          <View style={{flexDirection: 'column'}}>
             <Text style={{fontWeight: 'bold', fontSize: 18}}>Subtotal </Text>
-            <Text style={{paddingTop:7}}>Discount </Text>
+            <Text style={{paddingTop: 7}}>Discount </Text>
           </View>
           <View
-            style={{flexDirection: 'column',alignItems:'flex-end',flex:1,paddingRight:13}}>
+            style={{
+              flexDirection: 'column',
+              alignItems: 'flex-end',
+              flex: 1,
+              paddingRight: 13,
+            }}>
             <Text style={{fontWeight: 'bold', fontSize: 18}}>
               {' '}
               {'\u00A3'}
               {item.subtotal}
             </Text>
-            <Text style={{color:"#FF0000",paddingTop:7}}>
+            <Text style={{color: '#FF0000', paddingTop: 7}}>
               -{'\u00A3'}
               {item.discount}
             </Text>
@@ -102,10 +114,9 @@ const DetailsScreen = ({route, navigation}) => {
           paddingVertical: 30,
           paddingHorizontal: 10,
           backgroundColor: '#fff',
-          flexDirection:'column',
-  
+          flexDirection: 'column',
         }}>
-        <View style={{ marginStart: 4,flexDirection: 'row'}}>
+        <View style={{marginStart: 4, flexDirection: 'row'}}>
           <Text style={{fontWeight: 'bold', fontSize: 22}}> Total</Text>
 
           <Text style={{fontWeight: 'bold', fontSize: 18, marginLeft: 250}}>
@@ -114,13 +125,13 @@ const DetailsScreen = ({route, navigation}) => {
           </Text>
         </View>
         <View style={{marginStart: 10}}>
-        <Button
-          title="Accept"
-          color="#3090C7"
-          onPress={() =>
-            navigation.navigate('DetailsScreen', {item: item.details})
-          }
-        />
+          <Button
+            title="Print the order"
+            color="#3090C7"
+            onPress={() =>
+              navigation.navigate('DetailsScreen', {item: item.details})
+            }
+          />
         </View>
       </View>
     </SafeAreaView>

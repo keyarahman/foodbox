@@ -24,6 +24,7 @@ export const getOrder = () => async (dispatch) => {
         let OrderData=null;
 
         OrderData=res.data.sort((a,b) => b.created_at.localeCompare(a.created_at));
+        console.log(OrderData);
         dispatch({
           type: FETCH_ORDER,
           payload: OrderData,

@@ -2,6 +2,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import axios from 'axios';
+import { FETCH_ORDER, FETCH_ORDER_FAIL, LOGIN, LOGOUT, SET_USER_EMAIL, SET_USER_PASSWORD } from '../Redux2/constant';
+import { useDispatch } from 'react-redux'
+import { getOrder } from '../Redux2/actions';
+import SoundPlayer from 'react-native-sound-player'
+
+
+
+// const dispatch = useDispatch();
 
 
  export  async function  requestUserPermission(){
@@ -50,9 +58,9 @@ import axios from 'axios';
    
   
   
+    export const notificationListener = () => async (dispatch) => {
 
-
-  export const notificationListener = async () => {
+  
 
 
     messaging().onNotificationOpenedApp(remoteMessage => {
@@ -62,12 +70,25 @@ import axios from 'axios';
         );
         // navigation.navigate(remoteMessage.data.type);
       });
-  messaging().onMessage(remoteMessage => {
-        console.log(
-          'Notification caused app to open from foeground state:',
-          remoteMessage.notification,
-        );
-        // navigation.navigate(remoteMessage.data.type);
+   messaging().onMessage(remoteMessage => {
+  
+   
+     if(remoteMessage){
+      try {
+       
+        SoundPlayer.playSoundFile('tone', 'mp3')
+       
+    } catch (e) {
+        console.log(`cannot play the sound file`, e)
+    }
+      console.log(
+        'Notification caused app to open from foeground state:',
+        remoteMessage.notification.body,
+      );
+       dispatch(getOrder())
+        
+     }
+       
       });
      
       messaging()

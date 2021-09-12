@@ -11,6 +11,7 @@ import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux'
 import { getOrder } from '../Redux2/actions';
 
+import messaging from '@react-native-firebase/messaging';
 
 
 
@@ -18,6 +19,9 @@ export default function IncomingOrderScreen({ navigation }) {
 
   const { Orders, loading } = useSelector(state => state.OrderReducer)
   const [refreshing, setrefreshing] = useState(false);
+
+  console.log("orders: ",Orders);
+
 
   // Pusher.logToConsole = true;
   // var pusher = new Pusher('1a041f160fe9810fac45', {
@@ -35,6 +39,18 @@ export default function IncomingOrderScreen({ navigation }) {
 
   useEffect(() => {
     dispatch(getOrder());
+    // messaging().onMessage(remoteMessage => {
+    //   if(remoteMessage!==null){
+    //   alert(
+    //       'Notification caused app to open from foeground state:',
+    //       remoteMessage.notification,
+    //     );
+    //     dispatch(getOrder());
+    //   }
+      
+    //   // navigation.navigate(remoteMessage.data.type);
+    // });
+   
 
 
   }, [])
@@ -63,6 +79,7 @@ export default function IncomingOrderScreen({ navigation }) {
     <SafeAreaView>
       <StatusBar backgroundColor='#FFA500' barStyle="light-content" />
       {Orders !== null ? (
+        
         <FlatList
           data={Orders}
           renderItem={({ item }) => (
@@ -73,17 +90,18 @@ export default function IncomingOrderScreen({ navigation }) {
                   <Text style={{ fontWeight: 'bold' }}>{item.customer.name}</Text>
                   <Text>Address: {item.customer.address}</Text>
                   <Text>Order status: {item.order_status}</Text>
+                  <Text>Phone: {item.customer.phone}</Text>
                   <Text style={{ fontWeight: 'bold' }}>Total: {'\u00A3'}{item.details.total}</Text>
                 </View>
                 <View style={{ flex: 1, flexDirection: "column", padding: 10 }}>
                   <Button
-                    title="Check"
+                    title="Accept"
                     color="#3090C7"
                     onPress={() => navigation.navigate('DetailsScreen', { item: item.details })}
                   />
-                  <View style={{ flex: 1, flexDirection: "row", marginTop: 20, marginStart: 50 }} >
+                  <View style={{ flex: 1, flexDirection: "row", marginTop: 30, marginStart: 40 }} >
                     <Clock stroke="#05375a" fill="none" width={20} height={20} />
-                    <Text> 1.00pm</Text>
+                    <Text style={{paddingLeft:5}}>{moment(item.created_at).format("hh:mm a")}</Text>
                   </View>
                 </View>
               </View>
