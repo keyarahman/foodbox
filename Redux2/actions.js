@@ -1,4 +1,4 @@
-import { FETCH_ORDER, FETCH_ORDER_FAIL, LOGIN, LOGOUT, SET_USER_EMAIL, SET_USER_PASSWORD } from './constant';
+import { FETCH_ORDER, FETCH_ORDER_FAIL, LOGIN, LOGOUT, SET_USER_EMAIL, SET_USER_PASSWORD,IS_NEW_OREDER } from './constant';
 // import * as api from "./api";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -102,3 +102,32 @@ export const setPassword = password => dispatch => {
   });
 
 }
+
+
+// export const buttonHandler = (orderId,resturant_id) => async (dispatch) => {
+//   var body = {
+//     restaurant_id:resturant_id,
+//     order_id: orderId,
+//     status: "Accepted" 
+//   };
+
+//   AsyncStorage.getItem('userToken').then(data => {
+//     let token = JSON.parse(data).access_token;
+//     axios
+//       .post("https://qrtech.co.uk/api/update_order", body,{headers: {'Content-Type': 'application/json',Authorization: `Bearer ${token}`}})
+//       .then(res => {
+//         alert(res.data.message)
+//         dispatch({
+//           type: IS_NEW_OREDER,
+//           id:orderId,
+//           payload: false,
+//         });
+//         // item.is_new=false
+//       })
+//       .catch(function (error) {
+//         console.log(error);
+//       });
+//   });
+
+    
+// };

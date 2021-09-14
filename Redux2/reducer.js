@@ -1,5 +1,5 @@
 import { LogIn } from 'react-native-feather';
-import { FETCH_ORDER, FETCH_ORDER_FAIL, LOGOUT, LOGIN,RETRIEVE_TOKEN } from './constant';
+import { FETCH_ORDER, FETCH_ORDER_FAIL, LOGOUT, LOGIN,RETRIEVE_TOKEN ,IS_NEW_OREDER} from './constant';
 
 const initialOrderState = {
   loading: true, Orders:[], error: "",
@@ -17,7 +17,6 @@ export const OrderReducer = (state=initialOrderState, action) => {
       return { loading: false, Orders: action.payload };
     case FETCH_ORDER_FAIL:
       return { loading: false, error: action.payload };
-
     default:
       return state;
   }

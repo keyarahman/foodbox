@@ -70,7 +70,7 @@ import SoundPlayer from 'react-native-sound-player'
         );
         // navigation.navigate(remoteMessage.data.type);
       });
-   messaging().onMessage(remoteMessage => {
+     messaging().onMessage(remoteMessage => {
   
    
      if(remoteMessage){

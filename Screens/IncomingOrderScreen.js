@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, Button, Date, ActivityIndicator } from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, Button, Date, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { Bold } from 'react-native-feather';
 import { Card } from "react-native-paper";
 import { Clock } from 'react-native-feather';
@@ -19,38 +19,21 @@ export default function IncomingOrderScreen({ navigation }) {
 
   const { Orders, loading } = useSelector(state => state.OrderReducer)
   const [refreshing, setrefreshing] = useState(false);
+  const [buttonState, setButtonState] = useState("Accept")
 
-  console.log("orders: ",Orders);
+  console.log("orders: ", Orders);
 
 
-  // Pusher.logToConsole = true;
-  // var pusher = new Pusher('1a041f160fe9810fac45', {
 
-  //   cluster: 'eu'
-  // });
-  // var channel = pusher.subscribe('restaurant_app');
-  // channel.bind('OrderEvent', function (data) {
-  //   console.log(data);
-  //   alert(JSON.stringify(data));
-  // });
+
 
   const dispatch = useDispatch()
 
 
   useEffect(() => {
     dispatch(getOrder());
-    // messaging().onMessage(remoteMessage => {
-    //   if(remoteMessage!==null){
-    //   alert(
-    //       'Notification caused app to open from foeground state:',
-    //       remoteMessage.notification,
-    //     );
-    //     dispatch(getOrder());
-    //   }
-      
-    //   // navigation.navigate(remoteMessage.data.type);
-    // });
-   
+
+
 
 
   }, [])
@@ -73,13 +56,17 @@ export default function IncomingOrderScreen({ navigation }) {
     }, 1000);
   };
 
+  //   const doChanges =(text) {
+  //     this.setState({ buttonText: "Disable headlights" });
+  // }
+
 
 
   return (
     <SafeAreaView>
       <StatusBar backgroundColor='#FFA500' barStyle="light-content" />
       {Orders !== null ? (
-        
+
         <FlatList
           data={Orders}
           renderItem={({ item }) => (
@@ -94,14 +81,22 @@ export default function IncomingOrderScreen({ navigation }) {
                   <Text style={{ fontWeight: 'bold' }}>Total: {'\u00A3'}{item.details.total}</Text>
                 </View>
                 <View style={{ flex: 1, flexDirection: "column", padding: 10 }}>
+
+                  {/* <TouchableOpacity onPress=(buttonState)>
+                   {(this.state.status) ? "Add" : "Delete"}
+                  </TouchableOpacity> */}
+
                   <Button
-                    title="Accept"
+                    title="View Details"
                     color="#3090C7"
-                    onPress={() => navigation.navigate('DetailsScreen', { item: item.details })}
+                    onPress={() => navigation.navigate('DetailsScreen',{item:item})}
                   />
+
+
+
                   <View style={{ flex: 1, flexDirection: "row", marginTop: 30, marginStart: 40 }} >
                     <Clock stroke="#05375a" fill="none" width={20} height={20} />
-                    <Text style={{paddingLeft:5}}>{moment(item.created_at).format("hh:mm a")}</Text>
+                    <Text style={{ paddingLeft: 5 }}>{moment(item.created_at).format("hh:mm a")}</Text>
                   </View>
                 </View>
               </View>
@@ -127,7 +122,7 @@ export default function IncomingOrderScreen({ navigation }) {
       )}
 
 
-    </SafeAreaView>
+    </SafeAreaView >
 
 
   );

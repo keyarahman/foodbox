@@ -5,3 +5,4 @@ export const LOGOUT="LOGOUT";
 export const RETRIEVE_TOKEN="RETRIEVE_TOKEN";
 export const SET_USER_EMAIL="SET_USER_EMAIL";
 export const SET_USER_PASSWORD="SET_USER_PASSWORD";
+export const IS_NEW_OREDER="IS_NEW_OREDER"
