@@ -7,7 +7,12 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build": "cd android && ./gradlew bundleRelease",
+    "clean": "cd android && ./gradlew clean",
+    "apk": "cd android && ./gradlew assembleRelease",
+    "device": "react-native run-android --deviceId 68efca1a",
+    "cc": "react-native start --reset-cache"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.15.7",
