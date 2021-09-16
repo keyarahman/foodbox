@@ -19,12 +19,12 @@ import SoundPlayer from 'react-native-sound-player'
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
     if (enabled) {
-        alert("yes");
+        // alert("yes");
       console.log('Authorization status:', authStatus);
       getFcmToken();
     }
     else{
-        alert("No");
+        // alert("No");
     }
   }
 
@@ -33,7 +33,7 @@ import SoundPlayer from 'react-native-sound-player'
    
     const fcmToken = await messaging().getToken();
     if (fcmToken) {
-     alert(fcmToken);
+    //  alert(fcmToken);
      console.log("Your Firebase Token is:", fcmToken);
      var body = {
       token:fcmToken,
@@ -44,7 +44,7 @@ import SoundPlayer from 'react-native-sound-player'
       axios
         .post("https://qrtech.co.uk/api/save_token", body,{headers: {'Content-Type': 'application/json',Authorization: `Bearer ${token}`}})
         .then(res => {
-          alert(res.data.message)
+          // alert(res.data.message)
         })
         .catch(function (error) {
           console.log(error);

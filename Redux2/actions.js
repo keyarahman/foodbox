@@ -69,7 +69,7 @@ export const logIn = (email, password) => async (dispatch) => {
           }
         }
         if (resData.message != null) {
-          alert(resData.message);
+          // alert(resData.message);
         }
       }
     }).then(data=>{

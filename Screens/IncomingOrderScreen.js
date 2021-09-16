@@ -56,9 +56,6 @@ export default function IncomingOrderScreen({ navigation }) {
     }, 1000);
   };
 
-  //   const doChanges =(text) {
-  //     this.setState({ buttonText: "Disable headlights" });
-  // }
 
 
 
