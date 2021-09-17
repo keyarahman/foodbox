@@ -67,11 +67,12 @@ const ForgotPasswordScreen = ({navigation}) => {
       .then(res => res.json())
       .then(resData => {
     //    alert(resData.message)
-    if(isValidEmail){
+    
+    if(isValidEmail && resData.message==="Email Sent!"){
      navigation.navigate('ResetPasswordScreen');
     }
     else{
-        alert("Invalid Email")
+        alert(resData.message)
     }
 
       }).catch(function (error) {
