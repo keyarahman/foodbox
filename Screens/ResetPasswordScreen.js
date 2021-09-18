@@ -8,59 +8,30 @@ import {
   StyleSheet,
   StatusBar,
   Alert,
-  Button,
   ActivityIndicator,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
-import {EyeOff, Lock, Mail, Eye} from 'react-native-feather';
+import {EyeOff, Lock, Mail, Eye, Bold} from 'react-native-feather';
 import {AuthContext} from '../components.js/context';
 import {useSelector, useDispatch} from 'react-redux';
 import AuthReducer from '../Redux2/reducer';
 import {logIn} from '../Redux2/actions';
-import ForgotPasswordScreen from './ForgotPasswordScreen';
-import ResetPasswordScreen from './ResetPasswordScreen'
+import SignInScreen from './SignInScreen'
 
-const SignInScreen = ({navigation}) => {
+const ResetPasswordScreen = ({navigation}) => {
   const dispatch = useDispatch();
-  // const {} =useSelector(state => state.AuthReducer)
 
   const [data, setData] = React.useState({
-    email: '',
+    code: '',
     password: '',
     check_textInputChange: false,
     secureTextEntry: true,
-    isValidEmail: true,
+
     isValidPassword: true,
   });
-
-  const handleEmailChange = val => {
-    if (val.trim().length > 0) {
-      if (validateEmail(val)) {
-        setData({
-          ...data,
-          email: val,
-          isValidEmail: true,
-        });
-      }
-     else {
-      setData({
-        ...data,
-        email: val,
-        isValidEmail: false,
-      });
-    }
-  }
-  };
-
-  const validateEmail = val => {
-    var regex =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return regex.test(String(val).toLowerCase());
-  };
-
   const handlePasswordChange = val => {
     if (val.trim().length >= 8) {
       setData({
@@ -83,66 +54,96 @@ const SignInScreen = ({navigation}) => {
       secureTextEntry: !data.secureTextEntry,
     });
   };
-
-  const loginHandle = (email, password) => {
-    dispatch(logIn(email, password));
+  const handleCodeChange = (val) => {
+    setData({
+      ...data,
+      code: val,
+    });
   };
 
-  const goToForgotPassword = () =>
-    navigation.navigate('ForgotPasswordScreen');
+  const resetPasswordHandel = () => async () => {
+
+    await fetch('https://qrtech.co.uk/api/new_password', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ passcode: data.code, password: data.password}),
+    })
+      .then(res => res.json())
+      .then(resData => {
+       alert(resData.message)
+     navigation.navigate('SignInScreen');
+
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }
+
 
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#FFA500" barStyle="light-content" />
-      <View style={styles.header}>
-        <Text style={styles.text_header}>Login </Text>
-      </View>
-      <Animatable.View style={styles.footer} animation="fadeInUpBig">
-        <Text style={styles.text_footer}>Email</Text>
-        <View style={styles.action}>
-          <Mail stroke="#05375a" fill="none" width={20} height={20} />
-          <TextInput
-            placeholder="Your Email"
-            style={styles.textInput}
-            autoCapitalize="none"
-            // value={email}
-            onChangeText={val => handleEmailChange(val)}
-          />
-        </View>
 
-        <Text
-          style={[
-            styles.text_footer,
-            {
-              marginTop: 35,
-            },
-          ]}>
-          Password
+      <View style={styles.header}></View>
+      <Animatable.View style={styles.footer} animation="fadeInUpBig">
+        <Text style={{fontSize: 22, fontWeight: 'bold', color: '#05375a'}}>
+          Reset Password
         </Text>
-        <View style={styles.action}>
-          <Lock stroke="#05375a" fill="none" width={20} height={20} />
-          <TextInput
-            placeholder="Your Password"
-            secureTextEntry={data.secureTextEntry ? true : false}
-            style={styles.textInput}
-            autoCapitalize="none"
-            autoCapitalize="none"
-            onChangeText={val => handlePasswordChange(val)}
-          />
-          <TouchableOpacity onPress={updateSecureTextEntry}>
-            {data.secureTextEntry ? (
-              <EyeOff stroke="#05375a" fill="none" width={20} height={20} />
-            ) : (
-              <Eye stroke="#05375a" fill="none" width={20} height={20} />
-            )}
-          </TouchableOpacity>
+        <View style={{marginTop: 25}}>
+          <Text style={{fontSize: 17, color: '#696969'}}>
+            Set the Verification code and new password for your account so that
+            you can login and accesss all the features.
+          </Text>
+        </View>
+        <View>
+          <View style={{marginTop: 30}}>
+            <Text style={styles.text_footer}>Verification Code</Text>
+            <View style={styles.action}>
+              <TextInput
+                placeholder="Enter the code"
+                style={styles.textInput}
+                autoCapitalize="none"
+                // value={email}
+                onChangeText={val => handleCodeChange(val)}
+              />
+            </View>
+          </View>
+          <Text
+            style={[
+              styles.text_footer,
+              {
+                marginTop: 35,
+              },
+            ]}>
+            New Password
+          </Text>
+          <View style={styles.action}>
+            <Lock stroke="#05375a" fill="none" width={20} height={20} />
+            <TextInput
+              placeholder="Enter Your Password"
+              secureTextEntry={data.secureTextEntry ? true : false}
+              style={styles.textInput}
+              autoCapitalize="none"
+              autoCapitalize="none"
+              onChangeText={val => handlePasswordChange(val)}
+            />
+            <TouchableOpacity onPress={updateSecureTextEntry}>
+              {data.secureTextEntry ? (
+                <EyeOff stroke="#05375a" fill="none" width={20} height={20} />
+              ) : (
+                <Eye stroke="#05375a" fill="none" width={20} height={20} />
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View style={styles.button}>
           <TouchableOpacity
             style={styles.signIn}
             // onPress={() => {logIn()}}
-            onPress={() => loginHandle(data.email, data.password)}>
+            onPress={resetPasswordHandel()}>
             <LinearGradient
               colors={['#FFA500', '#FFA500']}
               style={styles.signIn}>
@@ -153,38 +154,17 @@ const SignInScreen = ({navigation}) => {
                     color: '#fff',
                   },
                 ]}>
-                Login
+                Reset Password
               </Text>
             </LinearGradient>
           </TouchableOpacity>
-
-          {/* <View style={styles.row}>
-                    <Text>Dont have an account? </Text>
-                <TouchableOpacity
-                    onPress={() => navigation.navigate('SignInScreen')}
-                    style={[styles.signUp, { 
-                        marginTop:-3
-                    }]}
-                >
-                    <Text style={[styles.textSign, {
-                        color: "#3DD4CA"
-                    }]}>Click here</Text>
-                </TouchableOpacity></View> */}
-        </View>
-        <View style={styles.forgot_password}>
-         
-          <Text
-            style={{color: '#3090C7', fontSize: 16}}
-            onPress={goToForgotPassword}>
-            Forgot Password?
-          </Text>
         </View>
       </Animatable.View>
     </View>
   );
 };
 
-export default SignInScreen;
+export default ResetPasswordScreen;
 
 const styles = StyleSheet.create({
   container: {

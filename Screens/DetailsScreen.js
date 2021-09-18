@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -16,80 +16,87 @@ import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Card} from 'react-native-paper';
-import {useState} from 'react/cjs/react.development';
+// import {useState} from 'react/cjs/react.development';
 import {Stack} from 'react-native-spacing-system';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useTheme} from '@react-navigation/native';
 import {blue100} from 'react-native-paper/lib/typescript/styles/colors';
 import {ArrowLeft} from 'react-native-feather';
-import {useDispatch ,useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
-import { getOrder } from '../Redux2/actions';
-
-
-
-
-
+import {getOrder} from '../Redux2/actions';
 
 const DetailsScreen = ({route, navigation}) => {
   const dispatch = useDispatch();
+  const [refreshing, setrefreshing] = useState(false);
+  const [loading, setLoading] = useState('');
 
-  
   const {item} = route.params;
-  // const [productData, setProductData] = useState('');
-  // const {colors} = useTheme();
-  // const[button,setButton]=useState(true)
 
+  const [is_new, setIs_new] = useState(item.is_new);
+  const [orderStatus, setOrderStatus] = useState(item.order_status);
 
-   const AcceptbuttonHandler = () => async (dispatch) => {
+  const AcceptbuttonHandler = () => async dispatch => {
     var body = {
       restaurant_id: item.restaurant_id,
       order_id: item.id,
-      status: "Accepted" 
+      status: 'Accepted',
     };
 
     AsyncStorage.getItem('userToken').then(data => {
       let token = JSON.parse(data).access_token;
       axios
-        .post("https://qrtech.co.uk/api/update_order", body,{headers: {'Content-Type': 'application/json',Authorization: `Bearer ${token}`}})
+        .post('https://qrtech.co.uk/api/update_order', body, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then(res => {
-          alert(res.data.message)
+          setIs_new(0);
+          setOrderStatus('Accepted');
           dispatch(getOrder())
-          item.is_new=false
         })
         .catch(function (error) {
           console.log(error);
         });
     });
-
-      
   };
- 
 
-  const DeclinebuttonHandler = () => async (dispatch) => {
+  const DeclinebuttonHandler = () => async dispatch => {
     var body = {
       restaurant_id: item.restaurant_id,
       order_id: item.id,
-      status: "Declined" 
+      status: 'Declined',
     };
 
     AsyncStorage.getItem('userToken').then(data => {
       let token = JSON.parse(data).access_token;
       axios
-        .post("https://qrtech.co.uk/api/update_order", body,{headers: {'Content-Type': 'application/json',Authorization: `Bearer ${token}`}})
+        .post('https://qrtech.co.uk/api/update_order', body, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then(res => {
-          alert(res.data.message)
+          setIs_new(0);
+          setOrderStatus('Declined');
           dispatch(getOrder())
-          item.is_new=false
         })
         .catch(function (error) {
           console.log(error);
         });
     });
-
-      
   };
 
+  const handleAcceptBtfn = () => {
+    dispatch(AcceptbuttonHandler());
+  };
+
+  const handleDeclineBtfn = () => {
+    dispatch(DeclinebuttonHandler());
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -148,9 +155,11 @@ const DetailsScreen = ({route, navigation}) => {
         <View style={{flex: 1, flexDirection: 'row', paddingLeft: 20}}>
           <View style={{flexDirection: 'column'}}>
             <Text style={{fontWeight: 'bold', fontSize: 18}}>Subtotal </Text>
-             {item.details.discount!==null ? (
-            <Text style={{paddingTop: 7}}>Discount </Text>):(<View></View>)}
-            
+            {item.details.discount !== null ? (
+              <Text style={{paddingTop: 7}}>Discount </Text>
+            ) : (
+              <View></View>
+            )}
           </View>
           <View
             style={{
@@ -159,18 +168,19 @@ const DetailsScreen = ({route, navigation}) => {
               flex: 1,
               paddingRight: 13,
             }}>
-            <Text style={{ fontSize: 18}}>
+            <Text style={{fontSize: 18}}>
               {' '}
-             {'\u00A3'}
+              {'\u00A3'}
               {item.details.subtotal}
             </Text>
-            {item.details.discount!==null ? (
-
-            <Text style={{color: '#FF0000', paddingTop: 7}}>
-              -{'\u00A3'}
-              {item.details.discount}
-            </Text>):(<View></View>)}
-            
+            {item.details.discount !== null ? (
+              <Text style={{color: '#FF0000', paddingTop: 7}}>
+                -{'\u00A3'}
+                {item.details.discount}
+              </Text>
+            ) : (
+              <View></View>
+            )}
           </View>
         </View>
       </ScrollView>
@@ -182,45 +192,43 @@ const DetailsScreen = ({route, navigation}) => {
           backgroundColor: '#fff',
           flexDirection: 'column',
         }}>
-        <View style={{ flexDirection: 'row',marginStart:6}}>
+        <View style={{flexDirection: 'row', marginStart: 6}}>
           <Text style={{fontWeight: 'bold', fontSize: 18}}>Total: </Text>
-          <Text style={{ fontSize: 18 }}>
+          <Text style={{fontSize: 18}}>
             {'\u00A3'}
             {item.details.total}
           </Text>
         </View>
-        {item.is_new ? 
-        <View style={{flexDirection:'row'}}>
-          <View style={{width:190,padding:10}}>
-        
-          <Button
-            title="Accept"
-            color="#3090C7"
-           onPress={()=> {dispatch(AcceptbuttonHandler())}}
-          />
-        
+        {is_new === 1 ? (
+          <View style={{flexDirection: 'row'}}>
+            <View style={{width: 190, padding: 10}}>
+              <Button
+                title="Accept"
+                color="#3090C7"
+                onPress={handleAcceptBtfn}
+              />
+            </View>
+            <View style={{width: 190, padding: 10}}>
+              <Button
+                title="Decline"
+                color="#3090C7"
+                onPress={handleDeclineBtfn}
+              />
+            </View>
           </View>
-          <View style={{width:190,padding:10}}> 
-            <Button
-            title="Decline"
-            color="#3090C7"
-            onPress={()=> {dispatch(DeclinebuttonHandler())}}
-          />
-          </View>
-          </View>
-          :
-           [(item.order_status=="Accepted" ?
-           <View ><Button
-            title="Acceptd"
-            color="#808080"   
-          /></View>
-          :
-          <View ><Button
-            title="Declined"
-            color="#808080"   
-          /></View>
-           )
-           ]}    
+        ) : (
+          [
+            orderStatus == 'Accepted' ? (
+              <View>
+                <Button title="Acceptd" color="#808080" />
+              </View>
+            ) : (
+              <View>
+                <Button title="Declined" color="#808080" />
+              </View>
+            ),
+          ]
+        )}
       </View>
     </SafeAreaView>
   );
