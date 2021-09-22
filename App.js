@@ -15,16 +15,16 @@ import TodaysOrder from './Screens/TodaysOrder';
 import HomeScreen from './Screens/HomeScreen';
 import { AuthContext } from './components.js/context';
 
-import ProductScreen from './Screens/ProductsScreen'
+import ProductScreen from './Screens/ProductsScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DetailsScreen from './Screens/DetailsScreen';
 import { black } from 'react-native-paper/lib/typescript/styles/colors';
 
-import { useSelector, useDispatch } from 'react-redux'
-import { AuthReducer } from '../Redux2/reducer';
+import { useSelector, useDispatch } from 'react-redux';
+// import { AuthReducer } from '../Redux2/reducer';
 
-import { RETRIEVE_TOKEN } from './Redux2/constant'
-import { notificationListener } from './Service/Notifications'
+import { RETRIEVE_TOKEN } from './Redux2/constant';
+import { notificationListener } from './Service/Notifications';
 import messaging from '@react-native-firebase/messaging';
 
 const Drawer = createDrawerNavigator();
@@ -87,7 +87,12 @@ function DrawerPage() {
 const App = () => {
 
   const dispatch = useDispatch();
+
   const { userToken, isLoading } = useSelector(state => state.AuthReducer);
+
+
+  // console.log("userToken: ", userToken);
+  // console.log("isLoading: ", isLoading);
 
 
 
@@ -99,11 +104,18 @@ const App = () => {
       dispatch(notificationListener());
       let userToken;
       userToken = null;
-      AsyncStorage.getItem("userToken").then(token => {
+
+
+      AsyncStorage.getItem("userToken").then((token) => {
         userToken = JSON.parse(token);
+
+        // console.log("\n\n << userToken >> \n\n", userToken);
 
         dispatch({ type: RETRIEVE_TOKEN, token: userToken });
       });
+
+
+
 
     }, 1000);
     return () => { isMounted = false };
@@ -115,12 +127,19 @@ const App = () => {
 
 
   if (isLoading) {
+
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center' }}
+      >
         <ActivityIndicator size="large" color="#FFA500" />
       </View>
     );
   }
+
+
   return (
 
 
@@ -134,7 +153,7 @@ const App = () => {
             options={{ headerShown: false }}
           />
           <Stack.Screen name="DetailsScreen" component={DetailsScreen} options={{
-        
+
             headerStyle: {
               backgroundColor: '#FFA500',
             },

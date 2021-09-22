@@ -21,10 +21,13 @@ export const getOrder = () => async (dispatch) => {
     axios
       .get(OrderApi, {headers: {Authorization: `Bearer ${token}`}})
       .then(res => {
-        let OrderData=null;
 
-        OrderData=res.data.sort((a,b) => b.created_at.localeCompare(a.created_at));
-        console.log(OrderData);
+        let OrderData = null;
+
+        OrderData = res.data.sort((a,b) => b.created_at.localeCompare(a.created_at));
+        // console.log(OrderData);
+
+        // console.log(" << OrderData>> : ", OrderData);
         dispatch({
           type: FETCH_ORDER,
           payload: OrderData,
@@ -47,7 +50,10 @@ export const logIn = (email, password) => async (dispatch) => {
       Accept: 'application/json',
       'content-type': 'application/json',
     },
-    body: JSON.stringify({ email: email, password: password }),
+    body: JSON.stringify({
+      email: email,
+      password: password
+    }),
   })
     .then(res => res.json())
     .then(resData => {
@@ -62,7 +68,7 @@ export const logIn = (email, password) => async (dispatch) => {
             // alert('Successfully logged in');
             userToken = resData;
             AsyncStorage.setItem("userToken", JSON.stringify(userToken));
-            dispatch({ type: LOGIN, id: email, token: userToken });
+            dispatch({ type: LOGIN, id: email, token: userToken }); // check the AuthReducer....
           } else {
             console.log('Not allowed');
             alert("You don't have permission to log in");
@@ -76,7 +82,7 @@ export const logIn = (email, password) => async (dispatch) => {
       requestUserPermission();
     })
 
-}
+};
 
 export const logOut = () => async (dispatch) => {
   try {
@@ -85,7 +91,7 @@ export const logOut = () => async (dispatch) => {
    console.log(e);
  }
   dispatch({ type: LOGOUT });
-}
+};
 
 
 export const setEmail = email => dispatch => {
@@ -108,7 +114,7 @@ export const setPassword = password => dispatch => {
 //   var body = {
 //     restaurant_id:resturant_id,
 //     order_id: orderId,
-//     status: "Accepted" 
+//     status: "Accepted"
 //   };
 
 //   AsyncStorage.getItem('userToken').then(data => {
@@ -129,5 +135,5 @@ export const setPassword = password => dispatch => {
 //       });
 //   });
 
-    
+
 // };

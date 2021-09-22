@@ -22,7 +22,7 @@ export const OrderReducer = (state=initialOrderState, action) => {
   }
 };
 
-export const AuthReducer = (state=initialLoginState, action) => {
+export const AuthReducer = (state= initialLoginState, action) => {
   switch (action.type) {
     case RETRIEVE_TOKEN:
       return {

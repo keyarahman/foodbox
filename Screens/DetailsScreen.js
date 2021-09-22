@@ -27,6 +27,7 @@ import axios from 'axios';
 import {getOrder} from '../Redux2/actions';
 
 const DetailsScreen = ({route, navigation}) => {
+
   const dispatch = useDispatch();
   const [refreshing, setrefreshing] = useState(false);
   const [loading, setLoading] = useState('');

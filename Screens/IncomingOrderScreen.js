@@ -8,7 +8,7 @@ import { useState } from 'react/cjs/react.development';
 import DetailsScreen from './DetailsScreen';
 import { OrderReducer } from '../Redux2/reducer';
 import moment from 'moment';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux';
 import { getOrder } from '../Redux2/actions';
 
 import messaging from '@react-native-firebase/messaging';
@@ -21,13 +21,13 @@ export default function IncomingOrderScreen({ navigation }) {
   const [refreshing, setrefreshing] = useState(false);
   const [buttonState, setButtonState] = useState("Accept")
 
-  console.log("orders: ", Orders);
+  // console.log("orders: ", Orders);
 
 
 
 
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
 
   useEffect(() => {
