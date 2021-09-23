@@ -220,7 +220,7 @@ const DetailsScreen = ({route, navigation}) => {
               </Card>
             </View>
           )}
-  
+
           keyExtractor={(item:Product, index: number) => `${item.checkedItem}+ ${item.quantity}+ ${item.unit_price} +${item.name}+${index}`}
         />
       </View>
