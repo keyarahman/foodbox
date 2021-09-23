@@ -9,6 +9,9 @@ import {
   Image,
   SafeAreaView,
   FlatList,
+
+
+
   ScrollView,
   Button,
 } from 'react-native';
@@ -26,6 +29,45 @@ import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import {getOrder} from '../Redux2/actions';
 
+
+export interface Product {
+  name: string;
+  checkedItem: string[];
+  quantity: number;
+  unit_price: number;
+  unit_total: string;
+}
+export  interface oneOrder_Item_interface{
+
+
+  id: number;
+  restaurant_id: number;
+  order_type: string;
+  order_status: string;
+  is_new: number;
+  payment_type: string;
+  payment_status: string;
+  payment_id?: any;
+  requested_time: string;
+  accepted_time?: any;
+  total: number;
+  details: {
+    products: Product[];
+    subtotal: number;
+    discount?: any;
+    total: number;
+  };
+  customer: {
+    name: string;
+    phone: string;
+    address: string;
+    postcode: string;
+  };
+  created_at: Date;
+  updated_at: Date;
+}
+
+
 const DetailsScreen = ({route, navigation}) => {
 
 
@@ -37,21 +79,23 @@ const DetailsScreen = ({route, navigation}) => {
 
   const {item} = route.params;
 
-
-
-  // console.log(" <<item >> : ", item);
-
-  // console.log( " << JSON.stringify(item) >> ", JSON.stringify(item));
+  const orderItem:oneOrder_Item_interface =item;
 
 
 
-  const [is_new, setIs_new] = useState(item.is_new);
-  const [orderStatus, setOrderStatus] = useState(item.order_status);
+  // console.log(" <<orderItem >> : ", orderItem);
+
+  // console.log( " << JSON.stringify(orderItem) >> ", JSON.stringify(orderItem));
+
+
+
+  const [is_new, setIs_new] = useState(orderItem.is_new);
+  const [orderStatus, setOrderStatus] = useState(orderItem.order_status);
 
   const AcceptbuttonHandler = () => async dispatch => {
     var body = {
-      restaurant_id: item.restaurant_id,
-      order_id: item.id,
+      restaurant_id: orderItem.restaurant_id,
+      order_id: orderItem.id,
       status: 'Accepted',
     };
 
@@ -77,8 +121,8 @@ const DetailsScreen = ({route, navigation}) => {
 
   const DeclinebuttonHandler = () => async dispatch => {
     var body = {
-      restaurant_id: item.restaurant_id,
-      order_id: item.id,
+      restaurant_id: orderItem.restaurant_id,
+      order_id: orderItem.id,
       status: 'Declined',
     };
 
@@ -111,15 +155,30 @@ const DetailsScreen = ({route, navigation}) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+
+    <SafeAreaView
+      style={styles.container}
+    >
+
       <StatusBar backgroundColor="#FFA500" barStyle="light-content" />
-      <ScrollView>
+      {/*<ScrollView>*/}
+
+      <View style={{
+
+        flex: 6,
+        backgroundColor: '#fff',
+        flexDirection: 'column',
+      }}>
         <FlatList
-          data={item.details.products}
+          data={orderItem.details.products}
           renderItem={({item}) => (
             <View>
               <Card style={{margin: 5}}>
-                <View style={{flex: 1, flexDirection: 'row', padding: 8}}>
+                <View style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  padding: 8
+                }}>
                   <View
                     style={{
                       flexDirection: 'column',
@@ -133,7 +192,7 @@ const DetailsScreen = ({route, navigation}) => {
                         paddingHorizontal: 10,
                         fontWeight: 'bold',
                       }}>
-                      {item.quantity}
+                      {item?.quantity}
                     </Text>
                   </View>
 
@@ -161,16 +220,33 @@ const DetailsScreen = ({route, navigation}) => {
               </Card>
             </View>
           )}
-          keyExtractor={item => item.id}
+  
+          keyExtractor={(item:Product, index: number) => `${item.checkedItem}+ ${item.quantity}+ ${item.unit_price} +${item.name}+${index}`}
         />
+      </View>
 
-        <View style={{flex: 1, flexDirection: 'row', paddingLeft: 20}}>
+      <View style={{
+
+        flex: 1.5,
+        // backgroundColor: '#fff',
+        // backgroundColor: 'crimson',
+        flexDirection: 'column',
+
+      }}>
+        <View style={{
+          flex: 1,
+          flexDirection: 'row',
+          paddingLeft: 20}}>
           <View style={{flexDirection: 'column'}}>
-            <Text style={{fontWeight: 'bold', fontSize: 18}}>Subtotal </Text>
-            {item.details.discount !== null ? (
+            <Text style={{
+              fontWeight: 'bold',
+              fontSize: 18}}>Subtotal </Text>
+            {orderItem.details.discount !== null ? (
               <Text style={{paddingTop: 7}}>Discount </Text>
             ) : (
-              <View></View>
+              <View>
+
+              </View>
             )}
           </View>
           <View
@@ -183,69 +259,97 @@ const DetailsScreen = ({route, navigation}) => {
             <Text style={{fontSize: 18}}>
               {' '}
               {'\u00A3'}
-              {item.details.subtotal}
+              {orderItem.details.subtotal}
             </Text>
-            {item.details.discount !== null ? (
-              <Text style={{color: '#FF0000', paddingTop: 7}}>
+            {orderItem.details.discount !== null ? (
+              <Text style={{
+                color: '#FF0000',
+                paddingTop: 7
+              }}>
                 -{'\u00A3'}
-                {item.details.discount}
+                {orderItem.details.discount}
               </Text>
             ) : (
               <View></View>
             )}
           </View>
         </View>
-      </ScrollView>
+      </View>
+      {/* </ScrollView>*/}
 
-      <View
-        style={{
-          paddingVertical: 30,
-          paddingHorizontal: 10,
-          backgroundColor: '#fff',
-          flexDirection: 'column',
-        }}>
-        <View style={{flexDirection: 'row', marginStart: 6}}>
-          <Text style={{fontWeight: 'bold', fontSize: 18}}>Total: </Text>
-          <Text style={{fontSize: 18}}>
-            {'\u00A3'}
-            {item.details.total}
-          </Text>
-        </View>
-        {is_new === 1 ? (
-          <View style={{flexDirection: 'row'}}>
-            <View style={{width: 190, padding: 10}}>
-              <Button
-                title="Accept"
-                color="#3090C7"
-                onPress={handleAcceptBtfn}
-              />
-            </View>
-            <View style={{width: 190, padding: 10}}>
-              <Button
-                title="Decline"
-                color="#3090C7"
-                onPress={handleDeclineBtfn}
-              />
-            </View>
+
+      <View style={{
+
+        flex: 2.5,
+        // backgroundColor: '#fff',
+        // backgroundColor: 'green',
+        flexDirection: 'column',
+
+      }}>
+
+
+        <View
+          style={{
+            paddingVertical: 30,
+            paddingHorizontal: 10,
+            backgroundColor: '#fff',
+            flexDirection: 'column',
+          }}>
+          <View style={{
+            flexDirection: 'row',
+            marginStart: 6}}>
+            <Text style={{
+              fontWeight: 'bold',
+              fontSize: 18}}>Total: </Text>
+            <Text style={{
+              fontSize: 18}}>
+              {'\u00A3'}
+              {orderItem.details.total}
+            </Text>
           </View>
-        ) : (
-          [
-            orderStatus == 'Accepted' ? (
-              <View>
-                <Button title="Acceptd" color="#808080" />
+          {is_new === 1 ? (
+            <View style={{flexDirection: 'row'}}>
+              <View style={{
+                width: 190,
+                padding: 10}}>
+                <Button
+                  title="Accept"
+                  color="#3090C7"
+                  onPress={handleAcceptBtfn}
+                />
               </View>
-            ) : (
-              <View>
-                <Button title="Declined" color="#808080" />
+              <View style={{
+                width: 190,
+                padding: 10
+              }}>
+                <Button
+                  title="Decline"
+                  color="#3090C7"
+                  onPress={handleDeclineBtfn}
+                />
               </View>
-            ),
-          ]
-        )}
+            </View>
+          ) : (
+            [
+              orderStatus === 'Accepted' ? (
+                <View>
+                  <Button title="Accepted" color="#808080" />
+                </View>
+              ) : (
+                <View>
+                  <Button title="Declined" color="#808080" />
+                </View>
+              ),
+            ]
+          )}
+        </View>
       </View>
     </SafeAreaView>
+
   );
 };
 
+{/*</SafeAreaView>*/}
 export default DetailsScreen;
 
 const {height} = Dimensions.get('screen');
@@ -253,8 +357,9 @@ const height_logo = height * 0.28;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 10,
     backgroundColor: '#fff',
+    flexDirection: 'column',
   },
   header: {
     flex: 1,
