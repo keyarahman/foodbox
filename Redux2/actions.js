@@ -4,6 +4,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 import{requestUserPermission} from '../Service/Notifications'
+import { useSelector } from "react-redux";
 
 
 
@@ -16,26 +17,53 @@ const OrderApi = 'https://qrtech.co.uk/api/orders';
 //   };
 
 export const getOrder = () => async (dispatch) => {
-  AsyncStorage.getItem('userToken').then(data => {
-    let token = JSON.parse(data).access_token;
-    axios
-      .get(OrderApi, {headers: {Authorization: `Bearer ${token}`}})
-      .then(res => {
 
-        let OrderData = null;
+  AsyncStorage.getItem('userToken').then( (data) => {
+    const token = JSON.parse(data).access_token;
 
-        OrderData = res.data.sort((a,b) => b.created_at.localeCompare(a.created_at));
-        // console.log(OrderData);
 
-        // console.log(" << OrderData>> : ", OrderData);
-        dispatch({
-          type: FETCH_ORDER,
-          payload: OrderData,
-        });
-      })
-      .catch(function (error) {
+    try{
+      const config = {
+        method: 'get',
+        url: OrderApi,
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      };
+
+      axios(config).
+      then(function (response) {
+
+
+        // console.log( " << JSON.stringify(response.data) >> ", JSON.stringify(response.data));
+
+
+        // const OrderData = response.data;
+        const OrderData =  response.data; // JSON.parse(response.data); // .json();
+
+        if (OrderData !==undefined){
+
+          // console.log(" << OrderData>> : ", OrderData);
+          dispatch({
+            type: FETCH_ORDER,
+            payload: OrderData,
+          });
+        }
+
+
+      }).
+      catch(function (error) {
         console.log(error);
       });
+
+    }catch (error){
+
+      console.log("error in getting order data : ", error);
+    }
+
+
+
+
   });
 };
 
@@ -87,9 +115,9 @@ export const logIn = (email, password) => async (dispatch) => {
 export const logOut = () => async (dispatch) => {
   try {
     AsyncStorage.removeItem('userToken');
- } catch (e) {
-   console.log(e);
- }
+  } catch (e) {
+    console.log(e);
+  }
   dispatch({ type: LOGOUT });
 };
 

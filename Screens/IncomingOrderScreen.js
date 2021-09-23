@@ -17,9 +17,9 @@ import messaging from '@react-native-firebase/messaging';
 
 export default function IncomingOrderScreen({ navigation }) {
 
-  const { Orders, loading } = useSelector(state => state.OrderReducer)
+  const { Orders, loading } = useSelector(state => state.OrderReducer);
   const [refreshing, setrefreshing] = useState(false);
-  const [buttonState, setButtonState] = useState("Accept")
+  const [buttonState, setButtonState] = useState("Accept");
 
   // console.log("orders: ", Orders);
 
@@ -36,7 +36,7 @@ export default function IncomingOrderScreen({ navigation }) {
 
 
 
-  }, [])
+  }, []);
 
 
   if (loading) {
