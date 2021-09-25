@@ -16,6 +16,7 @@ import {
   Button,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
+// import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Card} from 'react-native-paper';
@@ -68,9 +69,12 @@ export  interface oneOrder_Item_interface{
 }
 
 
-const DetailsScreen = ({route, navigation}) => {
+export interface Props {
+  navigation: any,
+  route: any,
+}
 
-
+const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
 
 
   const dispatch = useDispatch();
@@ -92,7 +96,7 @@ const DetailsScreen = ({route, navigation}) => {
   const [is_new, setIs_new] = useState(orderItem.is_new);
   const [orderStatus, setOrderStatus] = useState(orderItem.order_status);
 
-  const AcceptbuttonHandler = () => async dispatch => {
+  const AcceptbuttonHandler = () => async (dispatch:any) => {
     var body = {
       restaurant_id: orderItem.restaurant_id,
       order_id: orderItem.id,
@@ -119,7 +123,7 @@ const DetailsScreen = ({route, navigation}) => {
     });
   };
 
-  const DeclinebuttonHandler = () => async dispatch => {
+  const DeclinebuttonHandler = () => async (dispatch:any) => {
     var body = {
       restaurant_id: orderItem.restaurant_id,
       order_id: orderItem.id,
