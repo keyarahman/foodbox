@@ -77,7 +77,11 @@ export default function IncomingOrderScreen({ navigation }) {
                   <Text>Phone: {item.customer.phone}</Text>
                   <Text style={{ fontWeight: 'bold' }}>Total: {'\u00A3'}{item.details.total}</Text>
                 </View>
-                <View style={{ flex: 1, flexDirection: "column", padding: 10 }}>
+                <View style={{
+                  flex: 1,
+                  flexDirection: "column",
+                  padding: 10
+                }}>
 
                   {/* <TouchableOpacity onPress=(buttonState)>
                    {(this.state.status) ? "Add" : "Delete"}
@@ -91,7 +95,11 @@ export default function IncomingOrderScreen({ navigation }) {
 
 
 
-                  <View style={{ flex: 1, flexDirection: "row", marginTop: 30, marginStart: 40 }} >
+                  <View style={{
+                    flex: 1,
+                    flexDirection: "row",
+                    marginTop: 30,
+                    marginStart: 40 }} >
                     <Clock stroke="#05375a" fill="none" width={20} height={20} />
                     <Text style={{ paddingLeft: 5 }}>{moment(item.created_at).format("hh:mm a")}</Text>
                   </View>

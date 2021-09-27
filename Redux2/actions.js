@@ -10,11 +10,11 @@ import { useSelector } from "react-redux";
 
 const OrderApi = 'https://qrtech.co.uk/api/orders';
 
-// const sortArray=(props)=>{
-//   const sortedArray  = props.sort((a,b) => moment(a.created_at).format('YYYYMMDD') -  moment(b.created_at).format('YYYYMMDD'));
-//   return sortedArray;
+const sortArray=(props)=>{
+  const sortedArray  = props.sort((a,b) => moment(a.created_at).format('YYYYMMDD') -  moment(b.created_at).format('YYYYMMDD'));
+  return sortedArray;
 
-//   };
+  };
 
 export const getOrder = () => async (dispatch) => {
 
@@ -44,9 +44,14 @@ export const getOrder = () => async (dispatch) => {
         if (OrderData !==undefined){
 
           // console.log(" << OrderData>> : ", OrderData);
+
+          const ordered_orderData =sortArray(OrderData);
+
+
+
           dispatch({
             type: FETCH_ORDER,
-            payload: OrderData,
+            payload: ordered_orderData,
           });
         }
 
