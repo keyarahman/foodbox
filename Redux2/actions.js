@@ -10,11 +10,26 @@ import { useSelector } from "react-redux";
 
 const OrderApi = 'https://qrtech.co.uk/api/orders';
 
+/*
 const sortArray=(props)=>{
   const sortedArray  = props.sort((a,b) => moment(a.created_at).format('YYYYMMDD') -  moment(b.created_at).format('YYYYMMDD'));
   return sortedArray;
 
   };
+
+*/
+
+const sortArray=(orders)=>{
+
+  orders.sort(function(a,b){
+    // Turn your strings into dates, and then subtract them
+    // to get a value that is either negative, positive, or zero.
+    return new Date(b.created_at) - new Date(a.created_at);
+  });
+
+
+  return orders;
+};
 
 export const getOrder = () => async (dispatch) => {
 
@@ -35,7 +50,7 @@ export const getOrder = () => async (dispatch) => {
       then(function (response) {
 
 
-        // console.log( " << JSON.stringify(response.data) >> ", JSON.stringify(response.data));
+        console.log( " << JSON.stringify(response.data) >> ", JSON.stringify(response.data));
 
 
         // const OrderData = response.data;
@@ -46,6 +61,9 @@ export const getOrder = () => async (dispatch) => {
           // console.log(" << OrderData>> : ", OrderData);
 
           const ordered_orderData =sortArray(OrderData);
+
+          console.log(" << ordered_orderData[55].created_at >> ", ordered_orderData[55].created_at );
+          console.log(" << ordered_orderData[0].created_at >> ", ordered_orderData[0].created_at );
 
 
 
