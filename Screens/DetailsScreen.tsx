@@ -11,10 +11,9 @@ import {
   FlatList,
 
 
-
   ScrollView,
-  Button,
-} from 'react-native';
+  Button, BackHandler
+} from "react-native";
 import * as Animatable from 'react-native-animatable';
 // import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
@@ -29,6 +28,17 @@ import {ArrowLeft} from 'react-native-feather';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import {getOrder} from '../Redux2/actions';
+import { useFocusEffect } from '@react-navigation/native';
+
+import {
+  BLEPrinter,
+  NetPrinter,
+  USBPrinter,
+  IUSBPrinter,
+  IBLEPrinter,
+  INetPrinter,
+} from "react-native-thermal-receipt-printer";
+
 
 
 export interface Product {
@@ -74,7 +84,29 @@ export interface Props {
   route: any,
 }
 
+
+
+// interface for printer begins here.
+
+const printerList: Record<string, any> = {
+  ble: BLEPrinter,
+  net: NetPrinter,
+  usb: USBPrinter,
+};
+// import * as Animatable from 'react-native-animatable';
+interface SelectedPrinter
+  extends Partial<IUSBPrinter & IBLEPrinter & INetPrinter> {
+  printerType?: keyof typeof printerList;
+}
+
+
+
+//// interface for printer ends here.
 const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
+
+
+
+
 
 
   const dispatch = useDispatch();
@@ -87,6 +119,10 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
 
 
 
+
+
+
+
   // console.log(" <<orderItem >> : ", orderItem);
 
   // console.log( " << JSON.stringify(orderItem) >> ", JSON.stringify(orderItem));
@@ -95,6 +131,238 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
 
   const [is_new, setIs_new] = useState(orderItem.is_new);
   const [orderStatus, setOrderStatus] = useState(orderItem.order_status);
+
+
+
+  // printer related states begins here...
+
+
+
+  const [selectedValue, setSelectedValue] = React.useState<keyof typeof printerList>("ble");
+
+
+
+  const [devices, setDevices] = React.useState([]);
+  const [printerLoadingState, setPrinterLoadingState] = React.useState<boolean>(false);
+  const [selectedPrinter, setSelectedPrinter] = React.useState<SelectedPrinter>(
+    {}
+  );
+
+  const handleChangePrinterType = async (type: keyof typeof printerList) => {
+    setSelectedValue((prev) => {
+      printerList[prev].closeConn();
+      return type;
+    });
+    setSelectedPrinter({});
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = async () => {
+
+       await handleChangePrinterType(selectedValue);
+
+
+        // if (isSelectionModeEnabled()) {
+        //   disableSelectionMode();
+        //   return true;
+        // } else {
+        //   return false;
+        // }
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [
+
+      // isSelectionModeEnabled,
+
+      // disableSelectionMode,
+
+      selectedValue,
+
+      selectedPrinter
+
+    ])
+  );
+
+
+
+
+  //  printer related states  ends here..
+
+  React.useEffect(() => {
+      const getListDevices = async () => {
+
+        const Printer = printerList[selectedValue];
+        // get list device for net printers is support scanning in local ip but not recommended
+        if (selectedValue === "net") {
+          return;
+        }
+        try {
+          setPrinterLoadingState(true);
+          await Printer.init();
+          const results = await Printer.getDeviceList();
+          setDevices(
+            results.map((item: any) => ({
+              ...item,
+              printerType: selectedValue
+            }))
+          );
+        } catch (err) {
+
+          console.log("\n\n error in << getListDevices >> \n\n ", err);
+          // "bluetooth adapter is not enabled".
+
+
+        } finally {
+          setPrinterLoadingState(false);
+        }
+      };
+      getListDevices();
+    }, [selectedValue]
+  );
+
+
+
+
+
+
+
+  const requested_time= (orderDate: Date)=>{
+   return  new Date(orderDate).toLocaleTimeString().
+    replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3");
+
+  };
+
+  const handlePrint = async () => {
+    try {
+
+      const Printer = printerList[selectedValue];
+
+
+      // await Printer.printText("<C>sample text</C>\n");
+
+
+      await Printer.printText("<CD>Your Recite</CD>\n");
+
+
+      await Printer.printText(`<CM>order Type: ${orderItem.order_type}</CM>\n`);
+      await Printer.printText(`<CM>order Status: ${orderItem.order_status}</CM>\n`);
+      await Printer.printText(`<CM>payment type: ${orderItem.payment_type}</CM>\n`);
+      await Printer.printText(`<CM>payment Status: ${orderItem.payment_status}</CM>\n`);
+      await Printer.printText(`<CM>requested time: ${requested_time(orderItem.created_at)}</CM>\n`);
+      await Printer.printText(`<CM>Total: ${orderItem.total}</CM>\n`);
+      await Printer.printText(`<CM>Product count${orderItem.details.products.length}</CM>\n`);
+
+
+
+
+
+
+
+        orderItem.details.products.map(async (oneProduct: Product, index: number) => {
+          await Printer.printText(`<M> item ${index} => ${oneProduct.name} => ${oneProduct.unit_price} =>  ${oneProduct.quantity} => ${oneProduct.unit_total}</M>\n`);
+
+        });
+
+
+      await Printer.printText(`<CM>Subtotal${orderItem.details.subtotal}</CM>\n`);
+      await Printer.printText(`<CM>Discount${(orderItem.details.discount===null)? "0":"N/A"}</CM>\n`); // here nu
+      await Printer.printText(`<CM>Total${orderItem.details.total}</CM>\n`);
+
+
+
+      await Printer.printText("<CD>Customer Information</CD>\n");
+      await Printer.printText(`<CM>name: ${orderItem.customer.name}</CM>\n`);
+      await Printer.printText(`<CM>phone: ${orderItem.customer.phone}</CM>\n`);
+      await Printer.printText(`<CM>address: ${orderItem.customer.address}</CM>\n`);
+      await Printer.printText(`<CM>post code: ${orderItem.customer.postcode}</CM>\n`);
+
+
+
+
+
+
+
+    // "customer": {
+    //   "name": "jytdjt",
+    //     "phone": "0123456",
+    //     "address": "hghjgcmh",
+    //     "postcode": "jkgvjg"
+    // },
+
+
+
+      // quantity: number;
+      // unit_price: number;
+      // unit_total: string;
+
+
+
+
+
+
+
+
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+
+
+  const handleConnectSelectedPrinter = () => {
+    if (!selectedPrinter) // even drop down list is not used , this << selectedPrinter >> might be needed.
+    {
+      return;
+    }
+    const connect = async () => {
+      try {
+        setPrinterLoadingState(true);
+
+        await BLEPrinter.connectPrinter(
+          selectedPrinter?.inner_mac_address || ""
+        );
+
+
+        /*
+        switch (selectedPrinter.printerType) {
+          case "ble":
+            await BLEPrinter.connectPrinter(
+              selectedPrinter?.inner_mac_address || ""
+            );
+            break;
+          case "net":
+            await NetPrinter.connectPrinter(
+              selectedPrinter?.host || "",
+              selectedPrinter?.port || 9100
+            );
+            break;
+          case "usb":
+            await USBPrinter.connectPrinter(
+              selectedPrinter?.vendor_id || "",
+              selectedPrinter?.product_id || ""
+            );
+            break;
+          default:
+        }
+        */
+      } catch (err) {
+        console.warn(err);
+        // console.log(err);
+      } finally {
+        setPrinterLoadingState(false);
+
+
+        handlePrint();
+      }
+    };
+    connect();
+  };
+
 
   const AcceptbuttonHandler = () => async (dispatch:any) => {
     var body = {
@@ -112,10 +380,54 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
             Authorization: `Bearer ${token}`,
           },
         })
-        .then(res => {
+        .then(async res => {
           setIs_new(0);
           setOrderStatus('Accepted');
-          dispatch(getOrder())
+          dispatch(getOrder());
+
+
+          // api called now print locally.. sept 28:
+
+          //
+
+
+          console.log( " << !selectedPrinter?.device_name >> ", selectedPrinter?.device_name);
+          console.log( " << !selectedPrinter?.inner_mac_address >> ", selectedPrinter?.inner_mac_address);
+
+
+          if(!selectedPrinter?.inner_mac_address){
+
+            // response is void.... // arefin
+            const response= await handleConnectSelectedPrinter();
+            console.log(" << What response could retrn may or may not be important >> ", response);
+
+
+
+            // may be depend on response...
+            if(selectedPrinter?.inner_mac_address){
+
+
+            }
+          }
+
+
+
+
+          if(selectedPrinter?.inner_mac_address){
+
+            handlePrint();
+
+          }
+
+
+
+
+
+          // selectedPrinter
+
+
+
+
         })
         .catch(function (error) {
           console.log(error);

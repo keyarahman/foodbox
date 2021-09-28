@@ -3,9 +3,31 @@ import { FETCH_ORDER, FETCH_ORDER_FAIL, LOGIN, LOGOUT, SET_USER_EMAIL, SET_USER_
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
-import{requestUserPermission} from '../Service/Notifications'
+import{requestUserPermission} from '../Service/Notifications';
 import { useSelector } from "react-redux";
 
+import {
+  BLEPrinter,
+  NetPrinter,
+  USBPrinter,
+  IUSBPrinter,
+  IBLEPrinter,
+  INetPrinter,
+} from "react-native-thermal-receipt-printer";
+import { oneOrder_Item_interface } from "../Screens/DetailsScreen";
+import { Alert } from "react-native";
+
+
+const printerList: Record<string, any> = {
+  ble: BLEPrinter,
+  net: NetPrinter,
+  usb: USBPrinter,
+};
+// import * as Animatable from 'react-native-animatable';
+interface SelectedPrinter
+  extends Partial<IUSBPrinter & IBLEPrinter & INetPrinter> {
+  printerType?: keyof typeof printerList;
+}
 
 
 const OrderApi = 'https://qrtech.co.uk/api/orders';
@@ -22,7 +44,54 @@ const sortArray=(props)=>{
 
 
 
-const sortArray=(orders)=>{
+
+/*
+const [selectedValue, setSelectedValue] = React.useState<keyof typeof printerList>("ble");
+const [devices, setDevices] = React.useState([]);
+
+
+
+
+
+// export const getOrder = () => async (dispatch) => {
+// export const getOrder = () => async (dispatch) => {
+export const getListDevices(selectedValue) = async () => {
+
+  const Printer = printerList[selectedValue];
+  // get list device for net printers is support scanning in local ip but not recommended
+  if (selectedValue === "net") {
+    return;
+  }
+  try {
+
+
+    setLoading(true);
+
+
+
+    await Printer.init();
+    const results = await Printer.getDeviceList();
+    setDevices(
+      results.map((item: any) => ({
+        ...item,
+        printerType: selectedValue
+      }))
+    );
+  } catch (err) {
+    console.warn(err);
+  } finally {
+
+
+
+    setLoading(false);
+  }
+};
+
+*/
+
+
+
+const sortArray=(orders:oneOrder_Item_interface[])=>{
 
   orders.sort(function(a,b){
     // Turn your strings into dates, and then subtract them
@@ -127,7 +196,7 @@ export const logIn = (email, password) => async (dispatch) => {
             dispatch({ type: LOGIN, id: email, token: userToken }); // check the AuthReducer....
           } else {
             console.log('Not allowed');
-            alert("You don't have permission to log in");
+            Alert.alert("You don't have permission to log in");
           }
         }
         if (resData.message != null) {
