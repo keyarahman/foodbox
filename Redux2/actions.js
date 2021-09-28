@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 
 const OrderApi = 'https://qrtech.co.uk/api/orders';
 
+
 /*
 const sortArray=(props)=>{
   const sortedArray  = props.sort((a,b) => moment(a.created_at).format('YYYYMMDD') -  moment(b.created_at).format('YYYYMMDD'));
@@ -18,6 +19,8 @@ const sortArray=(props)=>{
   };
 
 */
+
+
 
 const sortArray=(orders)=>{
 
@@ -30,6 +33,8 @@ const sortArray=(orders)=>{
 
   return orders;
 };
+
+
 
 export const getOrder = () => async (dispatch) => {
 
