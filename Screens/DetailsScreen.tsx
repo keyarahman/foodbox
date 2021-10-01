@@ -148,6 +148,9 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
     {}
   );
 
+
+  console.log(" << devices: >> : ", devices);
+
   const handleChangePrinterType = async (type: keyof typeof printerList) => {
     setSelectedValue((prev) => {
       printerList[prev].closeConn();
@@ -356,6 +359,8 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
       } finally {
         setPrinterLoadingState(false);
 
+
+        //1 ---most likely.....
 
         handlePrint();
       }
