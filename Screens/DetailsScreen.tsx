@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -12,7 +12,8 @@ import {
 
 
   ScrollView,
-  Button, BackHandler
+  Button,
+  BackHandler
 } from "react-native";
 import * as Animatable from 'react-native-animatable';
 // import * as Animatable from 'react-native-animatable';
@@ -30,14 +31,7 @@ import axios from 'axios';
 import {getOrder} from '../Redux2/actions';
 import { useFocusEffect } from '@react-navigation/native';
 
-import {
-  BLEPrinter,
-  NetPrinter,
-  USBPrinter,
-  IUSBPrinter,
-  IBLEPrinter,
-  INetPrinter,
-} from "react-native-thermal-receipt-printer";
+
 
 
 
@@ -83,20 +77,18 @@ export interface Props {
   navigation: any,
   route: any,
 }
-
+import {
+  // USBPrinter,
+  // NetPrinter,
+  BLEPrinter,
+} from "react-native-thermal-receipt-printer";
 
 
 // interface for printer begins here.
 
-const printerList: Record<string, any> = {
-  ble: BLEPrinter,
-  net: NetPrinter,
-  usb: USBPrinter,
-};
-// import * as Animatable from 'react-native-animatable';
-interface SelectedPrinter
-  extends Partial<IUSBPrinter & IBLEPrinter & INetPrinter> {
-  printerType?: keyof typeof printerList;
+interface IBLEPrinter {
+  device_name: string;
+  inner_mac_address: string;
 }
 
 
@@ -137,33 +129,17 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
   // printer related states begins here...
 
 
+  // const [imagesState, setImageState] = useState <iImageCorpPicker[] | []>([]);
+  const [printers, setPrinters] = useState <IBLEPrinter[]|[]>([]);
+  const [currentPrinter, setCurrentPrinter] = useState();
+  // printer related states ends here...
 
-  const [selectedValue, setSelectedValue] = React.useState<keyof typeof printerList>("ble");
-
-
-
-  const [devices, setDevices] = React.useState([]);
-  const [printerLoadingState, setPrinterLoadingState] = React.useState<boolean>(false);
-  const [selectedPrinter, setSelectedPrinter] = React.useState<SelectedPrinter>(
-    {}
-  );
-
-
-  console.log(" << devices: >> : ", devices);
-
-  const handleChangePrinterType = async (type: keyof typeof printerList) => {
-    setSelectedValue((prev) => {
-      printerList[prev].closeConn();
-      return type;
-    });
-    setSelectedPrinter({});
-  };
 
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = async () => {
 
-       await handleChangePrinterType(selectedValue);
+       //await handleChangePrinterType(selectedValue);
 
 
         // if (isSelectionModeEnabled()) {
@@ -180,13 +156,10 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
         BackHandler.removeEventListener('hardwareBackPress', onBackPress);
     }, [
 
-      // isSelectionModeEnabled,
 
-      // disableSelectionMode,
 
-      selectedValue,
-
-      selectedPrinter
+      // selectedValue,
+      // selectedPrinter
 
     ])
   );
@@ -196,39 +169,73 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
 
   //  printer related states  ends here..
 
-  React.useEffect(() => {
-      const getListDevices = async () => {
-
-        const Printer = printerList[selectedValue];
-        // get list device for net printers is support scanning in local ip but not recommended
-        if (selectedValue === "net") {
-          return;
-        }
-        try {
-          setPrinterLoadingState(true);
-          await Printer.init();
-          const results = await Printer.getDeviceList();
-          setDevices(
-            results.map((item: any) => ({
-              ...item,
-              printerType: selectedValue
-            }))
-          );
-        } catch (err) {
-
-          console.log("\n\n error in << getListDevices >> \n\n ", err);
-          // "bluetooth adapter is not enabled".
 
 
-        } finally {
-          setPrinterLoadingState(false);
-        }
-      };
-      getListDevices();
-    }, [selectedValue]
-  );
+  // use Effect for BLE printer
+  useEffect(() => {
+    BLEPrinter.init().then(()=> {
+      BLEPrinter.getDeviceList().then(setPrinters);
+    });
+  }, []);
 
 
+
+  // original:
+
+  /*
+  _connectPrinter => (printer) => {
+    //connect printer
+    BLEPrinter.connectPrinter(printer.inner_mac_address).then(
+      setCurrentPrinter,
+      error => console.warn(error))
+  }
+  */
+
+
+  /*
+  const four_curried3= function (_connectPrinter){
+    return function (printer) {
+
+
+      //   BLEPrinter.connectPrinter(printer.inner_mac_address).then(
+      //     setCurrentPrinter,
+      //     error => console.warn(error))
+
+    }
+  }
+
+  */
+
+
+
+  const four_curried= function (_connectPrinter){
+    return function (printer) {
+
+
+      BLEPrinter.connectPrinter(printer.inner_mac_address).then(
+        setCurrentPrinter,
+        error => console.warn(error))
+
+    }
+  }
+
+
+  /*
+  const _connectPrinter => (printer) => {
+    //connect printer
+    BLEPrinter.connectPrinter(printer.inner_mac_address).then(
+      setCurrentPrinter,
+      error => console.warn(error))
+  }
+  */
+
+  const printTextTest = () => {
+    currentPrinter && BLEPrinter.printText("<C>sample text</C>\n");
+  }
+
+  const printBillTest = () => {
+    currentPrinter && BLEPrinter.printBill("<C>sample bill</C>");
+  }
 
 
 
@@ -240,133 +247,6 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
 
   };
 
-  const handlePrint = async () => {
-    try {
-
-      const Printer = printerList[selectedValue];
-
-
-      // await Printer.printText("<C>sample text</C>\n");
-
-
-      await Printer.printText("<CD>Your Recite</CD>\n");
-
-
-      await Printer.printText(`<CM>order Type: ${orderItem.order_type}</CM>\n`);
-      await Printer.printText(`<CM>order Status: ${orderItem.order_status}</CM>\n`);
-      await Printer.printText(`<CM>payment type: ${orderItem.payment_type}</CM>\n`);
-      await Printer.printText(`<CM>payment Status: ${orderItem.payment_status}</CM>\n`);
-      await Printer.printText(`<CM>requested time: ${requested_time(orderItem.created_at)}</CM>\n`);
-      await Printer.printText(`<CM>Total: ${orderItem.total}</CM>\n`);
-      await Printer.printText(`<CM>Product count${orderItem.details.products.length}</CM>\n`);
-
-
-
-
-
-
-
-        orderItem.details.products.map(async (oneProduct: Product, index: number) => {
-          await Printer.printText(`<M> item ${index} => ${oneProduct.name} => ${oneProduct.unit_price} =>  ${oneProduct.quantity} => ${oneProduct.unit_total}</M>\n`);
-
-        });
-
-
-      await Printer.printText(`<CM>Subtotal${orderItem.details.subtotal}</CM>\n`);
-      await Printer.printText(`<CM>Discount${(orderItem.details.discount===null)? "0":"N/A"}</CM>\n`); // here nu
-      await Printer.printText(`<CM>Total${orderItem.details.total}</CM>\n`);
-
-
-
-      await Printer.printText("<CD>Customer Information</CD>\n");
-      await Printer.printText(`<CM>name: ${orderItem.customer.name}</CM>\n`);
-      await Printer.printText(`<CM>phone: ${orderItem.customer.phone}</CM>\n`);
-      await Printer.printText(`<CM>address: ${orderItem.customer.address}</CM>\n`);
-      await Printer.printText(`<CM>post code: ${orderItem.customer.postcode}</CM>\n`);
-
-
-
-
-
-
-
-    // "customer": {
-    //   "name": "jytdjt",
-    //     "phone": "0123456",
-    //     "address": "hghjgcmh",
-    //     "postcode": "jkgvjg"
-    // },
-
-
-
-      // quantity: number;
-      // unit_price: number;
-      // unit_total: string;
-
-
-
-
-
-
-
-
-    } catch (err) {
-      console.warn(err);
-    }
-  };
-
-
-
-  const handleConnectSelectedPrinter = () => {
-    if (!selectedPrinter) // even drop down list is not used , this << selectedPrinter >> might be needed.
-    {
-      return;
-    }
-    const connect = async () => {
-      try {
-        setPrinterLoadingState(true);
-
-        await BLEPrinter.connectPrinter(
-          selectedPrinter?.inner_mac_address || ""
-        );
-
-
-        /*
-        switch (selectedPrinter.printerType) {
-          case "ble":
-            await BLEPrinter.connectPrinter(
-              selectedPrinter?.inner_mac_address || ""
-            );
-            break;
-          case "net":
-            await NetPrinter.connectPrinter(
-              selectedPrinter?.host || "",
-              selectedPrinter?.port || 9100
-            );
-            break;
-          case "usb":
-            await USBPrinter.connectPrinter(
-              selectedPrinter?.vendor_id || "",
-              selectedPrinter?.product_id || ""
-            );
-            break;
-          default:
-        }
-        */
-      } catch (err) {
-        console.warn(err);
-        // console.log(err);
-      } finally {
-        setPrinterLoadingState(false);
-
-
-        //1 ---most likely.....
-
-        handlePrint();
-      }
-    };
-    connect();
-  };
 
 
   const AcceptbuttonHandler = () => async (dispatch:any) => {
@@ -394,6 +274,30 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
           // api called now print locally.. sept 28:
 
           //
+
+          {
+            // this.state.printers.map(printer => (
+            //   <TouchableOpacity key={printer.inner_mac_address} onPress={() => _connectPrinter(printer)}>
+            //     {`device_name: ${printer.device_name}, inner_mac_address: ${printer.inner_mac_address}`}
+            //   </TouchableOpacity>
+            // ))
+
+
+
+            printers.map((printer:IBLEPrinter) => (
+
+              console.log( ` printer => ${printer.inner_mac_address} ${printer.device_name} `)
+              // four_curried
+              // <TouchableOpacity key={printer.inner_mac_address} onPress={() => _connectPrinter(printer)}>
+              //   {`device_name: ${printer.device_name}, inner_mac_address: ${printer.inner_mac_address}`}
+              // </TouchableOpacity>
+            ))
+          }
+
+
+
+          /*
+
 
 
           console.log( " << !selectedPrinter?.device_name >> ", selectedPrinter?.device_name);
@@ -423,6 +327,9 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
             handlePrint();
 
           }
+
+
+          */
 
 
 
@@ -654,11 +561,21 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
             [
               orderStatus === 'Accepted' ? (
                 <View>
-                  <Button title="Accepted" color="#808080" />
+                  <Button
+                    title="Accepted"
+                    color="#808080"
+                    disabled={true}
+                    onPress= {function doNothing(){}}
+                  />
                 </View>
               ) : (
                 <View>
-                  <Button title="Declined" color="#808080" />
+                  <Button
+                    title="Declined"
+                    color="#808080"
+                    disabled={true}
+                    onPress={function doNothing(){}}
+                  />
                 </View>
               ),
             ]
