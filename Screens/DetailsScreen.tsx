@@ -257,11 +257,8 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
       // BLEPrinter.printBill("<C>sample bill</C>");
       const Printer = BLEPrinter;
 
-
       // await Printer.printText("<C>sample text</C>\n");
 
-
-      /*
       await Printer.printBill("<CD>Your Recite</CD>\n");
       await Printer.printBill(`<CM>order Type: ${orderItem.order_type}</CM>\n`);
       await Printer.printBill(`<CM>order Status: ${orderItem.order_status}</CM>\n`);
@@ -270,12 +267,6 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
       await Printer.printBill(`<CM>requested time: ${requested_time(orderItem.created_at)}</CM>\n`);
       await Printer.printBill(`<CM>Total: ${orderItem.total}</CM>\n`);
       await Printer.printBill(`<CM>Product count${orderItem.details.products.length}</CM>\n`);
-      */
-
-
-
-
-
 
 
       orderItem.details.products.map(async (oneProduct: Product, index: number) => {
@@ -283,7 +274,7 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
 
       });
 
-      /*
+
       await Printer.printBill(`<CM>Subtotal${orderItem.details.subtotal}</CM>\n`);
       await Printer.printBill(`<CM>Discount${(orderItem.details.discount===null)? "0":"N/A"}</CM>\n`); // here nu
       await Printer.printBill(`<CM>Total${orderItem.details.total}</CM>\n`);
@@ -292,25 +283,6 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
       await Printer.printBill(`<CM>phone: ${orderItem.customer.phone}</CM>\n`);
       await Printer.printBill(`<CM>address: ${orderItem.customer.address}</CM>\n`);
       await Printer.printBill(`<CM>post code: ${orderItem.customer.postcode}</CM>\n`);
-
-      */
-
-
-
-
-      // "customer": {
-      //   "name": "jytdjt",
-      //     "phone": "0123456",
-      //     "address": "hghjgcmh",
-      //     "postcode": "jkgvjg"
-      // },
-
-
-
-      // quantity: number;
-      // unit_price: number;
-      // unit_total: string;
-
     } catch (err) {
       console.warn(err);
     }
