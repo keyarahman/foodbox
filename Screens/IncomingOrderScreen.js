@@ -41,7 +41,11 @@ export default function IncomingOrderScreen({ navigation }) {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
         <ActivityIndicator size="large" color="#FFA500" />
       </View>
     );
@@ -68,9 +72,16 @@ export default function IncomingOrderScreen({ navigation }) {
           data={Orders}
           renderItem={({ item }) => (
             <Card style={{ margin: 5 }}>
-              <View style={{ flex: 1, flexDirection: "row", padding: 10 }}>
+              <View style={{
+                flex: 1,
+                flexDirection: "row",
+                padding: 10
+              }}>
 
-                <View style={{ flex: 1, flexDirection: "column", padding: 10 }}>
+                <View style={{
+                  flex: 1,
+                  flexDirection: "column",
+                  padding: 10 }}>
                   <Text style={{ fontWeight: 'bold' }}>{item.customer.name}</Text>
                   <Text>Address: {item.customer.address}</Text>
                   <Text>Order status: {item.order_status}</Text>

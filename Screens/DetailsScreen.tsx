@@ -150,10 +150,14 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
         // }
       };
 
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      BackHandler.addEventListener(
+        'hardwareBackPress',
+        onBackPress);
 
       return () =>
-        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+        BackHandler.removeEventListener(
+          'hardwareBackPress',
+          onBackPress);
     }, [
 
 
@@ -182,6 +186,7 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
 
   // original:
 
+
   /*
   _connectPrinter => (printer) => {
     //connect printer
@@ -192,7 +197,9 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
   */
 
 
+
   /*
+
   const four_curried3= function (_connectPrinter){
     return function (printer) {
 
@@ -203,10 +210,13 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
 
     }
   }
-
   */
 
 
+
+
+
+  /*
 
   const four_curried= function (_connectPrinter){
     return function (printer) {
@@ -218,6 +228,9 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
 
     }
   }
+  */
+
+
 
 
   /*
@@ -227,7 +240,9 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
       setCurrentPrinter,
       error => console.warn(error))
   }
+
   */
+
 
   const printTextTest = () => {
     currentPrinter && BLEPrinter.printText("<C>sample text</C>\n");
@@ -236,6 +251,70 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
   const printBillTest = () => {
     currentPrinter && BLEPrinter.printBill("<C>sample bill</C>");
   }
+
+  const handlePrint = async () => {
+    try {
+      // BLEPrinter.printBill("<C>sample bill</C>");
+      const Printer = BLEPrinter;
+
+
+      // await Printer.printText("<C>sample text</C>\n");
+
+
+      /*
+      await Printer.printBill("<CD>Your Recite</CD>\n");
+      await Printer.printBill(`<CM>order Type: ${orderItem.order_type}</CM>\n`);
+      await Printer.printBill(`<CM>order Status: ${orderItem.order_status}</CM>\n`);
+      await Printer.printBill(`<CM>payment type: ${orderItem.payment_type}</CM>\n`);
+      await Printer.printBill(`<CM>payment Status: ${orderItem.payment_status}</CM>\n`);
+      await Printer.printBill(`<CM>requested time: ${requested_time(orderItem.created_at)}</CM>\n`);
+      await Printer.printBill(`<CM>Total: ${orderItem.total}</CM>\n`);
+      await Printer.printBill(`<CM>Product count${orderItem.details.products.length}</CM>\n`);
+      */
+
+
+
+
+
+
+
+      orderItem.details.products.map(async (oneProduct: Product, index: number) => {
+        await Printer.printBill(`<M> item ${index} => ${oneProduct.name} => ${oneProduct.unit_price} =>  ${oneProduct.quantity} => ${oneProduct.unit_total}</M>\n`);
+
+      });
+
+      /*
+      await Printer.printBill(`<CM>Subtotal${orderItem.details.subtotal}</CM>\n`);
+      await Printer.printBill(`<CM>Discount${(orderItem.details.discount===null)? "0":"N/A"}</CM>\n`); // here nu
+      await Printer.printBill(`<CM>Total${orderItem.details.total}</CM>\n`);
+      await Printer.printBill("<CD>Customer Information</CD>\n");
+      await Printer.printBill(`<CM>name: ${orderItem.customer.name}</CM>\n`);
+      await Printer.printBill(`<CM>phone: ${orderItem.customer.phone}</CM>\n`);
+      await Printer.printBill(`<CM>address: ${orderItem.customer.address}</CM>\n`);
+      await Printer.printBill(`<CM>post code: ${orderItem.customer.postcode}</CM>\n`);
+
+      */
+
+
+
+
+      // "customer": {
+      //   "name": "jytdjt",
+      //     "phone": "0123456",
+      //     "address": "hghjgcmh",
+      //     "postcode": "jkgvjg"
+      // },
+
+
+
+      // quantity: number;
+      // unit_price: number;
+      // unit_total: string;
+
+    } catch (err) {
+      console.warn(err);
+    }
+  };
 
 
 
@@ -247,6 +326,56 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
 
   };
 
+
+
+
+  const AcceptButtonHandler2  = async () => {
+
+    for (let step = 0; step < printers.length; step++) {
+      // Runs 5 times, with values of step 0 through 4.
+      // console.log('Walking east one step');
+
+      if (printers[step].inner_mac_address==="66:22:37:5D:18:65"){
+        // _connectPrinter(printer)
+        // four_curried(_connectPrinter(printer));
+
+
+
+        // then cathc block begins here
+        BLEPrinter.connectPrinter(printers[step].inner_mac_address).
+        then(async (responseJson) => {
+          const success = responseJson;
+          console.log(" <<success >> : ", success);
+
+
+          await handlePrint();
+
+
+          // setCurrentPrinter(printers[step]);
+
+        }).
+        catch((error) => {
+          console.error("error:", error);
+        });
+
+        // ends here..
+      }
+    }
+
+    printers.map((printer:IBLEPrinter) => (
+
+      console.log( ` printer => ${printer.inner_mac_address} ${printer.device_name} `)
+      // four_curried
+      // <TouchableOpacity key={printer.inner_mac_address} onPress={() => _connectPrinter(printer)}>
+      //   {`device_name: ${printer.device_name}, inner_mac_address: ${printer.inner_mac_address}`}
+      // </TouchableOpacity>
+
+
+      // <TouchableOpacity key={printer.inner_mac_address} onPress={() => _connectPrinter(printer)}>
+      //   {`device_name: ${printer.device_name}, inner_mac_address: ${printer.inner_mac_address}`}
+      // </TouchableOpacity>
+    ))
+  };
 
 
   const AcceptbuttonHandler = () => async (dispatch:any) => {
@@ -275,24 +404,6 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
 
           //
 
-          {
-            // this.state.printers.map(printer => (
-            //   <TouchableOpacity key={printer.inner_mac_address} onPress={() => _connectPrinter(printer)}>
-            //     {`device_name: ${printer.device_name}, inner_mac_address: ${printer.inner_mac_address}`}
-            //   </TouchableOpacity>
-            // ))
-
-
-
-            printers.map((printer:IBLEPrinter) => (
-
-              console.log( ` printer => ${printer.inner_mac_address} ${printer.device_name} `)
-              // four_curried
-              // <TouchableOpacity key={printer.inner_mac_address} onPress={() => _connectPrinter(printer)}>
-              //   {`device_name: ${printer.device_name}, inner_mac_address: ${printer.inner_mac_address}`}
-              // </TouchableOpacity>
-            ))
-          }
 
 
 
@@ -375,13 +486,19 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
   };
 
   const handleAcceptBtfn = () => {
-    dispatch(AcceptbuttonHandler());
+    // dispatch(AcceptbuttonHandler());
+
+    AcceptButtonHandler2();
+
   };
 
   const handleDeclineBtfn = () => {
     dispatch(DeclinebuttonHandler());
   };
 
+  console.log(" << currentPrinter >>: ", currentPrinter);
+
+  // NHS begins here....
   return (
 
     <SafeAreaView

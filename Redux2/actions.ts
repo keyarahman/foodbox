@@ -124,7 +124,7 @@ export const getOrder = () => async (dispatch) => {
       then(function (response) {
 
 
-        console.log( " << JSON.stringify(response.data) >> ", JSON.stringify(response.data));
+        console.log( " << JSON.stringify(response.data) >> ", JSON.stringify(response.data).length);
 
 
         // const OrderData = response.data;
@@ -136,8 +136,8 @@ export const getOrder = () => async (dispatch) => {
 
           const ordered_orderData =sortArray(OrderData);
 
-          console.log(" << ordered_orderData[55].created_at >> ", ordered_orderData[55].created_at );
-          console.log(" << ordered_orderData[0].created_at >> ", ordered_orderData[0].created_at );
+          // console.log(" << ordered_orderData[55].created_at >> ", ordered_orderData[55].created_at );
+          // console.log(" << ordered_orderData[0].created_at >> ", ordered_orderData[0].created_at );
 
 
 
