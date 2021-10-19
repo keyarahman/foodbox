@@ -1016,6 +1016,11 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
+"@leesiongchan/react-native-esc-pos@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@leesiongchan/react-native-esc-pos/-/react-native-esc-pos-0.9.0.tgz#0a98f5025fd55ac9782b887d8ba628030ebe2ca2"
+  integrity sha512-HUWBAzbLC83m52mogSyIh/0GSPbQ7hGv2uT7km4+5566L4wmKTKxwCqVn7j1tPDwZzGHWhPCAOFyEXXGbB4iaA==
+
 "@react-native-async-storage/async-storage@^1.15.7":
   version "1.15.8"
   resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.15.8.tgz#c2263646b7261803125b555cf1bbd48b72dedafc"
