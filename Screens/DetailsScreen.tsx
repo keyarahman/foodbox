@@ -13,7 +13,7 @@ import {
 
   ScrollView,
   Button,
-  BackHandler
+  BackHandler, Alert
 } from "react-native";
 import * as Animatable from 'react-native-animatable';
 // import * as Animatable from 'react-native-animatable';
@@ -80,7 +80,7 @@ export interface Props {
 import {
   // USBPrinter,
   // NetPrinter,
-  BLEPrinter,
+  BLEPrinter, PrinterOptions,
 } from "react-native-thermal-receipt-printer";
 
 
@@ -254,37 +254,58 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
 
 
 
-  const products_Print = (products?: Product[]) =>
+  const products_Print = (products?: Product[]) => {
 
-    products?.map((oneProduct: Product, index: number) => {
-      `item ${index} => ${oneProduct.name} => ${oneProduct.unit_price} =>  ${oneProduct.quantity} => ${oneProduct.unit_total}`
-    });
+    // console.log(" << products: >>", products);
+
+
+
+    if(products){
+     return (products.map((oneProduct: Product, index: number) => `item[${index+1}]: ${oneProduct.name.length <16?oneProduct.name: `${oneProduct.name.substring(0,15)}.`}: ${oneProduct.unit_price} X ${oneProduct.quantity} = ${oneProduct.unit_total} \n`).join(''));
+    }
+    else{
+      return "Products: null";
+    }
+
+  };
+
+  // name: string;
+  // checkedItem: string[];
+  // quantity: number;
+  // unit_price: number;
+  // unit_total: string;
+
+
+
   const design =(orderItem:oneOrder_Item_interface)=> `
        Your Recite           
 -------------------------------
- order Type: ${orderItem.order_type}
- order Status: ${orderItem.order_status}
- payment type: ${orderItem.payment_type}
- payment Status: ${orderItem.payment_status}
- requested time: ${requested_time(orderItem.created_at)}
- Total: ${orderItem.total}
- Product count${orderItem.details.products.length}
+Order Type: ${orderItem.order_type}
+Order Status: Accepted
+Payment type: ${orderItem.payment_type}
+Payment Status: ${orderItem.payment_status}
+Requested time: ${requested_time(orderItem.created_at)}
+ 
+Product count: ${orderItem.details.products.length}
 -------------------------------
- ${products_Print(orderItem.details.products)}
- Subtotal${orderItem.details.subtotal}
- Discount${(orderItem.details.discount === null) ? "0" : "N/A"}
- Total${orderItem.details.total}
+${products_Print(orderItem.details.products)}
+Subtotal: ${orderItem.details.subtotal}
+Discount: ${(orderItem.details.discount === null) ? "0" : "N/A"}
+Total: ${orderItem.details.total}
+Total cost: ${orderItem.total}
 -------------------------------
  Customer Information
 -------------------------------
- name: ${orderItem.customer.name}
- phone: ${orderItem.customer.phone}
- address: ${orderItem.customer.address}
- post code: ${orderItem.customer.postcode}
+Name: ${orderItem.customer.name}
+Phone: ${orderItem.customer.phone}
+Add.: ${(orderItem.customer.address.length < 25)  
+      ?item.orderItem.customer.address
+      :`${orderItem.customer.address.substring(0,23)}.`}
+Post code: ${orderItem.customer.postcode}
 `;
 
 
-  const handlePrint = async () => {
+  const handlePrint = async (oneOrder3: oneOrder_Item_interface) => {
     try {
       // BLEPrinter.printBill("<C>sample bill</C>");
       const Printer = BLEPrinter;
@@ -292,7 +313,21 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
       // await Printer.printText("<C>sample text</C>\n");
 
 
-      await Printer.printBill(`<CM>${design(orderItem)}</CM>\n`);
+
+      // console.log("design(orderItem): ", design(oneOrder3));
+
+      // design(oneOrder3)
+
+
+      const PrinterOptions2:PrinterOptions= {
+        beep: true,
+        cut: true,
+        tailingLine: true,
+        encoding: 'utf-8',
+      };
+
+
+      await Printer.printBill(`<M>${design(orderItem)}</M>`,PrinterOptions2);
 
 
 
@@ -314,7 +349,7 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
 
 
 
-  const AcceptButtonHandler2  = async () => {
+  const AcceptButtonHandler2  = async (oneOrder:oneOrder_Item_interface ) => {
 
     for (let step = 0; step < printers.length; step++) {
       // Runs 5 times, with values of step 0 through 4.
@@ -323,6 +358,7 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
       if (printers[step].inner_mac_address==="66:22:37:5D:18:65"){
         // _connectPrinter(printer)
         // four_curried(_connectPrinter(printer));
+        // {"device_name": "MTP-2", "inner_mac_address": "66:22:37:5D:18:65"}
 
 
 
@@ -333,7 +369,7 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
           console.log(" <<success >> : ", success);
 
 
-          await handlePrint();
+          await handlePrint(oneOrder);
 
 
           // setCurrentPrinter(printers[step]);
@@ -370,6 +406,9 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
       status: 'Accepted',
     };
 
+
+    const orderItemTemp = orderItem;
+
     AsyncStorage.getItem('userToken').then(data => {
       let token = JSON.parse(data).access_token;
       axios
@@ -383,6 +422,37 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
             setIs_new(0);
             setOrderStatus('Accepted');
             dispatch(getOrder());
+
+
+            Alert.alert(
+                `Order Accepted`,
+                'Do you want to print the recite now?',
+                [
+                  {
+                    text: 'Cancel',
+                    onPress: () => {console.log('Cancel Pressed')},
+                    style: 'cancel',
+                  },
+                  {text: 'print', onPress: () =>{
+
+                      const tempOrder ={
+                        ...orderItemTemp,
+                        order_status: "Accepted",
+                      };
+
+
+                      // console.log(" << tempOrder >>: ", tempOrder);
+
+
+                      AcceptButtonHandler2(tempOrder);
+                    }},
+                ],
+                {cancelable: true},
+            );
+
+
+
+
 
 
             // api called now print locally.. sept 28:
@@ -471,9 +541,22 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
   };
 
   const handleAcceptBtfn = () => {
-    // dispatch(AcceptbuttonHandler());
+    dispatch(AcceptbuttonHandler());
 
-    AcceptButtonHandler2();
+
+
+    // for tEST ONLY....
+    /*
+    const tempOrder ={
+      ...orderItem,
+      order_status: "Accepted",
+    };
+
+    console.log(" << tempOrder >>: ", JSON.stringify(tempOrder));
+
+    AcceptButtonHandler2(tempOrder);
+
+    */
 
   };
 
