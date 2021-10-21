@@ -105,9 +105,9 @@ const sortArray=(orders:oneOrder_Item_interface[])=>{
 
 
 
-export const getOrder = () => async (dispatch) => {
+export const getOrder = () => async (dispatch:any) => {
 
-  AsyncStorage.getItem('userToken').then( (data) => {
+  AsyncStorage.getItem('userToken').then( (data:any) => {
     const token = JSON.parse(data).access_token;
 
 
@@ -165,7 +165,7 @@ export const getOrder = () => async (dispatch) => {
 };
 
 
-export const logIn = (email, password) => async (dispatch) => {
+export const logIn = (email:any, password:any) => async (dispatch:any) => {
 
   let userToken;
   userToken = null;
@@ -209,7 +209,7 @@ export const logIn = (email, password) => async (dispatch) => {
 
 };
 
-export const logOut = () => async (dispatch) => {
+export const logOut = () => async (dispatch:any) => {
   try {
     AsyncStorage.removeItem('userToken');
   } catch (e) {
@@ -219,14 +219,14 @@ export const logOut = () => async (dispatch) => {
 };
 
 
-export const setEmail = email => dispatch => {
+export const setEmail = (email:any) => (dispatch:any) => {
   dispatch({
     type: SET_USER_EMAIL,
     payload: email
   });
 
 }
-export const setPassword = password => dispatch => {
+export const setPassword = (password:any)=> (dispatch:any) => {
   dispatch({
     type: SET_USER_PASSWORD,
     payload: password

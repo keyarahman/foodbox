@@ -56,8 +56,8 @@ AsyncStorage.getItem("userToken").then(token => {
       <Drawer.Section style={styles.firstDrawerSection}>
         <View style={{height: 160 ,marginStart:20,flexDirection:'column'}}>
           <Image
-            source={require('../assets/images.jpeg')}
-            style={{height: 100, width: 100, borderRadius: 200}}
+            source={require('../assets/unnamed.png')}
+            style={{height: 90, width: 90, borderRadius: 200}}
           />
           {/* <View style={{marginLeft: 15, flexDirection: 'column'}}> */}
             <Title style={styles.title}>{profile.name}</Title>
