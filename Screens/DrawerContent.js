@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, StyleSheet, Image, SafeAreaView} from 'react-native';
+import React from "react";
+import {View, StyleSheet, Image, SafeAreaView} from "react-native";
 import {
   useTheme,
   Avatar,
@@ -12,12 +12,12 @@ import {
   Switch,
   List,
   Menu,
-} from 'react-native-paper';
+} from "react-native-paper";
 
-import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
+import {DrawerContentScrollView, DrawerItem} from "@react-navigation/drawer";
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {black, white} from 'react-native-paper/lib/typescript/styles/colors';
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import {black, white} from "react-native-paper/lib/typescript/styles/colors";
 import {
   Home,
   Settings,
@@ -26,53 +26,50 @@ import {
   FolderPlus,
   FileMinus,
   FolderMinus,
-  Folder
-} from 'react-native-feather';
-import {AuthContext} from '../components.js/context';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { get } from 'react-native/Libraries/Utilities/PixelRatio';
-import { useState } from 'react/cjs/react.development';
-import { color } from 'react-native-reanimated';
-import { useSelector, useDispatch } from 'react-redux'
-import {logOut} from '../Redux2/actions';
+  Folder,
+} from "react-native-feather";
+import {AuthContext} from "../components.js/context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {get} from "react-native/Libraries/Utilities/PixelRatio";
+import {useState} from "react/cjs/react.development";
+import {color} from "react-native-reanimated";
+import {useSelector, useDispatch} from "react-redux";
+import {logOut} from "../Redux2/actions";
 // import{ AuthContext } from '../components/context';
 
 export default function DrawerContent(props) {
   const dispatch = useDispatch();
-  
+
   // const {logOut} = React.useContext(AuthContext);
- 
-const [profile, setProfile] = useState("")
 
+  const [profile, setProfile] = useState("");
 
-AsyncStorage.getItem("userToken").then(token => {
-  setProfile(JSON.parse(token).data.profile)
- 
-});
-
+  AsyncStorage.getItem("userToken").then(token => {
+    setProfile(JSON.parse(token).data.profile);
+  });
 
   return (
     <SafeAreaView style={{flex: 1}}>
       <Drawer.Section style={styles.firstDrawerSection}>
-        <View style={{height: 160 ,marginStart:20,flexDirection:'column'}}>
+        <View style={{height: 160, marginStart: 20, flexDirection: "column"}}>
           <Image
-            source={require('../assets/unnamed.png')}
-            style={{height: 90, width: 90, borderRadius: 200}}
+            source={require("../assets/profileImage.png")}
+            style={{height: 80, width: 80, borderRadius: 200}}
           />
           {/* <View style={{marginLeft: 15, flexDirection: 'column'}}> */}
-            <Title style={styles.title}>{profile.name}</Title>
-            <Text style={{color:"#fff"}}>{profile.email}</Text>
-           
+          <Title style={styles.title}>{profile.name}</Title>
+          <Text style={{color: "#fff"}}>{profile.email}</Text>
+
           {/* </View> */}
         </View>
       </Drawer.Section>
       <DrawerContentScrollView {...props}>
         <View style={styles.drawerContent}>
           <Drawer.Section style={styles.drawerSection}>
-            <Home stroke="#3090C7"fill="none" width={20} height={20} />
+            <Home stroke="#3090C7" fill="none" width={20} height={20} />
             <Menu.Item
               onPress={() => {
-                props.navigation.navigate('Home');
+                props.navigation.navigate("Home");
               }}
               title="Home"
             />
@@ -82,7 +79,7 @@ AsyncStorage.getItem("userToken").then(token => {
 
             <Menu.Item
               onPress={() => {
-                props.navigation.navigate('Products');
+                props.navigation.navigate("Products");
               }}
               title="Products"
             />
@@ -97,22 +94,22 @@ AsyncStorage.getItem("userToken").then(token => {
               title="Today's Order"
             />
           </Drawer.Section>
-         
+
           <Drawer.Section style={styles.drawerSection}>
             <FolderMinus stroke="#3090C7" fill="none" width={20} height={20} />
 
             <Menu.Item
               onPress={() => {
-                props.navigation.navigate('Order History');
+                props.navigation.navigate("Order History");
               }}
               title="Order History"
             />
           </Drawer.Section>
           <Drawer.Section style={styles.drawerSection}>
-            <Settings stroke="#3090C7"fill="none" width={20} height={20} />
+            <Settings stroke="#3090C7" fill="none" width={20} height={20} />
             <Menu.Item
               onPress={() => {
-                props.navigation.navigate('Settings');
+                props.navigation.navigate("Settings");
               }}
               title="Settings"
             />
@@ -121,7 +118,7 @@ AsyncStorage.getItem("userToken").then(token => {
       </DrawerContentScrollView>
 
       <Drawer.Section style={styles.bottomDrawerSection}>
-        <LogOut stroke="#3090C7"fill="none" width={20} height={20} />
+        <LogOut stroke="#3090C7" fill="none" width={20} height={20} />
 
         <Menu.Item
           onPress={() => {
@@ -145,11 +142,10 @@ const styles = StyleSheet.create({
   image: {},
   title: {
     fontSize: 14,
- 
-    color:"#fff",
-    fontSize:15,
-    fontWeight:'bold'
-   
+
+    color: "#fff",
+    fontSize: 15,
+    fontWeight: "bold",
   },
   caption: {
     fontSize: 14,
@@ -158,41 +154,40 @@ const styles = StyleSheet.create({
 
   row: {
     marginTop: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   FirstSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 15,
-    backgroundColor: 'green',
+    backgroundColor: "green",
   },
   section: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginRight: 15,
   },
 
   firstDrawerSection: {
     // marginBottom:
-    backgroundColor:'#FFA500',
+    backgroundColor: "#FFA500",
     paddingTop: 10,
-    borderTopColor: '#f4f4f4',
-    
+    borderTopColor: "#f4f4f4",
   },
   drawerSection: {
     marginStart: 20,
-    alignItems: 'center',
+    alignItems: "center",
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   bottomDrawerSection: {
     marginStart: 20,
     marginBottom: 2,
-    borderTopColor: '#f4f4f4',
+    borderTopColor: "#f4f4f4",
     borderTopWidth: 1,
-    alignItems: 'center',
+    alignItems: "center",
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
 });
