@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState} from "react";
 import {
   View,
   Text,
@@ -7,29 +7,22 @@ import {
   Platform,
   StyleSheet,
   StatusBar,
-  Alert,
-  Button,
-  ActivityIndicator,
-} from 'react-native';
-import * as Animatable from 'react-native-animatable';
-import LinearGradient from 'react-native-linear-gradient';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Feather from 'react-native-vector-icons/Feather';
-import {EyeOff, Lock, Mail, Eye} from 'react-native-feather';
-import {AuthContext} from '../components.js/context';
-import {useSelector, useDispatch} from 'react-redux';
-import AuthReducer from '../Redux2/reducer';
-import {logIn} from '../Redux2/actions';
-import ForgotPasswordScreen from './ForgotPasswordScreen';
-import ResetPasswordScreen from './ResetPasswordScreen'
+} from "react-native";
+import * as Animatable from "react-native-animatable";
+import LinearGradient from "react-native-linear-gradient";
+
+import {EyeOff, Lock, Mail, Eye} from "react-native-feather";
+
+import {useDispatch} from "react-redux";
+
+import {logIn} from "../Redux2/actions";
 
 const SignInScreen = ({navigation}) => {
   const dispatch = useDispatch();
-  // const {} =useSelector(state => state.AuthReducer)
 
   const [data, setData] = React.useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
     check_textInputChange: false,
     secureTextEntry: true,
     isValidEmail: true,
@@ -44,15 +37,14 @@ const SignInScreen = ({navigation}) => {
           email: val,
           isValidEmail: true,
         });
+      } else {
+        setData({
+          ...data,
+          email: val,
+          isValidEmail: false,
+        });
       }
-     else {
-      setData({
-        ...data,
-        email: val,
-        isValidEmail: false,
-      });
     }
-  }
   };
 
   const validateEmail = val => {
@@ -88,8 +80,7 @@ const SignInScreen = ({navigation}) => {
     dispatch(logIn(email, password));
   };
 
-  const goToForgotPassword = () =>
-    navigation.navigate('ForgotPasswordScreen');
+  const goToForgotPassword = () => navigation.navigate("ForgotPasswordScreen");
 
   return (
     <View style={styles.container}>
@@ -103,6 +94,7 @@ const SignInScreen = ({navigation}) => {
           <Mail stroke="#05375a" fill="none" width={20} height={20} />
           <TextInput
             placeholder="Your Email"
+            placeholderTextColor="#A9A9A9"
             style={styles.textInput}
             autoCapitalize="none"
             // value={email}
@@ -123,6 +115,7 @@ const SignInScreen = ({navigation}) => {
           <Lock stroke="#05375a" fill="none" width={20} height={20} />
           <TextInput
             placeholder="Your Password"
+            placeholderTextColor="#A9A9A9"
             secureTextEntry={data.secureTextEntry ? true : false}
             style={styles.textInput}
             autoCapitalize="none"
@@ -144,13 +137,13 @@ const SignInScreen = ({navigation}) => {
             // onPress={() => {logIn()}}
             onPress={() => loginHandle(data.email, data.password)}>
             <LinearGradient
-              colors={['#FFA500', '#FFA500']}
+              colors={["#FFA500", "#FFA500"]}
               style={styles.signIn}>
               <Text
                 style={[
                   styles.textSign,
                   {
-                    color: '#fff',
+                    color: "#fff",
                   },
                 ]}>
                 Login
@@ -172,9 +165,8 @@ const SignInScreen = ({navigation}) => {
                 </TouchableOpacity></View> */}
         </View>
         <View style={styles.forgot_password}>
-         
           <Text
-            style={{color: '#3090C7', fontSize: 16}}
+            style={{color: "#3090C7", fontSize: 16}}
             onPress={goToForgotPassword}>
             Forgot Password?
           </Text>
@@ -189,83 +181,83 @@ export default SignInScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFA500',
+    backgroundColor: "#FFA500",
   },
   header: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     paddingHorizontal: 20,
     paddingBottom: 50,
   },
   footer: {
     flex: 3,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingHorizontal: 20,
     paddingVertical: 30,
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 30,
     marginLeft: 100,
   },
   text_header: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
     fontSize: 30,
   },
   text_footer: {
-    color: '#05375a',
+    color: "#05375a",
     fontSize: 18,
   },
   action: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#f2f2f2',
+    borderBottomColor: "#f2f2f2",
     paddingBottom: 5,
   },
   actionError: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#FF0000',
+    borderBottomColor: "#FF0000",
     paddingBottom: 5,
   },
   textInput: {
     flex: 1,
-    marginTop: Platform.OS === 'ios' ? 0 : -12,
+    marginTop: Platform.OS === "ios" ? 0 : -12,
     paddingLeft: 10,
-    color: '#05375a',
+    color: "#05375a",
   },
   errorMsg: {
-    color: '#FF0000',
+    color: "#FF0000",
     fontSize: 14,
   },
   button: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 50,
   },
   signIn: {
-    width: '100%',
+    width: "100%",
     height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 50,
   },
   signUp: {
-    width: '80%',
+    width: "80%",
     height: 20,
     borderRadius: 30,
   },
   textSign: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 
   forgot_password: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 30,
   },
 });

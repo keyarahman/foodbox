@@ -20,13 +20,13 @@ const SplashScreen = ({navigation}) => {
     <View style={styles.container}>
       <StatusBar backgroundColor="#FFA500" barStyle="light-content" />
       <View style={styles.header}>
-        <Animatable.Image
+        {/* <Animatable.Image
           animation="bounceIn"
           duraton="2000"
           source={require("../assets/foodImage.png")}
           style={styles.logo}
           resizeMode="stretch"
-        />
+        /> */}
       </View>
       <Animatable.View
         style={[
