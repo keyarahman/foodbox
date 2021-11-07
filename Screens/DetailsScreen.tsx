@@ -20,7 +20,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useDispatch} from "react-redux";
 import axios from "axios";
 import {getOrder} from "../Redux2/actions";
-import {useFocusEffect} from "@react-navigation/native";
+// import {useFocusEffect} from "@react-navigation/native";
 
 export interface Product {
   name: string;
@@ -92,6 +92,7 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
   const [currentPrinter, setCurrentPrinter] = useState();
   // printer related states ends here...
 
+    /*
   useFocusEffect(
     React.useCallback(
       () => {
@@ -116,6 +117,7 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
       ],
     ),
   );
+  */
 
   //  printer related states  ends here..
 
