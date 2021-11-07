@@ -17,9 +17,10 @@ import moment from "moment";
 import {useSelector, useDispatch} from "react-redux";
 
 export default function AcceptiesScreen({navigation}) {
-  const [PreOrderData, setPreOrderData] = useState([]);
+  const [acceptedOrder, setAcceptedOrder] = useState([]);
   const {Orders} = useSelector(state => state.OrderReducer);
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setrefreshing] = useState(false);
 
   useEffect(() => {
     newArray();
@@ -30,7 +31,7 @@ export default function AcceptiesScreen({navigation}) {
     let arr = itemsArray.filter(item => {
       return item.order_status === "Accepted";
     });
-    setPreOrderData(arr);
+    setAcceptedOrder(arr);
     setIsLoading(false);
   };
 
@@ -41,12 +42,19 @@ export default function AcceptiesScreen({navigation}) {
       </View>
     );
   }
+  const onRefresh = () => {
+    setrefreshing(true);
+    setTimeout(() => {
+      dispatch(getOrder());
+      setrefreshing(false);
+    }, 1000);
+  };
 
   return (
     <SafeAreaView>
-      {PreOrderData.length > 0 ? (
+      {acceptedOrder.length > 0 ? (
         <FlatList
-          data={PreOrderData}
+          data={acceptedOrder}
           renderItem={({item}) => (
             <Card style={{margin: 5, backgroundColor: "#fff"}}>
               <View style={{flex: 1, flexDirection: "row", padding: 10}}>
@@ -87,6 +95,8 @@ export default function AcceptiesScreen({navigation}) {
             </Card>
           )}
           keyExtractor={item => item.id}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
         />
       ) : (
         <View style={{alignItems: "center", marginTop: 190}}>

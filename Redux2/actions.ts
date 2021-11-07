@@ -1,10 +1,19 @@
-import { FETCH_ORDER, FETCH_ORDER_FAIL, LOGIN, LOGOUT, SET_USER_EMAIL, SET_USER_PASSWORD,IS_NEW_OREDER } from './constant';
+import {
+  FETCH_ORDER,
+  FETCH_ORDER_FAIL,
+  LOGIN,
+  LOGOUT,
+  SET_USER_EMAIL,
+  SET_USER_PASSWORD,
+  IS_NEW_OREDER,
+  ERROR,
+} from "./constant";
 // import * as api from "./api";
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import moment from 'moment';
-import{requestUserPermission} from '../Service/Notifications';
-import { useSelector } from "react-redux";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import moment from "moment";
+import {requestUserPermission} from "../Service/Notifications";
+import {useSelector} from "react-redux";
 
 import {
   BLEPrinter,
@@ -14,9 +23,8 @@ import {
   IBLEPrinter,
   INetPrinter,
 } from "react-native-thermal-receipt-printer";
-import { oneOrder_Item_interface } from "../Screens/DetailsScreen";
-import { Alert } from "react-native";
-
+import {oneOrder_Item_interface} from "../Screens/DetailsScreen";
+import {Alert} from "react-native";
 
 const printerList: Record<string, any> = {
   ble: BLEPrinter,
@@ -29,9 +37,7 @@ interface SelectedPrinter
   printerType?: keyof typeof printerList;
 }
 
-
-const OrderApi = 'https://qrtech.co.uk/api/orders';
-
+const OrderApi = "https://qrtech.co.uk/api/orders";
 
 /*
 const sortArray=(props)=>{
@@ -41,9 +47,6 @@ const sortArray=(props)=>{
   };
 
 */
-
-
-
 
 /*
 const [selectedValue, setSelectedValue] = React.useState<keyof typeof printerList>("ble");
@@ -89,151 +92,126 @@ export const getListDevices(selectedValue) = async () => {
 
 */
 
-
-
-const sortArray=(orders:oneOrder_Item_interface[])=>{
-
-  orders.sort(function(a,b){
+const sortArray = (orders: oneOrder_Item_interface[]) => {
+  orders.sort(function (a, b) {
     // Turn your strings into dates, and then subtract them
     // to get a value that is either negative, positive, or zero.
     return new Date(b.created_at) - new Date(a.created_at);
   });
 
-
   return orders;
 };
 
-
-
-export const getOrder = () => async (dispatch:any) => {
-
-  AsyncStorage.getItem('userToken').then( (data:any) => {
+export const getOrder = () => async (dispatch: any) => {
+  AsyncStorage.getItem("userToken").then((data: any) => {
     const token = JSON.parse(data).access_token;
 
-
-    try{
+    try {
       const config = {
-        method: 'get',
+        method: "get",
         url: OrderApi,
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       };
 
-      axios(config).
-      then(function (response) {
+      axios(config)
+        .then(function (response) {
+          console.log(
+            " << JSON.stringify(response.data) >> ",
+            JSON.stringify(response.data).length,
+          );
 
+          // const OrderData = response.data;
+          const OrderData = response.data; // JSON.parse(response.data); // .json();
 
-        console.log( " << JSON.stringify(response.data) >> ", JSON.stringify(response.data).length);
+          if (OrderData !== undefined) {
+            // console.log(" << OrderData>> : ", OrderData);
 
+            const ordered_orderData = sortArray(OrderData);
 
-        // const OrderData = response.data;
-        const OrderData =  response.data; // JSON.parse(response.data); // .json();
+            // console.log(" << ordered_orderData[55].created_at >> ", ordered_orderData[55].created_at );
+            // console.log(" << ordered_orderData[0].created_at >> ", ordered_orderData[0].created_at );
 
-        if (OrderData !==undefined){
-
-          // console.log(" << OrderData>> : ", OrderData);
-
-          const ordered_orderData =sortArray(OrderData);
-
-          // console.log(" << ordered_orderData[55].created_at >> ", ordered_orderData[55].created_at );
-          // console.log(" << ordered_orderData[0].created_at >> ", ordered_orderData[0].created_at );
-
-
-
-          dispatch({
-            type: FETCH_ORDER,
-            payload: ordered_orderData,
-          });
-        }
-
-
-      }).
-      catch(function (error) {
-        console.log(error);
-      });
-
-    }catch (error){
-
+            dispatch({
+              type: FETCH_ORDER,
+              payload: ordered_orderData,
+            });
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } catch (error) {
       console.log("error in getting order data : ", error);
     }
-
-
-
-
   });
 };
 
+export const logIn =
+  (email: any, password: any, onComplete: any) => async (dispatch: any) => {
+    let userToken;
+    userToken = null;
+    await fetch("https://qrtech.co.uk/api/login", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    })
+      .then(res => res.json())
+      .then(resData => {
+        console.log(resData);
 
-export const logIn = (email:any, password:any) => async (dispatch:any) => {
-
-  let userToken;
-  userToken = null;
-  await fetch('https://qrtech.co.uk/api/login', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      email: email,
-      password: password
-    }),
-  })
-    .then(res => res.json())
-    .then(resData => {
-      console.log(resData);
-
-      if (resData != null) {
-
-        if (resData.data != null && resData.data.profile != null) {
-
-          if (resData.data.profile.role == 'RestaurantAdmin') {
-
-            // alert('Successfully logged in');
-            userToken = resData;
-            AsyncStorage.setItem("userToken", JSON.stringify(userToken));
-            dispatch({ type: LOGIN, id: email, token: userToken }); // check the AuthReducer....
-          } else {
-            console.log('Not allowed');
-            Alert.alert("You don't have permission to log in");
+        if (resData != null) {
+          if (resData.data != null && resData.data.profile != null) {
+            if (resData.data.profile.role == "RestaurantAdmin") {
+              // alert('Successfully logged in');
+              userToken = resData;
+              AsyncStorage.setItem("userToken", JSON.stringify(userToken));
+              dispatch({type: LOGIN, id: email, token: userToken}); // check the AuthReducer....
+            } else {
+              console.log("Not allowed");
+              Alert.alert("You don't have permission to log in");
+            }
+          }
+          if (resData.message != null) {
+            // alert(resData.message);
+            dispatch({type: ERROR, payload: resData.message});
           }
         }
-        if (resData.message != null) {
-          // alert(resData.message);
-        }
-      }
-    }).then(data=>{
-      requestUserPermission();
-    })
+        onComplete && onComplete();
+      })
+      .then(data => {
+        requestUserPermission();
+      });
+  };
 
-};
-
-export const logOut = () => async (dispatch:any) => {
+export const logOut = () => async (dispatch: any) => {
   try {
-    AsyncStorage.removeItem('userToken');
+    AsyncStorage.removeItem("userToken");
   } catch (e) {
     console.log(e);
   }
-  dispatch({ type: LOGOUT });
+  dispatch({type: LOGOUT});
 };
 
-
-export const setEmail = (email:any) => (dispatch:any) => {
+export const setEmail = (email: any) => (dispatch: any) => {
   dispatch({
     type: SET_USER_EMAIL,
-    payload: email
+    payload: email,
   });
-
-}
-export const setPassword = (password:any)=> (dispatch:any) => {
+};
+export const setPassword = (password: any) => (dispatch: any) => {
   dispatch({
     type: SET_USER_PASSWORD,
-    payload: password
+    payload: password,
   });
-
-}
-
+};
 
 // export const buttonHandler = (orderId,resturant_id) => async (dispatch) => {
 //   var body = {
@@ -259,6 +237,5 @@ export const setPassword = (password:any)=> (dispatch:any) => {
 //         console.log(error);
 //       });
 //   });
-
 
 // };

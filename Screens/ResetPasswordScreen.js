@@ -98,6 +98,7 @@ const ResetPasswordScreen = ({navigation}) => {
             <View style={styles.action}>
               <TextInput
                 placeholder="Enter the code"
+                placeholderTextColor="#A9A9A9"
                 style={styles.textInput}
                 autoCapitalize="none"
                 // value={email}
@@ -118,6 +119,7 @@ const ResetPasswordScreen = ({navigation}) => {
             <Lock stroke="#05375a" fill="none" width={20} height={20} />
             <TextInput
               placeholder="Enter Your Password"
+              placeholderTextColor="#A9A9A9"
               secureTextEntry={data.secureTextEntry ? true : false}
               style={styles.textInput}
               autoCapitalize="none"

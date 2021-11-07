@@ -52,7 +52,7 @@ export default function IncomingOrderScreen({navigation}) {
   return (
     <SafeAreaView>
       <StatusBar backgroundColor="#FFA500" barStyle="light-content" />
-      {Orders !== null ? (
+      {Orders.length > 0 ? (
         <FlatList
           data={Orders}
           renderItem={({item}) => (
@@ -125,10 +125,3 @@ export default function IncomingOrderScreen({navigation}) {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    margin: 5,
-    backgroundColor: "#fff",
-  },
-});

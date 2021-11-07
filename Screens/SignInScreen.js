@@ -7,18 +7,20 @@ import {
   Platform,
   StyleSheet,
   StatusBar,
+  Alert,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import LinearGradient from "react-native-linear-gradient";
 
 import {EyeOff, Lock, Mail, Eye} from "react-native-feather";
 
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 import {logIn} from "../Redux2/actions";
 
 const SignInScreen = ({navigation}) => {
   const dispatch = useDispatch();
+  const {loginError} = useSelector(state => state.AuthReducer);
 
   const [data, setData] = React.useState({
     email: "",
@@ -27,6 +29,9 @@ const SignInScreen = ({navigation}) => {
     secureTextEntry: true,
     isValidEmail: true,
     isValidPassword: true,
+    error: "",
+    emailerror: "",
+    passwordError: "",
   });
 
   const handleEmailChange = val => {
@@ -77,7 +82,26 @@ const SignInScreen = ({navigation}) => {
   };
 
   const loginHandle = (email, password) => {
-    dispatch(logIn(email, password));
+    if (!email || !password) {
+      setData({
+        ...data,
+        error: "Please fill up all the inputs ",
+      });
+    } else {
+      if (data.isValidEmail) {
+        setData({
+          ...data,
+          error: " ",
+        });
+        // dispatch(logIn(email, password));
+        dispatch(logIn(email, password));
+      } else {
+        setData({
+          ...data,
+          error: "Invalid email or password",
+        });
+      }
+    }
   };
 
   const goToForgotPassword = () => navigation.navigate("ForgotPasswordScreen");
@@ -101,6 +125,9 @@ const SignInScreen = ({navigation}) => {
             onChangeText={val => handleEmailChange(val)}
           />
         </View>
+        {/* <View>
+          <Text style={{color: "red"}}>{data.emailerror}</Text>
+        </View> */}
 
         <Text
           style={[
@@ -130,7 +157,12 @@ const SignInScreen = ({navigation}) => {
             )}
           </TouchableOpacity>
         </View>
-
+        {/* <View>
+          <Text style={{color: "red"}}>{data.passwordError}</Text>
+        </View> */}
+        <View>
+          <Text style={{color: "red"}}>{data.error}</Text>
+        </View>
         <View style={styles.button}>
           <TouchableOpacity
             style={styles.signIn}

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState} from "react";
 import {
   View,
   Text,
@@ -9,76 +9,81 @@ import {
   StatusBar,
   Alert,
   ActivityIndicator,
-} from 'react-native';
-import * as Animatable from 'react-native-animatable';
-import LinearGradient from 'react-native-linear-gradient';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Feather from 'react-native-vector-icons/Feather';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+} from "react-native";
+import * as Animatable from "react-native-animatable";
+import LinearGradient from "react-native-linear-gradient";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import Feather from "react-native-vector-icons/Feather";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import {EyeOff, Lock, Mail, Eye, Bold} from 'react-native-feather';
-import {AuthContext} from '../components.js/context';
-import {useSelector, useDispatch} from 'react-redux';
-import AuthReducer from '../Redux2/reducer';
-import {logIn} from '../Redux2/actions';
-import ResetPasswordScreen from './ResetPasswordScreen'
-
+import {EyeOff, Lock, Mail, Eye, Bold} from "react-native-feather";
+import {AuthContext} from "../components.js/context";
+import {useSelector, useDispatch} from "react-redux";
+import AuthReducer from "../Redux2/reducer";
+import {logIn} from "../Redux2/actions";
+import ResetPasswordScreen from "./ResetPasswordScreen";
 
 const ForgotPasswordScreen = ({navigation}) => {
   const dispatch = useDispatch();
-  const [email,setEmail]=useState("")
-  const[isValidEmail,setIsValidEmail]=useState(true)
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [isValidEmail, setIsValidEmail] = useState(true);
 
-//   const [data, setData] = React.useState({
-//     email: '',
-//     isValidEmail: true,
-   
-//   });
+  //   const [data, setData] = React.useState({
+  //     email: '',
+  //     isValidEmail: true,
 
-  const handleEmailChange = (val) => {
+  //   });
+
+  const handleEmailChange = val => {
     if (val.trim().length > 0) {
       if (validateEmail(val)) {
-       setEmail(val);
-       setIsValidEmail(true)
+        setEmail(val);
+        setIsValidEmail(true);
+      } else {
+        setEmail(val);
+        setIsValidEmail(false);
       }
-     else {
-     setEmail(val)
-     setIsValidEmail(false)
+    } else {
+      setEmailError("please enter an email adress");
     }
-}
   };
 
-  const validateEmail = (val) => {
+  const validateEmail = val => {
     var regex =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return regex.test(String(val).toLowerCase());
   };
 
-   const emailHandler = () => async () => {
+  const emailHandler = () => async () => {
+    if (email) {
+      await fetch("https://qrtech.co.uk/api/forgot_password", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({email: email}),
+      })
+        .then(res => res.json())
+        .then(resData => {
+          //    alert(resData.message)
 
-    await fetch('https://qrtech.co.uk/api/forgot_password', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({ email:email}),
-    })
-      .then(res => res.json())
-      .then(resData => {
-    //    alert(resData.message)
-    
-    if(isValidEmail && resData.message==="Email Sent!"){
-     navigation.navigate('ResetPasswordScreen');
+          if (isValidEmail && resData.message === "Email Sent!") {
+            setEmailError("");
+            navigation.navigate("ResetPasswordScreen");
+          } else {
+            setEmailError("Invalid email");
+            // alert(resData.message);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      setEmailError("please enter an email adress");
     }
-    else{
-        alert(resData.message)
-    }
-
-      }).catch(function (error) {
-        console.log(error);
-      });
-    }
+  };
 
   return (
     <View style={styles.container}>
@@ -86,11 +91,11 @@ const ForgotPasswordScreen = ({navigation}) => {
 
       <View style={styles.header}></View>
       <Animatable.View style={styles.footer} animation="fadeInUpBig">
-        <Text style={{fontSize: 22, fontWeight: 'bold', color: '#05375a'}}>
+        <Text style={{fontSize: 22, fontWeight: "bold", color: "#05375a"}}>
           Forgot Password
         </Text>
         <View style={{marginTop: 25}}>
-          <Text style={{fontSize: 17, color: '#696969'}}>
+          <Text style={{fontSize: 17, color: "#696969"}}>
             Enter your email for the varification process, we will send 4 digits
             code to your email.
           </Text>
@@ -100,27 +105,29 @@ const ForgotPasswordScreen = ({navigation}) => {
           <View style={styles.action}>
             <Mail stroke="#05375a" fill="none" width={20} height={20} />
             <TextInput
+              placeholderTextColor="#A9A9A9"
               placeholder="Your Email"
               style={styles.textInput}
               autoCapitalize="none"
-            //   value={email}
-              onChangeText={val=>handleEmailChange(val)}
+              //   value={email}
+              onChangeText={val => handleEmailChange(val)}
             />
           </View>
         </View>
+        <View>
+          <Text style={{color: "red"}}>{emailError}</Text>
+        </View>
 
         <View style={styles.button}>
-          <TouchableOpacity
-            style={styles.signIn}
-            onPress={emailHandler()}>
+          <TouchableOpacity style={styles.signIn} onPress={emailHandler()}>
             <LinearGradient
-              colors={['#FFA500', '#FFA500']}
+              colors={["#FFA500", "#FFA500"]}
               style={styles.signIn}>
               <Text
                 style={[
                   styles.textSign,
                   {
-                    color: '#fff',
+                    color: "#fff",
                   },
                 ]}>
                 Continue
@@ -138,83 +145,83 @@ export default ForgotPasswordScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFA500',
+    backgroundColor: "#FFA500",
   },
   header: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     paddingHorizontal: 20,
     paddingBottom: 50,
   },
   footer: {
     flex: 3,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingHorizontal: 20,
     paddingVertical: 30,
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 30,
     marginLeft: 100,
   },
   text_header: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
     fontSize: 30,
   },
   text_footer: {
-    color: '#05375a',
+    color: "#05375a",
     fontSize: 18,
   },
   action: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#f2f2f2',
+    borderBottomColor: "#f2f2f2",
     paddingBottom: 5,
   },
   actionError: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#FF0000',
+    borderBottomColor: "#FF0000",
     paddingBottom: 5,
   },
   textInput: {
     flex: 1,
-    marginTop: Platform.OS === 'ios' ? 0 : -12,
+    marginTop: Platform.OS === "ios" ? 0 : -12,
     paddingLeft: 10,
-    color: '#05375a',
+    color: "#05375a",
   },
   errorMsg: {
-    color: '#FF0000',
+    color: "#FF0000",
     fontSize: 14,
   },
   button: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 50,
   },
   signIn: {
-    width: '100%',
+    width: "100%",
     height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 50,
   },
   signUp: {
-    width: '80%',
+    width: "80%",
     height: 20,
     borderRadius: 30,
   },
   textSign: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 
   forgot_password: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 30,
   },
 });
