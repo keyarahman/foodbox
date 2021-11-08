@@ -123,7 +123,10 @@ const DetailsScreen: React.FC<Props> = ({route, navigation}) => {
 
   // use Effect for BLE printer
   useEffect(() => {
-    BLEPrinter.init().then(() => {
+    BLEPrinter.init().then((somePromise:void) => {
+
+      console.log("somePromise: ", somePromise);
+
       BLEPrinter.getDeviceList().then(setPrinters);
     });
   }, []);

@@ -103,6 +103,7 @@ const sortArray = (orders: oneOrder_Item_interface[]) => {
 };
 
 export const getOrder = () => async (dispatch: any) => {
+  console.log("___at getOrder");
   AsyncStorage.getItem("userToken").then((data: any) => {
     const token = JSON.parse(data).access_token;
 
@@ -117,10 +118,10 @@ export const getOrder = () => async (dispatch: any) => {
 
       axios(config)
         .then(function (response) {
-          console.log(
-            " << JSON.stringify(response.data) >> ",
-            JSON.stringify(response.data).length,
-          );
+          // console.log(
+          //   " << JSON.stringify(response.data) >> ",
+          //   JSON.stringify(response.data).length,
+          // );
 
           // const OrderData = response.data;
           const OrderData = response.data; // JSON.parse(response.data); // .json();

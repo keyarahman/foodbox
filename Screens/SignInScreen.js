@@ -7,7 +7,7 @@ import {
   Platform,
   StyleSheet,
   StatusBar,
-  Alert,
+  Alert, ActivityIndicator,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import LinearGradient from "react-native-linear-gradient";
@@ -33,6 +33,8 @@ const SignInScreen = ({navigation}) => {
     emailerror: "",
     passwordError: "",
   });
+
+  const [loadingState, setLoadingState] = useState(false);
 
   const handleEmailChange = val => {
     if (val.trim().length > 0) {
@@ -93,6 +95,10 @@ const SignInScreen = ({navigation}) => {
           ...data,
           error: " ",
         });
+
+        setLoadingState(true);
+
+
         // dispatch(logIn(email, password));
         dispatch(logIn(email, password));
       } else {
@@ -187,7 +193,7 @@ const SignInScreen = ({navigation}) => {
                     <Text>Dont have an account? </Text>
                 <TouchableOpacity
                     onPress={() => navigation.navigate('SignInScreen')}
-                    style={[styles.signUp, { 
+                    style={[styles.signUp, {
                         marginTop:-3
                     }]}
                 >
@@ -198,10 +204,41 @@ const SignInScreen = ({navigation}) => {
         </View>
         <View style={styles.forgot_password}>
           <Text
-            style={{color: "#3090C7", fontSize: 16}}
+            style={{
+              color: "#3090C7",
+              fontSize: 16
+            }}
             onPress={goToForgotPassword}>
             Forgot Password?
           </Text>
+        </View>
+
+
+        <View style={{
+
+          flexDirection: 'column',
+          alignItems: 'center',
+          flexShrink: 0, // flexShrink: 0 means no shrink
+          flexBasis: 0.1,
+          flex: 0.1,
+          justifyContent: "center",
+          // backgroundColor: "gold",
+
+        }}
+        >
+
+          {
+            !loadingState
+                ? null
+                : (<ActivityIndicator
+                    size="large"
+                    color="gray"
+                    animating={loadingState}
+                    hidesWhenStopped={true}
+                />)
+          }
+
+
         </View>
       </Animatable.View>
     </View>

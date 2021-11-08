@@ -13,6 +13,7 @@ const initialOrderState = {
   loading: true,
   Orders: [],
   loginError: "",
+  // apiInvokationTimer: 0,
 };
 
 const initialLoginState = {
@@ -24,7 +25,12 @@ const initialLoginState = {
 export const OrderReducer = (state = initialOrderState, action) => {
   switch (action.type) {
     case FETCH_ORDER:
-      return {loading: false, Orders: action.payload};
+      return {
+        loading: false,
+        Orders: action.payload,
+        // apiInvokationTimer:10000,
+
+      };
     case FETCH_ORDER_FAIL:
       return {loading: false, error: action.payload};
     default:
