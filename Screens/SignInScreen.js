@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {
   View,
   Text,
@@ -7,15 +7,19 @@ import {
   Platform,
   StyleSheet,
   StatusBar,
-  Alert, ActivityIndicator,
+  Alert,
+  Button,
+  ActivityIndicator,
 } from "react-native";
+import {ERROR} from "../Redux2/constant";
 import * as Animatable from "react-native-animatable";
 import LinearGradient from "react-native-linear-gradient";
-
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import Feather from "react-native-vector-icons/Feather";
 import {EyeOff, Lock, Mail, Eye} from "react-native-feather";
-
-import {useDispatch, useSelector} from "react-redux";
-
+import {AuthContext} from "../components.js/context";
+import {useSelector, useDispatch} from "react-redux";
+import AuthReducer from "../Redux2/reducer";
 import {logIn} from "../Redux2/actions";
 
 const SignInScreen = ({navigation}) => {
@@ -34,7 +38,19 @@ const SignInScreen = ({navigation}) => {
     passwordError: "",
   });
 
-  const [loadingState, setLoadingState] = useState(false);
+  useEffect(() => {
+    console.log("Log In Error: ", loginError);
+
+    if (loginError === "Invalid Email!") {
+      console.log("emailEror");
+      setData({...data, emailerror: loginError, passwordError: ""});
+    } else {
+      console.log("Password");
+      setData({...data, passwordError: loginError, emailerror: ""});
+    }
+
+    return () => {};
+  }, [loginError]);
 
   const handleEmailChange = val => {
     if (val.trim().length > 0) {
@@ -85,28 +101,19 @@ const SignInScreen = ({navigation}) => {
 
   const loginHandle = (email, password) => {
     if (!email || !password) {
+      dispatch({type: ERROR, payload: ""});
       setData({
         ...data,
         error: "Please fill up all the inputs ",
       });
     } else {
-      if (data.isValidEmail) {
-        setData({
-          ...data,
-          error: " ",
-        });
-
-        setLoadingState(true);
-
-
-        // dispatch(logIn(email, password));
-        dispatch(logIn(email, password));
-      } else {
-        setData({
-          ...data,
-          error: "Invalid email or password",
-        });
-      }
+      setData({
+        ...data,
+        error: "",
+      });
+      console.log("Logging in");
+      // dispatch(logIn(email, password));
+      dispatch(logIn(email, password));
     }
   };
 
@@ -124,16 +131,15 @@ const SignInScreen = ({navigation}) => {
           <Mail stroke="#05375a" fill="none" width={20} height={20} />
           <TextInput
             placeholder="Your Email"
-            placeholderTextColor="#A9A9A9"
             style={styles.textInput}
             autoCapitalize="none"
             // value={email}
             onChangeText={val => handleEmailChange(val)}
           />
         </View>
-        {/* <View>
+        <View>
           <Text style={{color: "red"}}>{data.emailerror}</Text>
-        </View> */}
+        </View>
 
         <Text
           style={[
@@ -148,7 +154,6 @@ const SignInScreen = ({navigation}) => {
           <Lock stroke="#05375a" fill="none" width={20} height={20} />
           <TextInput
             placeholder="Your Password"
-            placeholderTextColor="#A9A9A9"
             secureTextEntry={data.secureTextEntry ? true : false}
             style={styles.textInput}
             autoCapitalize="none"
@@ -163,12 +168,13 @@ const SignInScreen = ({navigation}) => {
             )}
           </TouchableOpacity>
         </View>
-        {/* <View>
+        <View>
           <Text style={{color: "red"}}>{data.passwordError}</Text>
-        </View> */}
+        </View>
         <View>
           <Text style={{color: "red"}}>{data.error}</Text>
         </View>
+
         <View style={styles.button}>
           <TouchableOpacity
             style={styles.signIn}
@@ -193,7 +199,7 @@ const SignInScreen = ({navigation}) => {
                     <Text>Dont have an account? </Text>
                 <TouchableOpacity
                     onPress={() => navigation.navigate('SignInScreen')}
-                    style={[styles.signUp, {
+                    style={[styles.signUp, { 
                         marginTop:-3
                     }]}
                 >
@@ -204,41 +210,10 @@ const SignInScreen = ({navigation}) => {
         </View>
         <View style={styles.forgot_password}>
           <Text
-            style={{
-              color: "#3090C7",
-              fontSize: 16
-            }}
+            style={{color: "#3090C7", fontSize: 16}}
             onPress={goToForgotPassword}>
             Forgot Password?
           </Text>
-        </View>
-
-
-        <View style={{
-
-          flexDirection: 'column',
-          alignItems: 'center',
-          flexShrink: 0, // flexShrink: 0 means no shrink
-          flexBasis: 0.1,
-          flex: 0.1,
-          justifyContent: "center",
-          // backgroundColor: "gold",
-
-        }}
-        >
-
-          {
-            !loadingState
-                ? null
-                : (<ActivityIndicator
-                    size="large"
-                    color="gray"
-                    animating={loadingState}
-                    hidesWhenStopped={true}
-                />)
-          }
-
-
         </View>
       </Animatable.View>
     </View>

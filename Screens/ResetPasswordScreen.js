@@ -59,7 +59,7 @@ const ResetPasswordScreen = ({navigation}) => {
   };
 
   const resetPasswordHandel = () => async () => {
-    await fetch("https://qrtech.co.uk/api/new_password", {
+    await fetch("http://3.9.23.131/api/new_password", {
       method: "POST",
       headers: {
         Accept: "application/json",

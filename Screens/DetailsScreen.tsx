@@ -124,17 +124,17 @@ useFocusEffect(
   // use Effect for BLE printer
 
   useEffect(() => {
-    BLEPrinter.init().then((somePromise:void) => {
+    BLEPrinter.init()
+      .then((somePromise: void) => {
+        console.log("somePromise: ", somePromise);
 
-      console.log("somePromise: ", somePromise);
-
-      BLEPrinter.getDeviceList().then(setPrinters);
-      // error => console.warn(error)
-    }).catch((error3:string) => {
-      console.log('_error_:', error3)
-      if(error3==="bluetooth adapter is not enabled"){
-
-        Alert.alert(
+        BLEPrinter.getDeviceList().then(setPrinters);
+        // error => console.warn(error)
+      })
+      .catch((error3: string) => {
+        console.log("_error_:", error3);
+        if (error3 === "bluetooth adapter is not enabled") {
+          Alert.alert(
             `Bluetooth not Enabled`,
             "Please enable Bluetooth.",
             [
@@ -145,19 +145,12 @@ useFocusEffect(
                 },
                 style: "cancel",
               },
-
             ],
             {cancelable: true},
-        );
-
-
-      };
-    });
-
+          );
+        }
+      });
   }, []);
-
-
-
 
   const printTextTest = () => {
     currentPrinter && BLEPrinter.printText("<C>sample text</C>\n");
@@ -172,17 +165,17 @@ useFocusEffect(
 
     if (products) {
       return products
-          .map(
-              (oneProduct: Product, index: number) =>
-                  `item[${index + 1}]: ${
-                      oneProduct.name.length < 16
-                          ? oneProduct.name
-                          : `${oneProduct.name.substring(0, 15)}.`
-                  }: ${oneProduct.unit_price} X ${oneProduct.quantity} = ${
-                      oneProduct.unit_total
-                  } \n`,
-          )
-          .join("");
+        .map(
+          (oneProduct: Product, index: number) =>
+            `item[${index + 1}]: ${
+              oneProduct.name.length < 16
+                ? oneProduct.name
+                : `${oneProduct.name.substring(0, 15)}.`
+            }: ${oneProduct.unit_price} X ${oneProduct.quantity} = ${
+              oneProduct.unit_total
+            } \n`,
+        )
+        .join("");
     } else {
       return "Products: null";
     }
@@ -216,9 +209,9 @@ Total cost: ${orderItem.total}
 Name: ${orderItem.customer.name}
 Phone: ${orderItem.customer.phone}
 Add.: ${
-      orderItem.customer.address.length < 25
-          ? orderItem.customer.address
-          : `${orderItem.customer.address.substring(0, 23)}.`
+    orderItem.customer.address.length < 25
+      ? orderItem.customer.address
+      : `${orderItem.customer.address.substring(0, 23)}.`
   }
 Post code: ${orderItem.customer.postcode}
 `;
@@ -249,8 +242,8 @@ Post code: ${orderItem.customer.postcode}
 
   const requested_time = (orderDate: Date) => {
     return new Date(orderDate)
-        .toLocaleTimeString()
-        .replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3");
+      .toLocaleTimeString()
+      .replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3");
   };
 
   const AcceptButtonHandler2 = async (oneOrder: oneOrder_Item_interface) => {
@@ -258,42 +251,45 @@ Post code: ${orderItem.customer.postcode}
       // Runs 5 times, with values of step 0 through 4.
       // console.log('Walking east one step');
 
-      if ((printers[step].inner_mac_address === "66:22:37:5D:18:65")||(printers[step].device_name==="MTP-2")) {
+      if (
+        printers[step].inner_mac_address === "66:22:37:5D:18:65" ||
+        printers[step].device_name === "MTP-2"
+      ) {
         // _connectPrinter(printer)
         // four_curried(_connectPrinter(printer));
         // {"device_name": "MTP-2", "inner_mac_address": "66:22:37:5D:18:65"}
 
         // then cathc block begins here
         BLEPrinter.connectPrinter(printers[step].inner_mac_address)
-            .then(async responseJson => {
-              const success = responseJson;
-              console.log(" <<success >> : ", success);
+          .then(async responseJson => {
+            const success = responseJson;
+            console.log(" <<success >> : ", success);
 
-              await handlePrint(oneOrder);
+            await handlePrint(oneOrder);
 
-              // setCurrentPrinter(printers[step]);
-            })
-            .catch(error => {
-              console.error("error:", error);
-            });
+            // setCurrentPrinter(printers[step]);
+          })
+          .catch(error => {
+            console.error("error:", error);
+          });
 
         // ends here..
       }
     }
 
     printers.map(
-        (printer: IBLEPrinter) =>
-            console.log(
-                ` printer => ${printer.inner_mac_address} ${printer.device_name} `,
-            ),
-        // four_curried
-        // <TouchableOpacity key={printer.inner_mac_address} onPress={() => _connectPrinter(printer)}>
-        //   {`device_name: ${printer.device_name}, inner_mac_address: ${printer.inner_mac_address}`}
-        // </TouchableOpacity>
+      (printer: IBLEPrinter) =>
+        console.log(
+          ` printer => ${printer.inner_mac_address} ${printer.device_name} `,
+        ),
+      // four_curried
+      // <TouchableOpacity key={printer.inner_mac_address} onPress={() => _connectPrinter(printer)}>
+      //   {`device_name: ${printer.device_name}, inner_mac_address: ${printer.inner_mac_address}`}
+      // </TouchableOpacity>
 
-        // <TouchableOpacity key={printer.inner_mac_address} onPress={() => _connectPrinter(printer)}>
-        //   {`device_name: ${printer.device_name}, inner_mac_address: ${printer.inner_mac_address}`}
-        // </TouchableOpacity>
+      // <TouchableOpacity key={printer.inner_mac_address} onPress={() => _connectPrinter(printer)}>
+      //   {`device_name: ${printer.device_name}, inner_mac_address: ${printer.inner_mac_address}`}
+      // </TouchableOpacity>
     );
   };
 
@@ -309,50 +305,50 @@ Post code: ${orderItem.customer.postcode}
     AsyncStorage.getItem("userToken").then(data => {
       let token = JSON.parse(data).access_token;
       axios
-          .post("https://qrtech.co.uk/api/update_order", body, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then(async res => {
-            setIs_new(0);
-            setOrderStatus("Accepted");
-            dispatch(getOrder());
+        .post("https://qrtech.co.uk/api/update_order", body, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(async res => {
+          setIs_new(0);
+          setOrderStatus("Accepted");
+          dispatch(getOrder());
 
-            Alert.alert(
-                `Order Accepted`,
-                "Do you want to print the recite now?",
-                [
-                  {
-                    text: "Cancel",
-                    onPress: () => {
-                      console.log("Cancel Pressed");
-                    },
-                    style: "cancel",
-                  },
-                  {
-                    text: "print",
-                    onPress: () => {
-                      const tempOrder = {
-                        ...orderItemTemp,
-                        order_status: "Accepted",
-                      };
+          Alert.alert(
+            `Order Accepted`,
+            "Do you want to print the recite now?",
+            [
+              {
+                text: "Cancel",
+                onPress: () => {
+                  console.log("Cancel Pressed");
+                },
+                style: "cancel",
+              },
+              {
+                text: "print",
+                onPress: () => {
+                  const tempOrder = {
+                    ...orderItemTemp,
+                    order_status: "Accepted",
+                  };
 
-                      // console.log(" << tempOrder >>: ", tempOrder);
+                  // console.log(" << tempOrder >>: ", tempOrder);
 
-                      AcceptButtonHandler2(tempOrder);
-                    },
-                  },
-                ],
-                {cancelable: true},
-            );
+                  AcceptButtonHandler2(tempOrder);
+                },
+              },
+            ],
+            {cancelable: true},
+          );
 
-            // api called now print locally.. sept 28:
+          // api called now print locally.. sept 28:
 
-            //
+          //
 
-            /*
+          /*
 
 
 
@@ -387,11 +383,11 @@ Post code: ${orderItem.customer.postcode}
 
               */
 
-            // selectedPrinter
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+          // selectedPrinter
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     });
   };
 
@@ -405,29 +401,27 @@ Post code: ${orderItem.customer.postcode}
     AsyncStorage.getItem("userToken").then(data => {
       let token = JSON.parse(data).access_token;
       axios
-          .post("https://qrtech.co.uk/api/update_order", body, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then(res => {
-            setIs_new(0);
-            setOrderStatus("Declined");
-            dispatch(getOrder());
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+        .post("https://qrtech.co.uk/api/update_order", body, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(res => {
+          setIs_new(0);
+          setOrderStatus("Declined");
+          dispatch(getOrder());
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     });
   };
 
   const handleAcceptBtfn = () => {
     dispatch(AcceptbuttonHandler());
 
-
     // for tEST ONLY.... DONT REMOVE...PLEASE...
-
 
     /*
     const tempOrder ={
@@ -441,8 +435,6 @@ Post code: ${orderItem.customer.postcode}
     // AcceptButtonHandler2(tempOrder);
 
     */
-
-
   };
 
   const handleDeclineBtfn = () => {
@@ -453,212 +445,211 @@ Post code: ${orderItem.customer.postcode}
 
   // NHS begins here....
   return (
-      <SafeAreaView style={styles.container}>
-        <StatusBar backgroundColor="#FFA500" barStyle="light-content" />
-        {/*<ScrollView>*/}
+    <SafeAreaView style={styles.container}>
+      <StatusBar backgroundColor="#FFA500" barStyle="light-content" />
+      {/*<ScrollView>*/}
 
-        <View
-            style={{
-              flex: 6,
-              backgroundColor: "#fff",
-              flexDirection: "column",
-            }}>
-          <FlatList
-              data={orderItem.details.products}
-              renderItem={({item}) => (
-                  <View>
-                    <Card style={{margin: 5, backgroundColor: "#fff"}}>
-                      <View
-                          style={{
-                            flex: 1,
-                            flexDirection: "row",
-                            padding: 8,
-                          }}>
-                        <View
-                            style={{
-                              flexDirection: "column",
-                              marginStart: 10,
-                              borderWidth: 1,
-                              backgroundColor: "#fff",
-                            }}>
-                          <Text
-                              style={{
-                                paddingVertical: 5,
-                                paddingHorizontal: 10,
-                                fontWeight: "bold",
-                              }}>
-                            {item?.quantity}
-                          </Text>
-                        </View>
-
-                        <View
-                            style={{
-                              flexDirection: "column",
-                              marginStart: 10,
-                              padding: 5,
-                            }}>
-                          <Text style={{color: "#3090C7"}}>{item.name}</Text>
-                        </View>
-
-                        <View
-                            style={{
-                              flexDirection: "column",
-                              flex: 1,
-                              alignItems: "flex-end",
-                            }}>
-                          <Text style={{}}>
-                            {"\u00A3"}
-                            {item.unit_total}
-                          </Text>
-                        </View>
-                      </View>
-                    </Card>
-                  </View>
-              )}
-              keyExtractor={(item: Product, index: number) =>
-                  `${item.checkedItem}+ ${item.quantity}+ ${item.unit_price} +${item.name}+${index}`
-              }
-          />
-        </View>
-
-        <View
-            style={{
-              flex: 1.5,
-              // backgroundColor: '#fff',
-              // backgroundColor: 'crimson',
-              flexDirection: "column",
-            }}>
-          <View
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                paddingLeft: 20,
-              }}>
-            <View style={{flexDirection: "column"}}>
-              <Text
+      <View
+        style={{
+          flex: 6,
+          backgroundColor: "#fff",
+          flexDirection: "column",
+        }}>
+        <FlatList
+          data={orderItem.details.products}
+          renderItem={({item}) => (
+            <View>
+              <Card style={{margin: 5, backgroundColor: "#fff"}}>
+                <View
                   style={{
-                    fontWeight: "bold",
-                    fontSize: 18,
+                    flex: 1,
+                    flexDirection: "row",
+                    padding: 8,
                   }}>
-                Subtotal{" "}
-              </Text>
-              {orderItem.details.discount !== null ? (
-                  <Text style={{paddingTop: 7}}>Discount </Text>
-              ) : null}
-            </View>
-            <View
-                style={{
-                  flexDirection: "column",
-                  alignItems: "flex-end",
-                  flex: 1,
-                  paddingRight: 13,
-                }}>
-              <Text style={{fontSize: 18}}>
-                {" "}
-                {"\u00A3"}
-                {orderItem.details.subtotal}
-              </Text>
-              {orderItem.details.discount !== null ? (
-                  <Text
-                      style={{
-                        color: "#FF0000",
-                        paddingTop: 7,
-                      }}>
-                    -{"\u00A3"}
-                    {orderItem.details.discount}
-                  </Text>
-              ) : null
-              }
-            </View>
-          </View>
-        </View>
-        {/* </ScrollView>*/}
-
-        <View
-            style={{
-              flex: 2.5,
-              // backgroundColor: '#fff',
-              // backgroundColor: 'green',
-              flexDirection: "column",
-            }}>
-          <View
-              style={{
-                paddingVertical: 30,
-                paddingHorizontal: 10,
-                backgroundColor: "#fff",
-                flexDirection: "column",
-              }}>
-            <View
-                style={{
-                  flexDirection: "row",
-                  marginStart: 6,
-                }}>
-              <Text
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: 18,
-                  }}>
-                Total:{" "}
-              </Text>
-              <Text
-                  style={{
-                    fontSize: 18,
-                  }}>
-                {"\u00A3"}
-                {orderItem.details.total}
-              </Text>
-            </View>
-            {is_new === 1 ? (
-                <View style={{flexDirection: "row"}}>
                   <View
+                    style={{
+                      flexDirection: "column",
+                      marginStart: 10,
+                      borderWidth: 1,
+                      backgroundColor: "#fff",
+                    }}>
+                    <Text
                       style={{
-                        width: 190,
-                        padding: 10,
+                        paddingVertical: 5,
+                        paddingHorizontal: 10,
+                        fontWeight: "bold",
                       }}>
-                    <Button
-                        title="Accept"
-                        color="#3090C7"
-                        onPress={handleAcceptBtfn}
-                    />
+                      {item?.quantity}
+                    </Text>
                   </View>
+
                   <View
-                      style={{
-                        width: 190,
-                        padding: 10,
-                      }}>
-                    <Button
-                        title="Decline"
-                        color="#3090C7"
-                        onPress={handleDeclineBtfn}
-                    />
+                    style={{
+                      flexDirection: "column",
+                      marginStart: 10,
+                      padding: 5,
+                    }}>
+                    <Text style={{color: "#3090C7"}}>{item.name}</Text>
+                  </View>
+
+                  <View
+                    style={{
+                      flexDirection: "column",
+                      flex: 1,
+                      alignItems: "flex-end",
+                    }}>
+                    <Text style={{}}>
+                      {"\u00A3"}
+                      {item.unit_total}
+                    </Text>
                   </View>
                 </View>
-            ) : (
-                [
-                  orderStatus === "Accepted" ? (
-                      <View>
-                        <Button
-                            title="Accepted"
-                            color="#808080"
-                            disabled={true}
-                            onPress={function doNothing() {}}
-                        />
-                      </View>
-                  ) : (
-                      <View>
-                        <Button
-                            title="Declined"
-                            color="#808080"
-                            disabled={true}
-                            onPress={function doNothing() {}}
-                        />
-                      </View>
-                  ),
-                ]
-            )}
+              </Card>
+            </View>
+          )}
+          keyExtractor={(item: Product, index: number) =>
+            `${item.checkedItem}+ ${item.quantity}+ ${item.unit_price} +${item.name}+${index}`
+          }
+        />
+      </View>
+
+      <View
+        style={{
+          flex: 1.5,
+          // backgroundColor: '#fff',
+          // backgroundColor: 'crimson',
+          flexDirection: "column",
+        }}>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            paddingLeft: 20,
+          }}>
+          <View style={{flexDirection: "column"}}>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 18,
+              }}>
+              Subtotal{" "}
+            </Text>
+            {orderItem.details.discount !== null ? (
+              <Text style={{paddingTop: 7}}>Discount </Text>
+            ) : null}
+          </View>
+          <View
+            style={{
+              flexDirection: "column",
+              alignItems: "flex-end",
+              flex: 1,
+              paddingRight: 13,
+            }}>
+            <Text style={{fontSize: 18}}>
+              {" "}
+              {"\u00A3"}
+              {orderItem.details.subtotal}
+            </Text>
+            {orderItem.details.discount !== null ? (
+              <Text
+                style={{
+                  color: "#FF0000",
+                  paddingTop: 7,
+                }}>
+                -{"\u00A3"}
+                {orderItem.details.discount}
+              </Text>
+            ) : null}
           </View>
         </View>
-      </SafeAreaView>
+      </View>
+      {/* </ScrollView>*/}
+
+      <View
+        style={{
+          flex: 2.5,
+          // backgroundColor: '#fff',
+          // backgroundColor: 'green',
+          flexDirection: "column",
+        }}>
+        <View
+          style={{
+            paddingVertical: 30,
+            paddingHorizontal: 10,
+            backgroundColor: "#fff",
+            flexDirection: "column",
+          }}>
+          <View
+            style={{
+              flexDirection: "row",
+              marginStart: 6,
+            }}>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 18,
+              }}>
+              Total:{" "}
+            </Text>
+            <Text
+              style={{
+                fontSize: 18,
+              }}>
+              {"\u00A3"}
+              {orderItem.details.total}
+            </Text>
+          </View>
+          {is_new === 1 ? (
+            <View style={{flexDirection: "row"}}>
+              <View
+                style={{
+                  width: 190,
+                  padding: 10,
+                }}>
+                <Button
+                  title="Accept"
+                  color="#3090C7"
+                  onPress={handleAcceptBtfn}
+                />
+              </View>
+              <View
+                style={{
+                  width: 190,
+                  padding: 10,
+                }}>
+                <Button
+                  title="Decline"
+                  color="#3090C7"
+                  onPress={handleDeclineBtfn}
+                />
+              </View>
+            </View>
+          ) : (
+            [
+              orderStatus === "Accepted" ? (
+                <View>
+                  <Button
+                    title="Accepted"
+                    color="#808080"
+                    disabled={true}
+                    onPress={function doNothing() {}}
+                  />
+                </View>
+              ) : (
+                <View>
+                  <Button
+                    title="Declined"
+                    color="#808080"
+                    disabled={true}
+                    onPress={function doNothing() {}}
+                  />
+                </View>
+              ),
+            ]
+          )}
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 

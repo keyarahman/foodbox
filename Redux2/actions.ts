@@ -37,7 +37,7 @@ interface SelectedPrinter
   printerType?: keyof typeof printerList;
 }
 
-const OrderApi = "https://qrtech.co.uk/api/orders";
+const OrderApi = "http://3.9.23.131/api/orders";
 
 /*
 const sortArray=(props)=>{
@@ -118,21 +118,12 @@ export const getOrder = () => async (dispatch: any) => {
 
       axios(config)
         .then(function (response) {
-          // console.log(
-          //   " << JSON.stringify(response.data) >> ",
-          //   JSON.stringify(response.data).length,
-          // );
-
-          // const OrderData = response.data;
           const OrderData = response.data; // JSON.parse(response.data); // .json();
 
           if (OrderData !== undefined) {
             // console.log(" << OrderData>> : ", OrderData);
 
             const ordered_orderData = sortArray(OrderData);
-
-            // console.log(" << ordered_orderData[55].created_at >> ", ordered_orderData[55].created_at );
-            // console.log(" << ordered_orderData[0].created_at >> ", ordered_orderData[0].created_at );
 
             dispatch({
               type: FETCH_ORDER,
@@ -149,48 +140,48 @@ export const getOrder = () => async (dispatch: any) => {
   });
 };
 
-export const logIn =
-  (email: any, password: any, onComplete: any) => async (dispatch: any) => {
-    let userToken;
-    userToken = null;
-    await fetch("https://qrtech.co.uk/api/login", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    })
-      .then(res => res.json())
-      .then(resData => {
-        console.log(resData);
-
-        if (resData != null) {
-          if (resData.data != null && resData.data.profile != null) {
-            if (resData.data.profile.role == "RestaurantAdmin") {
-              // alert('Successfully logged in');
-              userToken = resData;
-              AsyncStorage.setItem("userToken", JSON.stringify(userToken));
-              dispatch({type: LOGIN, id: email, token: userToken}); // check the AuthReducer....
-            } else {
-              console.log("Not allowed");
-              Alert.alert("You don't have permission to log in");
-            }
+export const logIn = (email: any, password: any) => async (dispatch: any) => {
+  let userToken;
+  userToken = null;
+  dispatch({type: ERROR, payload: ""});
+  await fetch("http://3.9.23.131/api/login", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      email: email,
+      password: password,
+    }),
+  })
+    .then(res => res.json())
+    .then(resData => {
+      if (resData != null) {
+        if (resData.data != null && resData.data.profile != null) {
+          if (resData.data.profile.role == "RestaurantAdmin") {
+            // alert('Successfully logged in');
+            userToken = resData;
+            AsyncStorage.setItem("userToken", JSON.stringify(userToken));
+            dispatch({type: LOGIN, id: email, token: userToken}); // check the AuthReducer....
+          } else {
+            console.log("Not allowed");
+            Alert.alert("You don't have permission to log in");
           }
-          if (resData.message != null) {
-            // alert(resData.message);
-            dispatch({type: ERROR, payload: resData.message});
-          }
+        } else {
+          console.log("ERROR: " + resData.message);
+          dispatch({type: ERROR, payload: resData.message});
         }
-        onComplete && onComplete();
-      })
-      .then(data => {
-        requestUserPermission();
-      });
-  };
+      }
+    })
+    .then(data => {
+      requestUserPermission();
+    })
+    .catch(err => {
+      console.log("ERROR: " + err.message);
+      dispatch({type: ERROR, payload: err.message});
+    });
+};
 
 export const logOut = () => async (dispatch: any) => {
   try {

@@ -57,7 +57,7 @@ const ForgotPasswordScreen = ({navigation}) => {
 
   const emailHandler = () => async () => {
     if (email) {
-      await fetch("https://qrtech.co.uk/api/forgot_password", {
+      await fetch("http://3.9.23.131/api/forgot_password", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -67,14 +67,14 @@ const ForgotPasswordScreen = ({navigation}) => {
       })
         .then(res => res.json())
         .then(resData => {
-          //    alert(resData.message)
+          alert(resData.message);
 
           if (isValidEmail && resData.message === "Email Sent!") {
             setEmailError("");
             navigation.navigate("ResetPasswordScreen");
           } else {
             setEmailError("Invalid email");
-            // alert(resData.message);
+            alert(resData.message);
           }
         })
         .catch(function (error) {

@@ -1,4 +1,4 @@
-import {LogIn} from "react-native-feather";
+import {AtSign, LogIn} from "react-native-feather";
 import {
   FETCH_ORDER,
   FETCH_ORDER_FAIL,
@@ -13,7 +13,6 @@ const initialOrderState = {
   loading: true,
   Orders: [],
   loginError: "",
-  // apiInvokationTimer: 0,
 };
 
 const initialLoginState = {
@@ -28,8 +27,6 @@ export const OrderReducer = (state = initialOrderState, action) => {
       return {
         loading: false,
         Orders: action.payload,
-        // apiInvokationTimer:10000,
-
       };
     case FETCH_ORDER_FAIL:
       return {loading: false, error: action.payload};

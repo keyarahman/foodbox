@@ -139,6 +139,7 @@ const App = () => {
   useEffect(() => {
     let isMounted = true;
     setTimeout(() => {
+    
       dispatch(notificationListener());
       let userToken;
       userToken = null;
