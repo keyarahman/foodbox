@@ -26,15 +26,26 @@ export default function TodaysOrder({navigation}) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    newArray();
-  }, []);
+    let itemsArray = Array.from(Orders);
+
+    let arr = itemsArray.filter(item => {
+      console.log("ietm", item);
+      const dateLimit = moment(item.created_at).format("MM-DD-YYYY");
+      const now = moment().utc().format("MM-DD-YYYY");
+      console.log("time_________", dateLimit, now);
+      return now === dateLimit;
+    });
+    console.log("arr._________----", arr);
+    setTodaysOrderData(arr);
+    setIsLoading(false);
+  }, [Orders]);
 
   const newArray = () => {
     let itemsArray = Array.from(Orders);
     let arr = itemsArray.filter(item => {
       const dateLimit = moment(item.created_at).format("MM ddd, YYYY");
       const now = moment().format("MM ddd, YYYY");
-      return now == dateLimit;
+      return now === dateLimit;
     });
     setTodaysOrderData(arr);
     setIsLoading(false);

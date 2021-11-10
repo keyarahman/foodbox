@@ -39,6 +39,9 @@ const SignInScreen = ({navigation}) => {
   });
 
   useEffect(() => {
+    dispatch({type: ERROR, payload: ""});
+  }, []);
+  useEffect(() => {
     console.log("Log In Error: ", loginError);
 
     if (loginError === "Invalid Email!") {
@@ -101,7 +104,6 @@ const SignInScreen = ({navigation}) => {
 
   const loginHandle = (email, password) => {
     if (!email || !password) {
-      dispatch({type: ERROR, payload: ""});
       setData({
         ...data,
         error: "Please fill up all the inputs ",

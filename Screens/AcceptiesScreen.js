@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import {Card} from "react-native-paper";
 import {Clock} from "react-native-feather";
-
+import {getOrder} from "../Redux2/actions";
 import moment from "moment";
 import {useSelector, useDispatch} from "react-redux";
 
@@ -21,19 +21,18 @@ export default function AcceptiesScreen({navigation}) {
   const {Orders} = useSelector(state => state.OrderReducer);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setrefreshing] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    newArray();
-  }, []);
-
-  const newArray = () => {
     let itemsArray = Array.from(Orders);
+    // console.log("orders", Orders);
     let arr = itemsArray.filter(item => {
+      // console.log(" -_________", item.order_status);
       return item.order_status === "Accepted";
     });
     setAcceptedOrder(arr);
     setIsLoading(false);
-  };
+  }, [Orders]);
 
   if (isLoading) {
     return (

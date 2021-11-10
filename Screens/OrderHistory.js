@@ -32,7 +32,7 @@ export default function OrderHistory({navigation}) {
     let itemsArray = Array.from(Orders);
     let arr = itemsArray.filter(item => {
       const dateLimit = moment(item.created_at).format("MM ddd, YYYY");
-      const now = moment().format("MM ddd, YYYY");
+      const now = moment().utc().format("MM ddd, YYYY");
       return now > dateLimit;
     });
     setPreOrderData(arr);
