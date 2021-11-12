@@ -133,6 +133,7 @@ const SignInScreen = ({navigation}) => {
           <Mail stroke="#05375a" fill="none" width={20} height={20} />
           <TextInput
             placeholder="Your Email"
+            placeholderTextColor="#A9A9A9"
             style={styles.textInput}
             autoCapitalize="none"
             // value={email}
@@ -157,6 +158,7 @@ const SignInScreen = ({navigation}) => {
           <TextInput
             placeholder="Your Password"
             secureTextEntry={data.secureTextEntry ? true : false}
+            placeholderTextColor="#A9A9A9"
             style={styles.textInput}
             autoCapitalize="none"
             autoCapitalize="none"

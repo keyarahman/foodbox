@@ -37,7 +37,7 @@ interface SelectedPrinter
   printerType?: keyof typeof printerList;
 }
 
-const OrderApi = "http://3.9.23.131/api/orders";
+const OrderApi = "https://eazm.co.uk/api/orders";
 
 /*
 const sortArray=(props)=>{
@@ -144,7 +144,7 @@ export const logIn = (email: any, password: any) => async (dispatch: any) => {
   let userToken;
   userToken = null;
   dispatch({type: ERROR, payload: ""});
-  await fetch("http://3.9.23.131/api/login", {
+  await fetch("https://eazm.co.uk/api/login", {
     method: "POST",
     headers: {
       Accept: "application/json",

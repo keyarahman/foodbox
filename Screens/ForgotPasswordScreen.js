@@ -57,7 +57,7 @@ const ForgotPasswordScreen = ({navigation}) => {
 
   const emailHandler = () => async () => {
     if (email) {
-      await fetch("http://3.9.23.131/api/forgot_password", {
+      await fetch("https://eazm.co.uk/api/forgot_password", {
         method: "POST",
         headers: {
           Accept: "application/json",
