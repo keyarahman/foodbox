@@ -872,7 +872,7 @@ Post code: ${orderItem.customer.postcode}
                                                                     },
 
                                                                     {
-                                                                        text: "EnabledAlready",
+                                                                        text: "Enabled",
                                                                         onPress: () => {
                                                                             // SetUserSaid_BlueTooth_EnabledState(true); --------check this and this...
                                                                             SetUserSaid_BlueTooth_EnabledState(!userSaid_BlueTooth_EnabledState); // --------check this and this...
