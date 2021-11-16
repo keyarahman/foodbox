@@ -305,7 +305,7 @@ Post code: ${orderItem.customer.postcode}
     AsyncStorage.getItem("userToken").then(data => {
       let token = JSON.parse(data).access_token;
       axios
-        .post("http://3.9.23.131/api/update_order", body, {
+        .post("https://eazm.co.uk/api/update_order", body, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -401,7 +401,7 @@ Post code: ${orderItem.customer.postcode}
     AsyncStorage.getItem("userToken").then(data => {
       let token = JSON.parse(data).access_token;
       axios
-        .post("http://3.9.23.131/api/update_order", body, {
+        .post("https://eazm.co.uk/api/update_order", body, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
