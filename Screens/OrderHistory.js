@@ -56,7 +56,18 @@ export default function OrderHistory({navigation}) {
             <Card style={{margin: 5, backgroundColor: "#fff"}}>
               <View style={{flex: 1, flexDirection: "row", padding: 10}}>
                 <View style={{flex: 1, flexDirection: "column", padding: 10}}>
-                  <Text style={{fontWeight: "bold"}}>{item.customer.name}</Text>
+                  <View style={{flexDirection: "row"}}>
+                    <Text style={{fontWeight: "bold"}}>
+                      {item.customer.name}
+                    </Text>
+                    {item.is_new == 1 ? (
+                      <Text style={{fontWeight: "bold", color: "red"}}>
+                        (New order)
+                      </Text>
+                    ) : (
+                      <Text>{}</Text>
+                    )}
+                  </View>
                   <Text>Address: {item.customer.address}</Text>
                   <Text>Order status: {item.order_status}</Text>
                   <Text style={{fontWeight: "bold"}}>

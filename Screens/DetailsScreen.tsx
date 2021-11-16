@@ -66,10 +66,9 @@ export interface Props {
 }
 import {BLEPrinter, PrinterOptions} from "react-native-thermal-receipt-printer";
 import Snackbar from "react-native-snackbar";
-// import BleManager from '../BleManager';
-// import BleManager from 'react-native-ble-manager';
+
 // interface for printer begins here.
-// import FontAwesome from "react-native-vector-icons/FontAwesome";
+
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Entypo from "react-native-vector-icons/Entypo";
 interface IBLEPrinter {
@@ -402,14 +401,7 @@ Post code: ${orderItem.customer.postcode}
                 console.log(
                     ` printer => ${printer.inner_mac_address} ${printer.device_name} `,
                 ),
-            // four_curried
-            // <TouchableOpacity key={printer.inner_mac_address} onPress={() => _connectPrinter(printer)}>
-            //   {`device_name: ${printer.device_name}, inner_mac_address: ${printer.inner_mac_address}`}
-            // </TouchableOpacity>
 
-            // <TouchableOpacity key={printer.inner_mac_address} onPress={() => _connectPrinter(printer)}>
-            //   {`device_name: ${printer.device_name}, inner_mac_address: ${printer.inner_mac_address}`}
-            // </TouchableOpacity>
         );
     };
 
@@ -426,7 +418,7 @@ Post code: ${orderItem.customer.postcode}
         AsyncStorage.getItem("userToken").then(data => {
             let token = JSON.parse(data).access_token;
             axios
-                .post("http://3.9.23.131/api/update_order", body, {
+                .post("https://eazm.co.uk/api/update_order", body, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
@@ -491,7 +483,7 @@ Post code: ${orderItem.customer.postcode}
                                                 },
 
                                                 {
-                                                    text: "EnabledAlready",
+                                                    text: "Enabled",
                                                     onPress: () => {
                                                         // SetUserSaid_BlueTooth_EnabledState(true); --------CHECK THIS AND THIS...
                                                         SetUserSaid_BlueTooth_EnabledState(!userSaid_BlueTooth_EnabledState); // --------CHECK THIS AND THIS...
@@ -593,7 +585,7 @@ Post code: ${orderItem.customer.postcode}
         AsyncStorage.getItem("userToken").then(data => {
             let token = JSON.parse(data).access_token;
             axios
-                .post("http://3.9.23.131/api/update_order", body, {
+                .post("https://eazm.co.uk/api/update_order", body, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
