@@ -52,7 +52,7 @@ export default function IncomingOrderScreen({navigation}) {
   return (
     <SafeAreaView>
       <StatusBar backgroundColor="#FFA500" barStyle="light-content" />
-      {Orders.length > 0 && Orders!==null ? (
+      {Orders.length > 0 && Orders !== null ? (
         <FlatList
           data={Orders}
           renderItem={({item}) => (
@@ -69,7 +69,18 @@ export default function IncomingOrderScreen({navigation}) {
                     flexDirection: "column",
                     padding: 10,
                   }}>
-                  <Text style={{fontWeight: "bold"}}>{item.customer.name}</Text>
+                  <View style={{flexDirection: "row"}}>
+                    <Text style={{fontWeight: "bold"}}>
+                      {item.customer.name}
+                    </Text>
+                    {item.is_new == 1 ? (
+                      <Text style={{fontWeight: "bold", color: "red"}}>
+                        (New order)
+                      </Text>
+                    ) : (
+                      <Text>{}</Text>
+                    )}
+                  </View>
                   <Text>Address: {item.customer.address}</Text>
                   <Text>Order status: {item.order_status}</Text>
                   <Text>Phone: {item.customer.phone}</Text>
