@@ -859,6 +859,7 @@ Post code: ${orderItem.customer.postcode}
                                                                 // order_status: "Accepted",
                                                             };
 
+
                                                             AcceptButtonHandler2(tempOrder);  // for printing in realLife..
                                                         }
 
