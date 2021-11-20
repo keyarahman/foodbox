@@ -3,11 +3,12 @@ import {
   FETCH_ORDER_FAIL,
   LOGIN,
   LOGOUT,
-  SET_USER_EMAIL,
-  SET_USER_PASSWORD,
-  IS_NEW_OREDER,
   ERROR,
+  PRODUCTS_DETAILS,
+  DELETE_PRODUCTS,
+  EDITPRODUCT,
 } from "./constant";
+
 // import * as api from "./api";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -38,59 +39,10 @@ interface SelectedPrinter
 }
 
 const OrderApi = "https://eazm.co.uk/api/orders";
-
-/*
-const sortArray=(props)=>{
-  const sortedArray  = props.sort((a,b) => moment(a.created_at).format('YYYYMMDD') -  moment(b.created_at).format('YYYYMMDD'));
-  return sortedArray;
-
-  };
-
-*/
-
-/*
-const [selectedValue, setSelectedValue] = React.useState<keyof typeof printerList>("ble");
-const [devices, setDevices] = React.useState([]);
-
-
-
-
-
-// export const getOrder = () => async (dispatch) => {
-// export const getOrder = () => async (dispatch) => {
-export const getListDevices(selectedValue) = async () => {
-
-  const Printer = printerList[selectedValue];
-  // get list device for net printers is support scanning in local ip but not recommended
-  if (selectedValue === "net") {
-    return;
-  }
-  try {
-
-
-    setLoading(true);
-
-
-
-    await Printer.init();
-    const results = await Printer.getDeviceList();
-    setDevices(
-      results.map((item: any) => ({
-        ...item,
-        printerType: selectedValue
-      }))
-    );
-  } catch (err) {
-    console.warn(err);
-  } finally {
-
-
-
-    setLoading(false);
-  }
-};
-
-*/
+const logInApi = "https://eazm.co.uk/api/login";
+const productApi = "https://eazm.co.uk/api/menu/4";
+const deleteApi = "https://eazm.co.uk/api/delete_product";
+const editProductApi = "https://eazm.co.uk/api/edit_product";
 
 const sortArray = (orders: oneOrder_Item_interface[]) => {
   orders.sort(function (a, b) {
@@ -144,7 +96,7 @@ export const logIn = (email: any, password: any) => async (dispatch: any) => {
   let userToken;
   userToken = null;
   dispatch({type: ERROR, payload: ""});
-  await fetch("https://eazm.co.uk/api/login", {
+  await fetch(logInApi, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -163,13 +115,17 @@ export const logIn = (email: any, password: any) => async (dispatch: any) => {
             // alert('Successfully logged in');
             userToken = resData;
             AsyncStorage.setItem("userToken", JSON.stringify(userToken));
+            AsyncStorage.setItem(
+              "resturantId",
+              JSON.stringify(resData.data.profile.restaurant_id),
+            );
             dispatch({type: LOGIN, id: email, token: userToken}); // check the AuthReducer....
           } else {
-            console.log("Not allowed");
-            Alert.alert("You don't have permission to log in");
+            // console.log("Not allowed");
+            // Alert.alert("You don't have permission to log in");
           }
         } else {
-          console.log("ERROR: " + resData.message);
+          // console.log("ERROR: " + resData.message);
           dispatch({type: ERROR, payload: resData.message});
         }
       }
@@ -192,42 +148,102 @@ export const logOut = () => async (dispatch: any) => {
   dispatch({type: LOGOUT});
 };
 
-export const setEmail = (email: any) => (dispatch: any) => {
-  dispatch({
-    type: SET_USER_EMAIL,
-    payload: email,
+// Products Api secrion
+
+// product details api call
+
+export const getProducts = () => async (dispatch: any) => {
+  AsyncStorage.getItem("userToken").then((data: any) => {
+    const token = JSON.parse(data).access_token;
+    try {
+      axios
+        .get(productApi, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(res => {
+          // console.log("responseData------------", res.data.products);
+          dispatch({type: PRODUCTS_DETAILS, payload: res.data.products});
+        })
+        .catch(error => console.log("error", error));
+    } catch (error) {
+      console.log("error in getting order data : ", error);
+    }
   });
 };
-export const setPassword = (password: any) => (dispatch: any) => {
-  dispatch({
-    type: SET_USER_PASSWORD,
-    payload: password,
+
+//Product delete api funtion
+
+export const deleteProduct = (productId: any) => async (dispatch: any) => {
+  const returant_id = AsyncStorage.getItem("resturantId").then((data: any) => {
+    const res_id = JSON.parse(data);
+
+    console.log("resturantId____", res_id, productId);
+
+    var id = {
+      product_id: productId,
+      restaurant_id: res_id,
+    };
+    AsyncStorage.getItem("userToken").then((data: any) => {
+      const token = JSON.parse(data).access_token;
+      try {
+        axios
+          .post(`${deleteApi}`, id, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then(res => {
+            // console.log("responseData__________", res);
+            dispatch({type: DELETE_PRODUCTS});
+            dispatch(getProducts());
+          })
+          .catch(error => console.log("error", error));
+      } catch (error) {
+        console.log("error in getting order data : ", error);
+      }
+    });
   });
 };
 
-// export const buttonHandler = (orderId,resturant_id) => async (dispatch) => {
-//   var body = {
-//     restaurant_id:resturant_id,
-//     order_id: orderId,
-//     status: "Accepted"
-//   };
+//update product
+export const editProduct =
+  (productId: any, title: any, description: any, price: any, onComplete: any) =>
+  async (dispatch: any) => {
+    const returant_id = AsyncStorage.getItem("resturantId").then(
+      (data: any) => {
+        const res_id = JSON.parse(data);
 
-//   AsyncStorage.getItem('userToken').then(data => {
-//     let token = JSON.parse(data).access_token;
-//     axios
-//       .post("https://qrtech.co.uk/api/update_order", body,{headers: {'Content-Type': 'application/json',Authorization: `Bearer ${token}`}})
-//       .then(res => {
-//         alert(res.data.message)
-//         dispatch({
-//           type: IS_NEW_OREDER,
-//           id:orderId,
-//           payload: false,
-//         });
-//         // item.is_new=false
-//       })
-//       .catch(function (error) {
-//         console.log(error);
-//       });
-//   });
+        // console.log("resturantId____", res_id, res_id);
 
-// };
+        var product = {
+          product_id: productId,
+          restaurant_id: res_id,
+          title: title,
+          description: description,
+          price: price,
+        };
+        AsyncStorage.getItem("userToken").then((data: any) => {
+          const token = JSON.parse(data).access_token;
+          try {
+            axios
+              .post(`${editProductApi}`, product, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+              .then(res => {
+                console.log("responseData__________", res);
+                dispatch({type: EDITPRODUCT});
+                dispatch(getProducts());
+                onComplete && onComplete();
+              })
+              .catch(error => console.log("error", error));
+          } catch (error) {
+            console.log("error in getting order data : ", error);
+          }
+        });
+      },
+    );
+  };

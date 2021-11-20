@@ -12,12 +12,8 @@ import {
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import LinearGradient from "react-native-linear-gradient";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Feather from "react-native-vector-icons/Feather";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import {EyeOff, Lock, Mail, Eye, Bold} from "react-native-feather";
-import {AuthContext} from "../components.js/context";
+
 import {useSelector, useDispatch} from "react-redux";
 import AuthReducer from "../Redux2/reducer";
 import {logIn} from "../Redux2/actions";

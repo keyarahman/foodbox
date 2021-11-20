@@ -7,6 +7,9 @@ import {
   RETRIEVE_TOKEN,
   IS_NEW_OREDER,
   ERROR,
+  PRODUCTS_DETAILS,
+  DELETE_PRODUCTS,
+  EDITPRODUCT,
 } from "./constant";
 
 const initialOrderState = {
@@ -20,6 +23,10 @@ const initialLoginState = {
   email: null,
   userToken: null,
   error: "",
+};
+const initialProductState = {
+  loading: true,
+  Products: [],
 };
 export const OrderReducer = (state = initialOrderState, action) => {
   switch (action.type) {
@@ -62,6 +69,29 @@ export const AuthReducer = (state = initialLoginState, action) => {
         ...initialLoginState,
         loginError: action.payload,
         isLoading: false,
+      };
+    default:
+      return state;
+  }
+};
+
+export const productReducer = (state = initialProductState, action) => {
+  switch (action.type) {
+    case PRODUCTS_DETAILS:
+      return {
+        ...state,
+        Products: action.payload,
+        isLoading: false,
+      };
+    case EDITPRODUCT:
+      return {
+        ...state,
+        isLoading: false,
+      };
+    case DELETE_PRODUCTS:
+      return {
+        ...state,
+        loading: false,
       };
     default:
       return state;

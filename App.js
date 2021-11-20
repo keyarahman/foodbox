@@ -3,29 +3,20 @@ import {View, Text, ActivityIndicator} from "react-native";
 import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {createDrawerNavigator, DrawerItem} from "@react-navigation/drawer";
-
 import DrawerContent from "./Screens/DrawerContent";
-import Settings from "./Screens/Settings";
-import MainTabScreen from "./Screens/HomeScreen";
 import RootStackScreen from "./Screens/RootStackScreen";
-
 import OrderHistory from "./Screens/OrderHistory";
 import TodaysOrder from "./Screens/TodaysOrder";
 import HomeScreen from "./Screens/HomeScreen";
-import {AuthContext} from "./components.js/context";
-
-import ProductScreen from "./Screens/ProductsScreen";
+import ProductScreen from "./Screens/ProductScreens/ProductsScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DetailsScreen from "./Screens/DetailsScreen";
-import {black} from "react-native-paper/lib/typescript/styles/colors";
-
 import {useSelector, useDispatch} from "react-redux";
 // import { AuthReducer } from '../Redux2/reducer';
-
 import {RETRIEVE_TOKEN} from "./Redux2/constant";
 import {notificationListener} from "./Service/Notifications";
-import messaging from "@react-native-firebase/messaging";
-import {DefaultTheme} from "react-native-paper";
+import EditProduct from "./Screens/ProductScreens/EditProduct";
+
 import {
   Home,
   Settings as SettingsIcon,
@@ -139,7 +130,6 @@ const App = () => {
   useEffect(() => {
     let isMounted = true;
     setTimeout(() => {
-    
       dispatch(notificationListener());
       let userToken;
       userToken = null;
@@ -182,6 +172,19 @@ const App = () => {
           <Stack.Screen
             name="DetailsScreen"
             component={DetailsScreen}
+            options={{
+              headerStyle: {
+                backgroundColor: "#FFA500",
+              },
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                fontWeight: "bold",
+              },
+            }}
+          />
+          <Stack.Screen
+            name="Edit Product"
+            component={EditProduct}
             options={{
               headerStyle: {
                 backgroundColor: "#FFA500",
