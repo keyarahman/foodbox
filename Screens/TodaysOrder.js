@@ -27,15 +27,14 @@ export default function TodaysOrder({navigation}) {
 
   useEffect(() => {
     let itemsArray = Array.from(Orders);
-
     let arr = itemsArray.filter(item => {
       console.log("ietm", item);
       const dateLimit = moment(item.created_at).format("MM-DD-YYYY");
       const now = moment().utc().format("MM-DD-YYYY");
-      console.log("time_________", dateLimit, now);
+      // console.log("time_________", dateLimit, now);
       return now === dateLimit;
     });
-    console.log("arr._________----", arr);
+    // console.log("arr._________----", arr);
     setTodaysOrderData(arr);
     setIsLoading(false);
   }, [Orders]);
