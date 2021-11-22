@@ -31,7 +31,7 @@ export default function TodaysOrder({navigation}) {
       console.log("ietm", item);
       const dateLimit = moment(item.created_at).format("MM-DD-YYYY");
       const now = moment().utc().format("MM-DD-YYYY");
-      console.log("time_________", dateLimit, now);
+      // console.log("time_________", dateLimit, now);
       return now === dateLimit;
     });
     // console.log("arr._________----", arr);
