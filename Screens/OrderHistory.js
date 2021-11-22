@@ -18,6 +18,7 @@ import DetailsScreen from "./DetailsScreen";
 import {OrderReducer} from "../Redux2/reducer";
 import moment from "moment";
 import {useSelector, useDispatch} from "react-redux";
+import {getOrder} from "../Redux2/actions";
 
 export default function OrderHistory({navigation}) {
   const [PreOrderData, setPreOrderData] = useState([]);
@@ -25,19 +26,19 @@ export default function OrderHistory({navigation}) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    newArray();
-  }, []);
-
-  const newArray = () => {
     let itemsArray = Array.from(Orders);
+
     let arr = itemsArray.filter(item => {
-      const dateLimit = moment(item.created_at).format("MM ddd, YYYY");
-      const now = moment().utc().format("MM ddd, YYYY");
+      console.log("ietm", item);
+      const dateLimit = moment(item.created_at).format("MM-DD-YYYY");
+      const now = moment().utc().format("MM-DD-YYYY");
+      console.log("time_________", dateLimit, now);
       return now > dateLimit;
     });
+    console.log("arr._________----", arr);
     setPreOrderData(arr);
     setIsLoading(false);
-  };
+  }, [Orders]);
 
   if (isLoading) {
     return (

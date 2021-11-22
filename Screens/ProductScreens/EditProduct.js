@@ -11,7 +11,7 @@ import {
 import * as Animatable from "react-native-animatable";
 import LinearGradient from "react-native-linear-gradient";
 import {useDispatch, useSelector} from "react-redux";
-import {editProduct} from "../../Redux2/actions";
+import {editProduct, updateProduct} from "../../Redux2/actions";
 
 const EditProduct = ({route, navigation}) => {
   const {item} = route.params;
@@ -42,7 +42,7 @@ const EditProduct = ({route, navigation}) => {
     } else {
       setData({...data, error: ""});
       dispatch(
-        editProduct(item.id, data.title, data.description, data.price, () => {
+        updateProduct(item.id, data.title, data.description, data.price, () => {
           navigation.navigate("Products");
         }),
       );
@@ -58,7 +58,7 @@ const EditProduct = ({route, navigation}) => {
           <Text style={styles.text_footer}>Title</Text>
           <View style={styles.action}>
             <TextInput
-              placeholderTextColor="#A9A9A9"
+              placeholderTextColor="#D3D3D3"
               style={styles.textInput}
               value={data.title}
               name="title"
@@ -145,11 +145,12 @@ const styles = StyleSheet.create({
   },
   text_footer: {
     color: "#05375a",
-    fontSize: 18,
+    fontSize: 20,
+    fontWeight: "bold",
   },
   action: {
     flexDirection: "row",
-    marginTop: 10,
+    marginTop: 8,
     borderBottomWidth: 1,
     borderBottomColor: "#f2f2f2",
     paddingBottom: 5,
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: Platform.OS === "ios" ? 0 : -12,
     paddingLeft: 10,
-    color: "#05375a",
+    color: "#696969",
   },
   errorMsg: {
     color: "#FF0000",

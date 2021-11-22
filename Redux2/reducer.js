@@ -10,6 +10,8 @@ import {
   PRODUCTS_DETAILS,
   DELETE_PRODUCTS,
   EDITPRODUCT,
+  CATAGORIES,
+  NEWPRODUCT,
 } from "./constant";
 
 const initialOrderState = {
@@ -27,6 +29,7 @@ const initialLoginState = {
 const initialProductState = {
   loading: true,
   Products: [],
+  categories: [],
 };
 export const OrderReducer = (state = initialOrderState, action) => {
   switch (action.type) {
@@ -91,6 +94,17 @@ export const productReducer = (state = initialProductState, action) => {
     case DELETE_PRODUCTS:
       return {
         ...state,
+        loading: false,
+      };
+    case NEWPRODUCT:
+      return {
+        ...state,
+        loading: false,
+      };
+    case CATAGORIES:
+      return {
+        ...state,
+        categories: action.payload,
         loading: false,
       };
     default:

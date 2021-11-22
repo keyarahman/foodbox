@@ -27,6 +27,7 @@ import {
   FolderMinus,
   Folder,
 } from "react-native-feather";
+import AddNewProduct from "./Screens/ProductScreens/AddNewProduct";
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -102,22 +103,6 @@ function DrawerPage() {
           },
         }}
       />
-
-      {/* <DrawerItem
-        name="LogOut"
-        options={{
-          headerStyle: {
-            backgroundColor: "#FFA500",
-          },
-          drawerIcon: () => (
-            <LogOut stroke="#3090C7" fill="none" width={20} height={20} />
-          ),
-          headerTintColor: "#fff",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
-        }}
-      /> */}
     </Drawer.Navigator>
   );
 }
@@ -185,6 +170,19 @@ const App = () => {
           <Stack.Screen
             name="Edit Product"
             component={EditProduct}
+            options={{
+              headerStyle: {
+                backgroundColor: "#FFA500",
+              },
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                fontWeight: "bold",
+              },
+            }}
+          />
+          <Stack.Screen
+            name="Add Product"
+            component={AddNewProduct}
             options={{
               headerStyle: {
                 backgroundColor: "#FFA500",

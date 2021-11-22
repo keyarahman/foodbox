@@ -40,17 +40,6 @@ export default function TodaysOrder({navigation}) {
     setIsLoading(false);
   }, [Orders]);
 
-  const newArray = () => {
-    let itemsArray = Array.from(Orders);
-    let arr = itemsArray.filter(item => {
-      const dateLimit = moment(item.created_at).format("MM ddd, YYYY");
-      const now = moment().format("MM ddd, YYYY");
-      return now === dateLimit;
-    });
-    setTodaysOrderData(arr);
-    setIsLoading(false);
-  };
-
   if (isLoading) {
     return (
       <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>

@@ -11,3 +11,5 @@ export const ERROR = "ERROR";
 export const PRODUCTS_DETAILS = "PRODUCTS_DETAILS";
 export const DELETE_PRODUCTS = "DELETE_PRODUCTS";
 export const EDITPRODUCT = "EDITPRODUCT";
+export const CATAGORIES = "CATAGORIES";
+export const NEWPRODUCT = "NEWPRODUCT";

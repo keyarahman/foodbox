@@ -7,6 +7,8 @@ import {
   PRODUCTS_DETAILS,
   DELETE_PRODUCTS,
   EDITPRODUCT,
+  CATAGORIES,
+  NEWPRODUCT,
 } from "./constant";
 
 // import * as api from "./api";
@@ -40,9 +42,11 @@ interface SelectedPrinter
 
 const OrderApi = "https://eazm.co.uk/api/orders";
 const logInApi = "https://eazm.co.uk/api/login";
-const productApi = "https://eazm.co.uk/api/menu/4";
+const productApi = "https://eazm.co.uk/api/category_products/4";
 const deleteApi = "https://eazm.co.uk/api/delete_product";
 const editProductApi = "https://eazm.co.uk/api/edit_product";
+const catagoriesApi = "https://eazm.co.uk/api/categories";
+const newProducApi = "https://eazm.co.uk/api/new_product";
 
 const sortArray = (orders: oneOrder_Item_interface[]) => {
   orders.sort(function (a, b) {
@@ -122,10 +126,10 @@ export const logIn = (email: any, password: any) => async (dispatch: any) => {
             dispatch({type: LOGIN, id: email, token: userToken}); // check the AuthReducer....
           } else {
             // console.log("Not allowed");
-            // Alert.alert("You don't have permission to log in");
           }
         } else {
           // console.log("ERROR: " + resData.message);
+          // Alert.alert("You don't have permission to log in");
           dispatch({type: ERROR, payload: resData.message});
         }
       }
@@ -146,31 +150,6 @@ export const logOut = () => async (dispatch: any) => {
     console.log(e);
   }
   dispatch({type: LOGOUT});
-};
-
-// Products Api secrion
-
-// product details api call
-
-export const getProducts = () => async (dispatch: any) => {
-  AsyncStorage.getItem("userToken").then((data: any) => {
-    const token = JSON.parse(data).access_token;
-    try {
-      axios
-        .get(productApi, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then(res => {
-          // console.log("responseData------------", res.data.products);
-          dispatch({type: PRODUCTS_DETAILS, payload: res.data.products});
-        })
-        .catch(error => console.log("error", error));
-    } catch (error) {
-      console.log("error in getting order data : ", error);
-    }
-  });
 };
 
 //Product delete api funtion
@@ -208,7 +187,7 @@ export const deleteProduct = (productId: any) => async (dispatch: any) => {
 };
 
 //update product
-export const editProduct =
+export const updateProduct =
   (productId: any, title: any, description: any, price: any, onComplete: any) =>
   async (dispatch: any) => {
     const returant_id = AsyncStorage.getItem("resturantId").then(
@@ -236,6 +215,100 @@ export const editProduct =
               .then(res => {
                 console.log("responseData__________", res);
                 dispatch({type: EDITPRODUCT});
+                dispatch(getProducts());
+                onComplete && onComplete();
+              })
+              .catch(error => console.log("error", error));
+          } catch (error) {
+            console.log("error in getting order data : ", error);
+          }
+        });
+      },
+    );
+  };
+
+// get all products
+
+export const getProducts = () => async (dispatch: any) => {
+  AsyncStorage.getItem("userToken").then((data: any) => {
+    const token = JSON.parse(data).access_token;
+    try {
+      axios
+        .get(productApi, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(res => {
+          console.log("responseData------------", res.data);
+          dispatch({type: PRODUCTS_DETAILS, payload: res.data});
+        })
+        .catch(error => console.log("error", error));
+    } catch (error) {
+      console.log("error in getting order data : ", error);
+    }
+  });
+};
+
+// get catagories
+
+export const getCatagories = () => async (dispatch: any) => {
+  AsyncStorage.getItem("userToken").then((data: any) => {
+    const token = JSON.parse(data).access_token;
+    try {
+      axios
+        .get(catagoriesApi, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(res => {
+          // console.log("responseData------------", res.data);
+          dispatch({type: CATAGORIES, payload: res.data.categories});
+        })
+        .catch(error => console.log("error", error));
+    } catch (error) {
+      console.log("error in getting order data : ", error);
+    }
+  });
+};
+
+//add new data
+
+export const addNewProduct =
+  (
+    catagoriId: any,
+    title: any,
+    description: any,
+    price: any,
+    onComplete: any,
+  ) =>
+  async (dispatch: any) => {
+    const returant_id = AsyncStorage.getItem("resturantId").then(
+      (data: any) => {
+        const res_id = JSON.parse(data);
+
+        // console.log("resturantId____", res_id, res_id);
+        console.log(res_id, catagoriId, title, description, price);
+        var product = {
+          category_id: catagoriId,
+          restaurant_id: res_id,
+          title: title,
+          description: description,
+          price: price,
+        };
+        AsyncStorage.getItem("userToken").then((data: any) => {
+          const token = JSON.parse(data).access_token;
+          try {
+            axios
+              .post(`${newProducApi}`, product, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+              .then(res => {
+                console.log("responseData__________", res);
+                dispatch({type: NEWPRODUCT});
                 dispatch(getProducts());
                 onComplete && onComplete();
               })
